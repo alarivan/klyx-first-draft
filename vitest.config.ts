@@ -1,8 +1,8 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
-// 👆 do not forget to add the references above
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
+
 export default defineConfig({
   plugins: [solidPlugin()],
   server: {
@@ -12,12 +12,23 @@ export default defineConfig({
     target: "esnext",
   },
   test: {
+    deps: {
+      registerNodeLoader: true,
+      inline: [/solid-js/],
+    },
     environment: "jsdom",
     globals: true,
     transformMode: { web: [/\.[jt]sx?$/] },
+    setupFiles: [
+      "node_modules/@testing-library/jest-dom/extend-expect",
+      "./setupVitest.js",
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text"],
     },
+  },
+  resolve: {
+    conditions: ["development", "browser"],
   },
 });
