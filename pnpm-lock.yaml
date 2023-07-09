@@ -11,6 +11,9 @@ dependencies:
   '@thisbeyond/solid-dnd':
     specifier: ^0.7.4
     version: 0.7.4(solid-js@1.6.12)
+  solid-icons:
+    specifier: ^1.0.11
+    version: 1.0.11(solid-js@1.6.12)
   solid-js:
     specifier: ^1.6.12
     version: 1.6.12
@@ -3509,6 +3512,15 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
     dev: true
+
+  /solid-icons@1.0.11(solid-js@1.6.12):
+    resolution: {integrity: sha512-shEL5Otrl73LPZukpanJKi6ISnQhpIvhqqAb8haKyCGrixHOYC6yGfNkSE7jpkKSikZ0rGtSMRiFETRrec2Uzw==}
+    engines: {node: '>= 16'}
+    peerDependencies:
+      solid-js: '*'
+    dependencies:
+      solid-js: 1.6.12
+    dev: false
 
   /solid-js@1.6.12:
     resolution: {integrity: sha512-JFqRobfG3q5r1l4RYVOAukk6+FWtHpXGIjgh/GEsHKweN/kK+iHOtzUALE6+P5t/jIcSNeGiVitX8gmJg+cYvQ==}
