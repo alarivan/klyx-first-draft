@@ -4,6 +4,7 @@ import { describe, expect, it, afterEach } from "vitest";
 import { StoreProvider, useStoreContext } from "./context";
 
 afterEach(cleanup);
+
 describe("StoreProvider", () => {
   it("renders provider with children", () => {
     render(() => <StoreProvider>children</StoreProvider>);
