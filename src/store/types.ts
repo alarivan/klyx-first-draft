@@ -25,6 +25,7 @@ export type IStoreActions = {
   find(findId: IList["id"]): IList | undefined;
   play(playId: IList["id"]): void;
   resetStatus(listId: IList["id"]): void;
+  reorderItems(listId: IList["id"], items: IList["items"]): void;
   addItem(
     listId: IList["id"],
     item: Pick<IListItem, "name" | "description">,

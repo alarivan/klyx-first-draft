@@ -99,7 +99,7 @@ describe(createStoreValue, () => {
     it("updates name and description", () => {
       createRoot((dispose) => {
         const mockState = newMockState();
-        const [_, actions] = createStoreValue({ ...mockState });
+        const [_, actions] = createStoreValue(mockState);
         const id = mockState.lists[0].id;
         const updatedValues = { name: "nameU", description: "descU" };
         actions.update(id, updatedValues);
@@ -114,7 +114,7 @@ describe(createStoreValue, () => {
     it("updates name and removes description when description is not prvided", () => {
       createRoot((dispose) => {
         const mockState = newMockState();
-        const [_, actions] = createStoreValue({ ...mockState });
+        const [_, actions] = createStoreValue(mockState);
         const id = mockState.lists[0].id;
         const updatedValues = { name: "nameU" };
         actions.update(id, updatedValues);
@@ -130,7 +130,7 @@ describe(createStoreValue, () => {
     it("updates currentItems to the first item in items array when array is not empty", () => {
       createRoot((dispose) => {
         const mockState = newMockState();
-        const [_, actions] = createStoreValue({ ...mockState });
+        const [_, actions] = createStoreValue(mockState);
         const id = mockState.lists[0].id;
         const updatedValues = { currentItem: actions.find(id)?.items[0]?.id };
         actions.play(id);
@@ -145,7 +145,7 @@ describe(createStoreValue, () => {
     it("does not update current item if items array is empty", () => {
       createRoot((dispose) => {
         const mockState = newMockState();
-        const [_, actions] = createStoreValue({ ...mockState });
+        const [_, actions] = createStoreValue(mockState);
         const id = mockState.lists[1].id;
         actions.play(id);
         expect(actions.find(id)).toEqual({ ...mockState.lists[1] });
@@ -156,7 +156,7 @@ describe(createStoreValue, () => {
     it("updates completed to false for all the items in the list", () => {
       createRoot((dispose) => {
         const mockState = newMockState();
-        const [_, actions] = createStoreValue({ ...mockState });
+        const [_, actions] = createStoreValue(mockState);
         const id = mockState.lists[1].id;
         actions.play(id);
         expect(actions.find(id)).toEqual({ ...mockState.lists[1] });
@@ -168,7 +168,7 @@ describe(createStoreValue, () => {
       it("adds item to a list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
-          const [_, actions] = createStoreValue({ ...mockState });
+          const [_, actions] = createStoreValue(mockState);
           const id = mockState.lists[0].id;
           actions.addItem(id, { name: "itemName3", description: "itemDesc3" });
           expect(actions.find(id)?.items).toHaveLength(3);
@@ -186,7 +186,7 @@ describe(createStoreValue, () => {
       it("finds item in a list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
-          const [_, actions] = createStoreValue({ ...mockState });
+          const [_, actions] = createStoreValue(mockState);
           const listId = mockState.lists[0].id;
           const itemId = mockState.lists[0].items[1].id;
 
@@ -200,7 +200,7 @@ describe(createStoreValue, () => {
       it("returns undefined when list does not exist", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
-          const [_, actions] = createStoreValue({ ...mockState });
+          const [_, actions] = createStoreValue(mockState);
           const listId = "fake";
           const itemId = mockState.lists[0].items[1].id;
 
@@ -212,7 +212,7 @@ describe(createStoreValue, () => {
       it("removes item from list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
-          const [_, actions] = createStoreValue({ ...mockState });
+          const [_, actions] = createStoreValue(mockState);
           const listId = mockState.lists[0].id;
           const itemId = mockState.lists[0].items[0].id;
 
@@ -227,7 +227,7 @@ describe(createStoreValue, () => {
       it("updates item in a list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
-          const [_, actions] = createStoreValue({ ...mockState });
+          const [_, actions] = createStoreValue(mockState);
           const listId = mockState.lists[0].id;
           const item = mockState.lists[0].items[0];
           const updatedValues = {
@@ -250,11 +250,27 @@ describe(createStoreValue, () => {
       it("updates all items in a list to have completed false", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
-          const [_, actions] = createStoreValue({ ...mockState });
+          const [_, actions] = createStoreValue(mockState);
           const id = mockState.lists[0].id;
           actions.resetStatus(id);
           const items = actions.find(id)?.items;
           expect(items?.every((item) => item.completed)).toBeTruthy;
+          dispose();
+        });
+      });
+
+      it("updates items order", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const list = mockState.lists[0];
+          const prevItems = [...mockState.lists[0].items];
+
+          actions.reorderItems(list.id, [list.items[1], list.items[0]]);
+
+          const items = actions.find(list.id)?.items;
+          expect(items).toEqual([prevItems[1], prevItems[0]]);
+
           dispose();
         });
       });

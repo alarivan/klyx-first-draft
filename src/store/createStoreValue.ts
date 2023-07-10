@@ -47,6 +47,13 @@ export const createStoreValue = (initialState?: IStore) => {
           }),
         );
       },
+      reorderItems(listId, items) {
+        setState(
+          "lists",
+          (list) => list.id === listId,
+          () => ({ items }),
+        );
+      },
       addItem(listId, newItem) {
         setState(
           "lists",
