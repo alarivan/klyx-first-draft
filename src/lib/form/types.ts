@@ -4,9 +4,7 @@ export type ExcludeFromTypeInference<T> = [T][T extends any ? 0 : never];
 
 export type IFormInputElement = HTMLInputElement | HTMLTextAreaElement;
 
-export type IValidatorFn = (
-  element: IFormInputElement,
-) => Promise<string | undefined>;
+export type IValidatorFn = (element: IFormInputElement) => string | undefined;
 
 export type IFormField = {
   element: IFormInputElement;

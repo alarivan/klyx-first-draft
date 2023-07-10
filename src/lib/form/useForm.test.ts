@@ -42,7 +42,7 @@ describe("useForm", () => {
         const inputElement = document.createElement("input");
         inputElement.name = "name";
         const accessor = vi.fn();
-        const validator = vi.fn().mockResolvedValue("error");
+        const validator = vi.fn().mockReturnValue("error");
 
         validate(inputElement, () => [validator]);
         formSubmit(formElement, () => accessor);
@@ -69,7 +69,7 @@ describe("useForm", () => {
 
         const inputElement = document.createElement("input");
         inputElement.name = "name";
-        const validator = vi.fn().mockResolvedValue("error");
+        const validator = vi.fn().mockReturnValue("error");
 
         validate(inputElement, () => [validator]);
 
@@ -96,7 +96,7 @@ describe("useForm", () => {
 
         const inputElement = document.createElement("input");
         inputElement.name = "name";
-        const validator = vi.fn().mockResolvedValue("error");
+        const validator = vi.fn().mockReturnValue("error");
 
         validate(inputElement, () => [validator]);
 
@@ -120,7 +120,28 @@ describe("useForm", () => {
 
         validate(inputElement, () => true);
 
-        await inputElement.oninput?.(vi.fn() as unknown as Event);
+        await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
+
+        expect(inputElement.className).toEqual("");
+
+        dispose();
+      });
+    });
+
+    it("should run when there is no errors returend by validators", () => {
+      createRoot(async (dispose) => {
+        const { validate } = useForm({
+          fieldNames: ["name"],
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "name";
+        const validator = vi.fn().mockReturnValue(undefined);
+
+        validate(inputElement, () => [validator]);
+
+        await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
 
         expect(inputElement.className).toEqual("");
 

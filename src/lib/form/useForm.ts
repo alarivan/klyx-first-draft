@@ -1,38 +1,45 @@
-import { SetStoreFunction, createStore } from "solid-js/store";
+import { createStore } from "solid-js/store";
 
 import {
   ExcludeFromTypeInference,
   IFormErrorRecord,
-  IFormField,
   IFormFieldRecord,
   IFormInputElement,
   IValidatorFn,
 } from "./types";
 
-function checkValid<E extends SetStoreFunction<IFormErrorRecord<string>>>(
-  { element, validators = [] }: IFormField,
-  setErrors: E,
-  errorClass: string,
+function checkValidity(element: IFormInputElement) {
+  element.setCustomValidity("");
+  element.checkValidity();
+
+  return element.validationMessage;
+}
+
+function checkCustomValidity(
+  element: IFormInputElement,
+  validators: IValidatorFn[],
 ) {
-  return async () => {
-    element.setCustomValidity("");
-    element.checkValidity();
-    let message = element.validationMessage;
-    if (!message) {
-      for (const validator of validators) {
-        const text = await validator(element);
-        if (text) {
-          element.setCustomValidity(text);
-          break;
-        }
-      }
-      message = element.validationMessage;
+  for (const validator of validators) {
+    const text = validator(element);
+    if (text) {
+      return text;
     }
-    if (message) {
-      errorClass && element.classList.toggle(errorClass, true);
-      setErrors({ [element.name]: message });
-    }
-  };
+  }
+
+  return "";
+}
+
+function getInputError(
+  element: IFormInputElement,
+  validators: IValidatorFn[] = [],
+) {
+  let error = checkValidity(element);
+
+  if (!error) {
+    error = checkCustomValidity(element, validators);
+  }
+
+  return error;
 }
 
 export function useForm<T extends string>({
@@ -53,12 +60,21 @@ export function useForm<T extends string>({
   ) => {
     const accessorValue = accessor();
     const validators = Array.isArray(accessorValue) ? accessorValue : [];
-    let config;
     const name = ref.name as ExcludeFromTypeInference<T>;
-    fields[name] = config = { element: ref, validators };
-    ref.onblur = checkValid(config, setErrors, errorClass);
+
+    const config = { element: ref, validators };
+    fields[name] = config;
+
+    ref.onblur = () => {
+      const message = getInputError(ref, validators);
+      if (message) {
+        errorClass && ref.classList.toggle(errorClass, true);
+        setErrors({ [name]: message } as typeof errors);
+      }
+    };
     ref.oninput = () => {
       if (!errors[name]) return;
+
       setErrors({ [name]: undefined } as typeof errors);
       errorClass && ref.classList.toggle(errorClass, false);
     };
@@ -77,13 +93,21 @@ export function useForm<T extends string>({
       for (const k of fieldNames) {
         const field = fields[k];
         if (field) {
-          await checkValid<typeof setErrors>(field, setErrors, errorClass)();
-          if (!errored && field?.element.validationMessage) {
-            field.element.focus();
+          const { element, validators } = field;
+          const message = getInputError(element, validators);
+
+          if (message) {
+            setErrors({ [element.name]: message } as typeof errors);
+            errorClass && element.classList.toggle(errorClass, true);
+          }
+
+          if (!errored && message) {
+            element.focus();
             errored = true;
           }
         }
       }
+
       !errored && callback(ref);
     };
   };
