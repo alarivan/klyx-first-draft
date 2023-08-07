@@ -30,7 +30,6 @@ export const NewListForm: Component<{
   };
 
   const lg: IValidatorFn = (r) => {
-    console.log(r);
     if (r.value.length < 3) {
       return `${r.name} should be longer than 3`;
     }

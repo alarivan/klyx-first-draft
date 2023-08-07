@@ -23,7 +23,7 @@ export const Home: Component = () => {
       <ul>
         <For each={state.lists}>
           {(list) => (
-            <li>{list.name}</li>
+            <li><A href={`/list/${list.id}`}>{list.name}</A></li>
           )}
         </For>
       </ul>
