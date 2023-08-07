@@ -4,6 +4,7 @@ import { Routes, Route, useParams, A } from "@solidjs/router";
 
 import styles from "./App.module.css";
 import { Home } from "./pages/Home";
+import { NewList } from "./pages/NewList";
 
 const List: Component = () => {
   const params = useParams();
@@ -27,6 +28,7 @@ const App: Component = () => {
     <div class={styles.container}>
       <Routes>
         <Route path="/" component={Home} />
+        <Route path="/list/new" component={NewList} />
         <Route path="/:listId" component={List} />
         <Route path="/:listId/play/:itemId" component={Play} />
       </Routes>

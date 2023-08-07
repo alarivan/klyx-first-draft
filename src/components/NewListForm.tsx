@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router";
 import { Component, Show } from "solid-js";
 
 import { IValidatorFn, useForm } from "../lib/form";
@@ -7,7 +8,6 @@ import styles from "./NewListForm.module.css";
 
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
-  onCancel: () => void;
 }> = (props) => {
 
   const fieldNamesConst = ["name", "description"] as const;
@@ -54,9 +54,9 @@ export const NewListForm: Component<{
         <Show when={errors.description}>{errors.description}</Show>
       </div>
       <button type="submit">Add list</button>
-      <button type="button" onClick={() => props.onCancel()}>
+      <A href='/' >
         Cancel
-      </button>
+      </A>
     </form>
   );
 };

@@ -1,8 +1,10 @@
+import { Router } from "@solidjs/router";
 import { cleanup, fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from 'vitest';
 import "@testing-library/jest-dom"
 
 import { NewListForm } from "./NewListForm";
+
 
 describe("NewListForm", () => {
 
@@ -10,29 +12,18 @@ describe("NewListForm", () => {
 
   it("renders component", () => {
     const onSubmit = vi.fn()
-    const onCancel = vi.fn()
-    render(() => <NewListForm onSubmit={onSubmit} onCancel={onCancel} />);
+
+    render(() => <Router><NewListForm onSubmit={onSubmit} /></Router>);
 
 
     expect(screen.getByText("Add list")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
   });
 
-  it("calls onCancel prop when cancel button is pressed", () => {
-    const onSubmit = vi.fn()
-    const onCancel = vi.fn()
-    render(() => <NewListForm onSubmit={onSubmit} onCancel={onCancel} />);
-
-
-    const button = screen.getByText("Cancel");
-    fireEvent.click(button)
-    expect(onCancel).toHaveBeenCalledOnce();
-  });
-
   it("does not call onSubmit when form is invalid", () => {
     const onSubmit = vi.fn()
-    const onCancel = vi.fn()
-    render(() => <NewListForm onSubmit={onSubmit} onCancel={onCancel} />);
+
+    render(() => <Router><NewListForm onSubmit={onSubmit} /></Router>);
 
 
     const button = screen.getByText("Add list");
@@ -43,8 +34,8 @@ describe("NewListForm", () => {
 
   it("shows name error when name is empty", () => {
     const onSubmit = vi.fn()
-    const onCancel = vi.fn()
-    render(() => <NewListForm onSubmit={onSubmit} onCancel={onCancel} />);
+
+    render(() => <Router><NewListForm onSubmit={onSubmit} /></Router>);
 
 
     const input = screen.getByPlaceholderText("List name");
@@ -56,8 +47,8 @@ describe("NewListForm", () => {
 
   it("shows description error when description is less than 3 characters", () => {
     const onSubmit = vi.fn()
-    const onCancel = vi.fn()
-    render(() => <NewListForm onSubmit={onSubmit} onCancel={onCancel} />);
+
+    render(() => <Router><NewListForm onSubmit={onSubmit} /></Router>);
 
 
     const input = screen.getByRole('textbox', { name: 'list description' })
@@ -69,8 +60,8 @@ describe("NewListForm", () => {
 
   it("submits form when all inputs are valid", () => {
     const onSubmit = vi.fn()
-    const onCancel = vi.fn()
-    render(() => <NewListForm onSubmit={onSubmit} onCancel={onCancel} />);
+
+    render(() => <Router><NewListForm onSubmit={onSubmit} /></Router>);
 
 
     const nameInput = screen.getByPlaceholderText("List name");
