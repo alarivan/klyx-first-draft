@@ -5,6 +5,12 @@ export interface IListItem {
   completed: boolean;
 }
 
+export interface IListItemCreateObject {
+  name: IListItem["name"];
+  description?: IListItem["description"];
+  completed?: IListItem["completed"];
+}
+
 export interface IList {
   id: string;
   name: string;
