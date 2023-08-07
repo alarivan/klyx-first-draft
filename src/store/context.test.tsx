@@ -11,6 +11,12 @@ describe("StoreProvider", () => {
 
     expect(screen.getByText("children")).toBeInTheDocument();
   });
+
+  it("renders provider with children and initialStore", () => {
+    render(() => <StoreProvider initalStore={{ lists: [] }}>children</StoreProvider>);
+
+    expect(screen.getByText("children")).toBeInTheDocument();
+  });
 });
 
 describe("useStoreContext", () => {
