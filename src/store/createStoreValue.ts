@@ -80,8 +80,12 @@ export const createStoreValue = (initialState?: IStore) => {
       findItem(listId, itemId) {
         const list = state.lists.find(({ id }) => id === listId);
         if (list) {
-          return list.items.find(({ id }) => id === itemId);
+          const index = list.items.findIndex(({ id }) => id === itemId);
+          if (index !== -1) {
+            return { item: list.items[index], index };
+          }
         }
+
         return undefined;
       },
     },

@@ -21,6 +21,8 @@ export interface IList {
 
 export type IStore = { lists: Array<IList> };
 
+export type IListItemWithIndex = { item: IListItem; index: number };
+
 export type IStoreActions = {
   add(list: Pick<IList, "name" | "description">): void;
   remove(removeId: IList["id"]): void;
@@ -39,7 +41,10 @@ export type IStoreActions = {
     itemId: IListItem["id"],
     item: Pick<IListItem, "name" | "description" | "completed">,
   ): void;
-  findItem(listId: IList["id"], itemId: IListItem["id"]): IListItem | undefined;
+  findItem(
+    listId: IList["id"],
+    itemId: IListItem["id"],
+  ): IListItemWithIndex | undefined;
 };
 
 export type IStoreContextValue = [state: IStore, actions: IStoreActions];

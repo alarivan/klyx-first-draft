@@ -193,9 +193,10 @@ describe(createStoreValue, () => {
           const listId = mockState.lists[0].id;
           const itemId = mockState.lists[0].items[1].id;
 
-          expect(actions.findItem(listId, itemId)).toEqual(
-            mockState.lists[0].items[1],
-          );
+          expect(actions.findItem(listId, itemId)).toEqual({
+            item: mockState.lists[0].items[1],
+            index: 1,
+          });
           dispose();
         });
       });
@@ -241,7 +242,7 @@ describe(createStoreValue, () => {
 
           actions.updateItem(listId, item.id, updatedValues);
 
-          expect(actions.findItem(listId, item.id)).toEqual({
+          expect(actions.findItem(listId, item.id)?.item).toEqual({
             ...item,
             ...updatedValues,
           });
