@@ -1,11 +1,11 @@
-import type { IValidatorFn } from "../lib/form";
-import type { IList, IStoreActions } from "../store/types";
+import type { IValidatorFn } from "../../lib/form";
+import type { IList, IStoreActions } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
-import { useForm } from "../lib/form";
+import { useForm } from "../../lib/form";
 
 import styles from "./NewListForm.module.css";
 
