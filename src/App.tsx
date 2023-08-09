@@ -1,29 +1,13 @@
 import type { Component } from "solid-js";
 
-import { Routes, Route, useParams, A } from "@solidjs/router";
+import { Routes, Route } from "@solidjs/router";
 
 import styles from "./App.module.css";
 import { Home } from "./pages/Home";
 import { ListView } from "./pages/ListView";
 import { NewItem } from "./pages/NewItem/NewItem";
 import { NewList } from "./pages/NewList";
-
-const List: Component = () => {
-  const params = useParams();
-
-  return <div>Play {params.listId}</div>;
-};
-
-const Play: Component = () => {
-  const params = useParams();
-
-  return (
-    <>
-      <div>Play {params.itemId}</div>
-      <div>Play {params.listId}</div>
-    </>
-  );
-};
+import { Play } from "./pages/Play";
 
 const App: Component = () => {
   return (
@@ -32,6 +16,7 @@ const App: Component = () => {
         <Route path="/" component={Home} />
         <Route path="/list/new" component={NewList} />
         <Route path="/list/:listId" component={ListView} />
+        <Route path="/list/:listId/play" component={Play} />
         <Route path="/list/:listId/play/:itemId" component={Play} />
         <Route path="/list/:listId/item/new" component={NewItem} />
       </Routes>
