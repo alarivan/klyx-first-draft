@@ -1,6 +1,8 @@
+import type { Component } from "solid-js";
+
 import { A } from "@solidjs/router";
 import { FiPlus } from "solid-icons/fi";
-import { Component, Show, For } from "solid-js";
+import { Show, For } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
 

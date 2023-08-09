@@ -34,7 +34,7 @@ export type IStoreActions = {
   reorderItems(listId: IList["id"], items: IList["items"]): void;
   addItem(
     listId: IList["id"],
-    item: Pick<IListItem, "name" | "description">,
+    item: IListItemCreateObject,
   ): void;
   removeItem(listId: IList["id"], itemId: IListItem["id"]): void;
   updateItem(

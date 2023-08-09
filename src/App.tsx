@@ -5,6 +5,7 @@ import { Routes, Route, useParams, A } from "@solidjs/router";
 import styles from "./App.module.css";
 import { Home } from "./pages/Home";
 import { ListView } from "./pages/ListView";
+import { NewItem } from "./pages/NewItem/NewItem";
 import { NewList } from "./pages/NewList";
 
 const List: Component = () => {
@@ -32,6 +33,7 @@ const App: Component = () => {
         <Route path="/list/new" component={NewList} />
         <Route path="/list/:listId" component={ListView} />
         <Route path="/list/:listId/play/:itemId" component={Play} />
+        <Route path="/list/:listId/item/new" component={NewItem} />
       </Routes>
     </div>
   );
