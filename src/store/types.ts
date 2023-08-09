@@ -21,7 +21,7 @@ export interface IList {
 
 export type IStore = { lists: Array<IList> };
 
-export type IListItemWithIndex = { item: IListItem; index: number };
+export type IListItemWithIndex = { data: IListItem; index: number };
 
 export type IStoreActions = {
   add(list: Pick<IList, "name" | "description">): void;

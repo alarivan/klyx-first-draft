@@ -82,7 +82,7 @@ export const createStoreValue = (initialState?: IStore) => {
         if (list) {
           const index = list.items.findIndex(({ id }) => id === itemId);
           if (index !== -1) {
-            return { item: list.items[index], index };
+            return { data: list.items[index], index };
           }
         }
 

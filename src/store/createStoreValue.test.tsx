@@ -242,7 +242,7 @@ describe(createStoreValue, () => {
 
           actions.updateItem(listId, item.id, updatedValues);
 
-          expect(actions.findItem(listId, item.id)?.item).toEqual({
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
             ...item,
             ...updatedValues,
           });

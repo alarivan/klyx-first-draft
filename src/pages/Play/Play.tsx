@@ -15,7 +15,7 @@ export const Play: Component = () => {
   const list = actions.find(params.listId);
   const item = params.itemId
     ? actions.findItem(params.listId, params.itemId)
-    : list?.items[0];
+    : { data: list?.items[0], index: 0 };
 
   createEffect(() => {
     if (!list) {
@@ -29,7 +29,7 @@ export const Play: Component = () => {
   return (
     <>
       <div>{list?.name}</div>
-      <div>{item?.name}</div>
+      <div>{item?.data?.name}</div>
     </>
   );
 };
