@@ -1,6 +1,6 @@
 module.exports = {
     "parser": "@typescript-eslint/parser",
-    "plugins": ["solid", "@typescript-eslint"],
+    "plugins": ["solid", "prettier", "@typescript-eslint"],
     "extends": [
         "eslint:recommended",
         "plugin:solid/typescript",
@@ -31,6 +31,9 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "prettier/prettier": "error",
+        "arrow-body-style": "off",
+        "prefer-arrow-callback": "off",
         "import/order": [
             "error",
             {
@@ -58,5 +61,11 @@ module.exports = {
                 "caughtErrorsIgnorePattern": "^_"
             }
         ],
+        "@typescript-eslint/consistent-type-imports": [
+            "error",
+            {
+                "prefer": "type-imports"
+            }
+        ]
     }
 }
