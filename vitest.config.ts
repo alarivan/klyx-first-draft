@@ -25,7 +25,7 @@ export default defineConfig({
     ],
     coverage: {
       provider: "v8",
-      reporter: ["text"],
+      reporter: ["text", "html"],
     },
   },
   resolve: {
