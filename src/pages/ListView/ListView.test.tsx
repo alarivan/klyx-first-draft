@@ -1,9 +1,8 @@
 import type { Mock } from "vitest";
 
-import { useParams } from "@solidjs/router";
-import { render, screen } from "@solidjs/testing-library";
+import { Router, useNavigate, useParams } from "@solidjs/router";
+import { cleanup, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
-import "@testing-library/jest-dom";
 
 import { StoreProvider } from "../../store/context";
 import { createListWithItems } from "../../store/helpers";
@@ -14,55 +13,71 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   { name: "item1", description: "item1desc" },
 ]);
 
-vi.mock("@solidjs/router", () => {
+vi.mock("@solidjs/router", async () => {
+  const mod: any = await vi.importActual("@solidjs/router");
   return {
-    Navigate: vi.fn().mockReturnValue("Im navigatin"),
-    A: vi.fn().mockReturnValue("Im an A"),
+    ...mod,
     useParams: vi.fn(),
+    useNavigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
+const mockUseNavigate = useNavigate as Mock;
 
 describe("ListView", () => {
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
+    mockUseNavigate.mockReturnValue(vi.fn());
   });
 
-  afterAll(() => {
-    vi.restoreAllMocks();
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   it("renders list when list is in store", () => {
     render(() => (
-      <StoreProvider initalStore={{ lists: [list] }}>
-        <ListView />
-      </StoreProvider>
+      <Router>
+        <StoreProvider initalStore={{ lists: [list] }}>
+          <ListView />
+        </StoreProvider>
+      </Router>
     ));
 
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list1desc")).toBeInTheDocument();
     expect(screen.getByText("item1")).toBeInTheDocument();
+    expect(screen.getByText("Add item")).toHaveAttribute(
+      "href",
+      `/list/${list.id}/item/new`,
+    );
   });
 
   it("renders list when list without items is in store", () => {
     render(() => (
-      <StoreProvider initalStore={{ lists: [{ ...list, items: [] }] }}>
-        <ListView />
-      </StoreProvider>
+      <Router>
+        <StoreProvider initalStore={{ lists: [{ ...list, items: [] }] }}>
+          <ListView />
+        </StoreProvider>
+      </Router>
     ));
 
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list1desc")).toBeInTheDocument();
   });
 
-  it("render navigation without lists", () => {
+  it("redirects when list is not found", () => {
+    const mockNavigate = vi.fn();
+    mockUseNavigate.mockReturnValue(mockNavigate);
+
     render(() => (
-      <StoreProvider initalStore={{ lists: [] }}>
-        <ListView />
-      </StoreProvider>
+      <Router>
+        <StoreProvider initalStore={{ lists: [] }}>
+          <ListView />
+        </StoreProvider>
+      </Router>
     ));
 
-    expect(screen.getByText("Im navigatin")).toBeInTheDocument();
+    expect(mockNavigate).toHaveBeenCalledOnce();
   });
 });
