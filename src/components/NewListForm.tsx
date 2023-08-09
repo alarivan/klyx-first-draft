@@ -1,15 +1,17 @@
-import { A } from "@solidjs/router";
-import { Component, Show } from "solid-js";
+import type { IValidatorFn } from "../lib/form";
+import type { IList, IStoreActions } from "../store/types";
+import type { Component } from "solid-js";
 
-import { IValidatorFn, useForm } from "../lib/form";
-import { IList, IStoreActions } from "../store/types";
+import { A } from "@solidjs/router";
+import { Show } from "solid-js";
+
+import { useForm } from "../lib/form";
 
 import styles from "./NewListForm.module.css";
 
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
 }> = (props) => {
-
   const fieldNamesConst = ["name", "description"] as const;
   const fieldNames = fieldNamesConst as unknown as string[];
   const { validate, formSubmit, errors } = useForm({
@@ -18,13 +20,19 @@ export const NewListForm: Component<{
   });
 
   const submitForm = (e: HTMLFormElement) => {
-    const elements = e.elements as unknown as {name: HTMLInputElement, description: HTMLTextAreaElement}
-    const values: Pick<IList, "name" | "description"> = fieldNamesConst.reduce((acc, name) => {
-      if(elements[name].value) {
-        acc[name] = elements[name].value
-      }
-      return acc;
-    }, {} as Pick<IList, "name" | "description">)
+    const elements = e.elements as unknown as {
+      name: HTMLInputElement;
+      description: HTMLTextAreaElement;
+    };
+    const values: Pick<IList, "name" | "description"> = fieldNamesConst.reduce(
+      (acc, name) => {
+        if (elements[name].value) {
+          acc[name] = elements[name].value;
+        }
+        return acc;
+      },
+      {} as Pick<IList, "name" | "description">,
+    );
 
     props.onSubmit(values);
   };
@@ -49,13 +57,16 @@ export const NewListForm: Component<{
         <Show when={errors.name}>{errors.name}</Show>
       </div>
       <div class="field-block">
-        <textarea name="description" aria-label="list description" rows="3" use:validate={[lg]} />
+        <textarea
+          name="description"
+          aria-label="list description"
+          rows="3"
+          use:validate={[lg]}
+        />
         <Show when={errors.description}>{errors.description}</Show>
       </div>
       <button type="submit">Add list</button>
-      <A href='/' >
-        Cancel
-      </A>
+      <A href="/">Cancel</A>
     </form>
   );
 };

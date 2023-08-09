@@ -1,4 +1,4 @@
-import { IValidatorFn } from "./src/lib/form";
+import type { IValidatorFn } from "./src/lib/form";
 
 declare module "solid-js" {
   namespace JSX {

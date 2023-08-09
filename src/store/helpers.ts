@@ -1,6 +1,6 @@
-import { createUniqueId } from "solid-js";
+import type { IList, IListItem, IListItemCreateObject } from "./types";
 
-import { IList, IListItem, IListItemCreateObject } from "./types";
+import { createUniqueId } from "solid-js";
 
 export const createList = ({
   name,

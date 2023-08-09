@@ -13,7 +13,9 @@ describe("StoreProvider", () => {
   });
 
   it("renders provider with children and initialStore", () => {
-    render(() => <StoreProvider initalStore={{ lists: [] }}>children</StoreProvider>);
+    render(() => (
+      <StoreProvider initalStore={{ lists: [] }}>children</StoreProvider>
+    ));
 
     expect(screen.getByText("children")).toBeInTheDocument();
   });

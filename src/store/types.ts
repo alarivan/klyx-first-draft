@@ -32,10 +32,7 @@ export type IStoreActions = {
   play(playId: IList["id"]): void;
   resetStatus(listId: IList["id"]): void;
   reorderItems(listId: IList["id"], items: IList["items"]): void;
-  addItem(
-    listId: IList["id"],
-    item: IListItemCreateObject,
-  ): void;
+  addItem(listId: IList["id"], item: IListItemCreateObject): void;
   removeItem(listId: IList["id"], itemId: IListItem["id"]): void;
   updateItem(
     listId: IList["id"],

@@ -14,9 +14,12 @@ const newMockState = () => {
     {
       name: "itemName2",
     },
-  ].reduce((list: IList, item) => {
-    return { ...list, items: [...list.items, createListItem(item)] };
-  }, createList({ name: "name", description: "desc" }));
+  ].reduce(
+    (list: IList, item) => {
+      return { ...list, items: [...list.items, createListItem(item)] };
+    },
+    createList({ name: "name", description: "desc" }),
+  );
 
   const emptyList = createList({ name: "name1", description: "desc1" });
 

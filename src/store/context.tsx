@@ -7,7 +7,9 @@ import { createStoreValue } from "./createStoreValue";
 
 const StoreContext = createContext<IStoreContextValue>();
 
-export const StoreProvider: ParentComponent<{ initalStore?: IStore }> = (props) => {
+export const StoreProvider: ParentComponent<{ initalStore?: IStore }> = (
+  props,
+) => {
   const value = createStoreValue(props.initalStore);
   return (
     <StoreContext.Provider value={value}>
