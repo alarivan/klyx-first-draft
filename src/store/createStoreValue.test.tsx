@@ -194,7 +194,7 @@ describe(createStoreValue, () => {
           const itemId = mockState.lists[0].items[1].id;
 
           expect(actions.findItem(listId, itemId)).toEqual({
-            item: mockState.lists[0].items[1],
+            data: mockState.lists[0].items[1],
             index: 1,
           });
           dispose();
