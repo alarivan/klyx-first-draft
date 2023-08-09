@@ -1,10 +1,10 @@
+import type { IList } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { useNavigate } from "@solidjs/router";
 
 import { NewListForm } from "../../components/NewListForm";
 import { useStoreContext } from "../../store/context";
-import { IList } from "../../store/types";
 
 import styles from "./NewList.module.css";
 
@@ -12,12 +12,10 @@ export const NewList: Component = () => {
   const [_, actions] = useStoreContext();
   const navigate = useNavigate();
 
-  const onSubmit = (values:Pick<IList, "name" | "description">) => {
+  const onSubmit = (values: Pick<IList, "name" | "description">) => {
     actions.add(values);
-    navigate('/')
-  }
+    navigate("/");
+  };
 
-  return (
-    <NewListForm onSubmit={onSubmit} />
-  );
+  return <NewListForm onSubmit={onSubmit} />;
 };

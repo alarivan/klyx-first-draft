@@ -1,7 +1,7 @@
 import type { Mock } from "vitest";
 
 import { Router, useNavigate, useParams } from "@solidjs/router";
-import { cleanup, render, screen } from "@solidjs/testing-library";
+import { render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { StoreProvider } from "../../store/context";
@@ -26,9 +26,10 @@ const mockUseParams = useParams as Mock;
 const mockUseNavigate = useNavigate as Mock;
 
 describe("ListView", () => {
+  const mockNavigate = vi.fn();
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
-    mockUseNavigate.mockReturnValue(vi.fn());
+    mockUseNavigate.mockReturnValue(mockNavigate);
   });
 
   afterEach(() => {
@@ -67,9 +68,6 @@ describe("ListView", () => {
   });
 
   it("redirects when list is not found", () => {
-    const mockNavigate = vi.fn();
-    mockUseNavigate.mockReturnValue(mockNavigate);
-
     render(() => (
       <Router>
         <StoreProvider initalStore={{ lists: [] }}>

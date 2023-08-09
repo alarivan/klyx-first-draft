@@ -26,9 +26,10 @@ const mockUseParams = useParams as Mock;
 const mockUseNavigate = useNavigate as Mock;
 
 describe("NewItem", () => {
+  const mockNavigate = vi.fn();
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
-    mockUseNavigate.mockReturnValue(vi.fn());
+    mockUseNavigate.mockReturnValue(mockNavigate);
   });
 
   afterEach(() => {
@@ -49,9 +50,6 @@ describe("NewItem", () => {
   });
 
   it("redirects when list is not found", () => {
-    const mockNavigate = vi.fn();
-    mockUseNavigate.mockReturnValue(mockNavigate);
-
     render(() => (
       <Router>
         <StoreProvider initalStore={{ lists: [] }}>
@@ -66,7 +64,7 @@ describe("NewItem", () => {
   it("submits form when all inputs are valid", () => {
     render(() => (
       <Router>
-        <StoreProvider>
+        <StoreProvider initalStore={{ lists: [list] }}>
           <NewItem />
         </StoreProvider>
       </Router>
@@ -85,5 +83,7 @@ describe("NewItem", () => {
 
     const button = screen.getByText("Add item");
     fireEvent.click(button);
+
+    expect(mockNavigate).toHaveBeenCalledWith(`/list/${list.id}`);
   });
 });

@@ -1,13 +1,32 @@
-import { Router } from "@solidjs/router";
-import { cleanup, fireEvent, render, screen } from "@solidjs/testing-library";
+import type { Mock } from "vitest";
+
+import { Router, useNavigate } from "@solidjs/router";
+import { fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { StoreProvider } from "../../store/context";
 
 import { NewList } from "./NewList";
 
+vi.mock("@solidjs/router", async () => {
+  const mod: any = await vi.importActual("@solidjs/router");
+  return {
+    ...mod,
+    useNavigate: vi.fn(),
+  };
+});
+
+const mockUseNavigate = useNavigate as Mock;
+
 describe("NewList", () => {
-  afterEach(cleanup);
+  const mockNavigate = vi.fn();
+  beforeEach(() => {
+    mockUseNavigate.mockReturnValue(mockNavigate);
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
 
   it("renders new list form", () => {
     render(() => (
@@ -44,5 +63,7 @@ describe("NewList", () => {
 
     const button = screen.getByText("Add list");
     fireEvent.click(button);
+
+    expect(mockNavigate).toHaveBeenCalledWith("/");
   });
 });
