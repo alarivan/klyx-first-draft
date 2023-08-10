@@ -1,4 +1,4 @@
-import type { IList, IListItem, IListItemCreateObject } from "./types";
+import type { IList, IListItem, IListItemDataObject } from "./types";
 
 import { createUniqueId } from "solid-js";
 
@@ -13,18 +13,26 @@ export const createListItem = ({
   name,
   description,
   completed = false,
-}: IListItemCreateObject): IListItem => {
+  counterLimit,
+  counterType,
+  timerSeconds,
+}: IListItemDataObject): IListItem => {
   return {
     id: createUniqueId(),
     name,
     description,
     completed,
+    counterLimit,
+    counterProgress: counterType ? 0 : undefined,
+    counterType,
+    timerSeconds,
+    timerProgress: timerSeconds ? 0 : undefined,
   };
 };
 
 export const createListWithItems = (
   list: Pick<IList, "name" | "description">,
-  items: IListItemCreateObject[] = [],
+  items: IListItemDataObject[] = [],
 ): IList => {
   return items.reduce((list: IList, item) => {
     return { ...list, items: [...list.items, createListItem(item)] };

@@ -1,4 +1,4 @@
-import type { IListItemCreateObject } from "../../store/types";
+import type { IListItemDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { Navigate, useNavigate, useParams } from "@solidjs/router";
@@ -16,7 +16,7 @@ export const NewItem: Component = () => {
 
   const maybeList = () => actions.find(params.listId);
 
-  const onSubmit = (values: IListItemCreateObject) => {
+  const onSubmit = (values: IListItemDataObject) => {
     actions.addItem(params.listId, values);
     navigate(`/list/${params.listId}`);
   };

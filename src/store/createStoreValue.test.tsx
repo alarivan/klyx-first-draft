@@ -1,30 +1,68 @@
-import type { IList } from "./types";
+import type { IList, IListItemDataObject } from "./types";
 
 import { createRoot } from "solid-js";
 import { describe, expect, it } from "vitest";
 
 import { createStoreValue } from "./createStoreValue";
-import { createList, createListItem } from "./helpers";
+import { createList, createListItem, createListWithItems } from "./helpers";
+
+const lists = [
+  Array(4)
+    .fill(undefined)
+    .map((_, idx) => ({
+      name: `item${idx + 1}name`,
+      description: `item${idx + 1}desc`,
+    })),
+  Array(4)
+    .fill(undefined)
+    .map((_, idx) => ({
+      name: `item${idx + 1}name`,
+      description: `item${idx + 1}desc`,
+      completed: true,
+      counterType: "limited",
+      counterLimit: 10,
+      counterProgress: 0,
+      timerSeconds: 60,
+      timerProgress: 20,
+    })),
+  [],
+].map((items, lidx) =>
+  createListWithItems(
+    { name: `list${lidx + 1}`, description: `list${lidx}dec` },
+    items,
+  ),
+);
 
 const newMockState = () => {
-  const listWithItems = [
-    {
-      name: "itemName1",
-    },
-    {
-      name: "itemName2",
-    },
-  ].reduce(
-    (list: IList, item) => {
-      return { ...list, items: [...list.items, createListItem(item)] };
-    },
-    createList({ name: "name", description: "desc" }),
+  const lists = [
+    Array(4)
+      .fill(undefined)
+      .map((_, idx) => ({
+        name: `item${idx + 1}name`,
+        description: `item${idx + 1}desc`,
+      })),
+    Array(4)
+      .fill(undefined)
+      .map((_, idx) => ({
+        name: `item${idx + 1}name`,
+        description: `item${idx + 1}desc`,
+        completed: true,
+        counterType: "limited",
+        counterLimit: 10,
+        counterProgress: 0,
+        timerSeconds: 60,
+        timerProgress: 20,
+      })),
+    [],
+  ].map((items, lidx) =>
+    createListWithItems(
+      { name: `list${lidx + 1}`, description: `list${lidx}dec` },
+      items,
+    ),
   );
 
-  const emptyList = createList({ name: "name1", description: "desc1" });
-
   return {
-    lists: [listWithItems, emptyList],
+    lists,
   };
 };
 
@@ -173,12 +211,14 @@ describe(createStoreValue, () => {
           const mockState = newMockState();
           const [_, actions] = createStoreValue(mockState);
           const id = mockState.lists[0].id;
-          actions.addItem(id, { name: "itemName3", description: "itemDesc3" });
-          expect(actions.find(id)?.items).toHaveLength(3);
-          expect(actions.find(id)?.items[2]).toEqual(
+          actions.addItem(id, { name: "itemNew", description: "itemNew" });
+
+          const items = actions.find(id)?.items;
+          expect(items).toHaveLength(5);
+          expect(items?.[items.length - 1]).toEqual(
             expect.objectContaining({
-              name: "itemName3",
-              description: "itemDesc3",
+              name: "itemNew",
+              description: "itemNew",
               completed: false,
             }),
           );
@@ -220,9 +260,10 @@ describe(createStoreValue, () => {
           const listId = mockState.lists[0].id;
           const itemId = mockState.lists[0].items[0].id;
 
-          expect(actions.find(listId)?.items).toHaveLength(2);
+          expect(actions.find(listId)?.items).toHaveLength(4);
           actions.removeItem(listId, itemId);
-          expect(actions.find(listId)?.items).toHaveLength(1);
+
+          expect(actions.find(listId)?.items).toHaveLength(3);
           expect(actions.findItem(listId, itemId)).toBeUndefined();
           dispose();
         });
@@ -234,14 +275,18 @@ describe(createStoreValue, () => {
           const [_, actions] = createStoreValue(mockState);
           const listId = mockState.lists[0].id;
           const item = mockState.lists[0].items[0];
-          const updatedValues = {
+          const updatedValues: IListItemDataObject = {
             name: "itemNameUpd",
             description: "descUpd",
             completed: true,
+            counterType: "limited",
+            counterLimit: 10,
+            counterProgress: 0,
+            timerSeconds: 60,
+            timerProgress: 20,
           };
 
           actions.updateItem(listId, item.id, updatedValues);
-
           expect(actions.findItem(listId, item.id)?.data).toEqual({
             ...item,
             ...updatedValues,
@@ -251,14 +296,41 @@ describe(createStoreValue, () => {
         });
       });
 
-      it("updates all items in a list to have completed false", () => {
+      it("resets all items state", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
           const [_, actions] = createStoreValue(mockState);
           const id = mockState.lists[0].id;
           actions.resetStatus(id);
           const items = actions.find(id)?.items;
-          expect(items?.every((item) => item.completed)).toBeTruthy;
+          expect(items?.every((item) => !item.completed)).toEqual(true);
+          dispose();
+        });
+      });
+
+      it("resets all items state with counter and timer", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const id = mockState.lists[1].id;
+          actions.resetStatus(id);
+
+          const items = actions.find(id)?.items;
+          expect(
+            items?.every((item) =>
+              item.counterType
+                ? item.counterProgress === 0
+                : item.counterType === undefined,
+            ),
+          ).toEqual(true);
+          expect(
+            items?.every((item) =>
+              item.timerSeconds
+                ? item.timerProgress === 0
+                : item.timerProgress === undefined,
+            ),
+          ).toEqual(true);
+
           dispose();
         });
       });

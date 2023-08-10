@@ -1,5 +1,5 @@
 import type { IValidatorFn } from "../../lib/form";
-import type { IListItemCreateObject } from "../../store/types";
+import type { IListItemDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { A } from "@solidjs/router";
@@ -11,7 +11,7 @@ import styles from "./NewItemForm.module.css";
 
 export const NewItemForm: Component<{
   listId: string;
-  onSubmit: (values: IListItemCreateObject) => void;
+  onSubmit: (values: IListItemDataObject) => void;
 }> = (props) => {
   const fieldNamesConst = ["name", "description"] as const;
   const fieldNames = fieldNamesConst as unknown as string[];
@@ -30,7 +30,7 @@ export const NewItemForm: Component<{
         acc[name] = elements[name].value;
       }
       return acc;
-    }, {} as IListItemCreateObject);
+    }, {} as IListItemDataObject);
 
     props.onSubmit(values);
   };

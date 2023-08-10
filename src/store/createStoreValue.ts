@@ -1,4 +1,4 @@
-import type { IStore, IStoreContextValue } from "./types";
+import type { IListItem, IStore, IStoreContextValue } from "./types";
 
 import { createStore, produce } from "solid-js/store";
 
@@ -43,7 +43,12 @@ export const createStoreValue = (initialState?: IStore) => {
           "lists",
           (list) => list.id === listId,
           (list) => ({
-            items: list.items.map((item) => ({ ...item, completed: false })),
+            items: list.items.map((item) => ({
+              ...item,
+              counterProgress: item.counterType ? 0 : undefined,
+              timerProgress: item.timerSeconds ? 0 : undefined,
+              completed: false,
+            })),
           }),
         );
       },
@@ -68,13 +73,13 @@ export const createStoreValue = (initialState?: IStore) => {
           (list) => ({ items: list.items.filter(({ id }) => id !== itemId) }),
         );
       },
-      updateItem(listId, itemId, item) {
+      updateItem(listId, itemId, newItem) {
         setState(
           "lists",
           (list) => list.id === listId,
           "items",
           (item) => item.id === itemId,
-          () => item,
+          (item: IListItem) => ({ ...item, ...newItem }),
         );
       },
       findItem(listId, itemId) {
