@@ -16,7 +16,7 @@ export const ListView: Component = () => {
 
   createEffect(() => {
     if (!list) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   });
 

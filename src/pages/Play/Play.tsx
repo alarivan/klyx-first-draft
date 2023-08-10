@@ -32,10 +32,10 @@ export const Play: Component = () => {
     const item = maybeItem();
     const list = maybeList();
     if (!list) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
     if (list && !item) {
-      navigate(`/list/${params.listId}`);
+      navigate(`/list/${params.listId}`, { replace: true });
     }
   });
 

@@ -17,7 +17,7 @@ export const NewItem: Component = () => {
   const list = actions.find(params.listId);
   createEffect(() => {
     if (!list) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   });
 
