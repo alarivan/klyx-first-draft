@@ -1,7 +1,7 @@
 import type { Mock } from "vitest";
 
-import { Router, useNavigate, useParams } from "@solidjs/router";
-import { cleanup, fireEvent, render, screen } from "@solidjs/testing-library";
+import { Navigate, Router, useNavigate, useParams } from "@solidjs/router";
+import { fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { StoreProvider } from "../../store/context";
@@ -19,11 +19,13 @@ vi.mock("@solidjs/router", async () => {
     ...mod,
     useParams: vi.fn(),
     useNavigate: vi.fn(),
+    Navigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
 const mockUseNavigate = useNavigate as Mock;
+const mockNavigateComponent = Navigate as Mock;
 
 describe("NewItem", () => {
   const mockNavigate = vi.fn();
@@ -58,7 +60,7 @@ describe("NewItem", () => {
       </Router>
     ));
 
-    expect(mockNavigate).toHaveBeenCalledOnce();
+    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
   });
 
   it("submits form when all inputs are valid", () => {

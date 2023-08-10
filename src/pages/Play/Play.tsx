@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 
-import { useNavigate, useParams } from "@solidjs/router";
-import { createEffect, Show } from "solid-js";
+import { Navigate, useParams } from "@solidjs/router";
+import { Show } from "solid-js";
 
 import { PlayView } from "../../components/PlayView";
 import { useStoreContext } from "../../store/context";
@@ -10,7 +10,6 @@ import styles from "./Play.module.css";
 
 export const Play: Component = () => {
   const params = useParams();
-  const navigate = useNavigate();
   const [_, actions] = useStoreContext();
 
   const maybeList = () => actions.find(params.listId);
@@ -28,20 +27,16 @@ export const Play: Component = () => {
     return undefined;
   };
 
-  createEffect(() => {
-    const item = maybeItem();
-    const list = maybeList();
-    if (!list) {
-      navigate("/", { replace: true });
-    }
-    if (list && !item) {
-      navigate(`/list/${params.listId}`, { replace: true });
-    }
-  });
-
   return (
-    <Show when={maybeList() && maybeItem()}>
-      <PlayView list={maybeList()!} item={maybeItem()!} />
+    <Show when={maybeList()} fallback={<Navigate href="/" />}>
+      {(list) => (
+        <Show
+          when={maybeItem()}
+          fallback={<Navigate href={`/list/${params.listId}`} />}
+        >
+          {(item) => <PlayView list={list()} item={item()} />}
+        </Show>
+      )}
     </Show>
   );
 };

@@ -1,8 +1,8 @@
 import type { IListItemCreateObject } from "../../store/types";
 import type { Component } from "solid-js";
 
-import { useNavigate, useParams } from "@solidjs/router";
-import { createEffect } from "solid-js";
+import { Navigate, useNavigate, useParams } from "@solidjs/router";
+import { Show } from "solid-js";
 
 import { NewItemForm } from "../../components/NewItemForm";
 import { useStoreContext } from "../../store/context";
@@ -14,17 +14,16 @@ export const NewItem: Component = () => {
   const navigate = useNavigate();
   const [_, actions] = useStoreContext();
 
-  const list = actions.find(params.listId);
-  createEffect(() => {
-    if (!list) {
-      navigate("/", { replace: true });
-    }
-  });
+  const maybeList = () => actions.find(params.listId);
 
   const onSubmit = (values: IListItemCreateObject) => {
     actions.addItem(params.listId, values);
     navigate(`/list/${params.listId}`);
   };
 
-  return <NewItemForm listId={params.listId} onSubmit={onSubmit} />;
+  return (
+    <Show when={maybeList()} fallback={<Navigate href="/" />}>
+      <NewItemForm listId={params.listId} onSubmit={onSubmit} />
+    </Show>
+  );
 };

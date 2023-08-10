@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 
-import { Router, useNavigate, useParams } from "@solidjs/router";
+import { Navigate, Router, useParams } from "@solidjs/router";
 import { render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
@@ -18,24 +18,42 @@ vi.mock("@solidjs/router", async () => {
   return {
     ...mod,
     useParams: vi.fn(),
-    useNavigate: vi.fn(),
+    Navigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
-const mockUseNavigate = useNavigate as Mock;
+const mockNavigateComponent = Navigate as Mock;
 
-describe("NewItem", () => {
+describe("Play", () => {
   beforeEach(() => {
-    mockUseParams.mockReturnValue({ listId: list.id });
-    mockUseNavigate.mockReturnValue(vi.fn());
+    mockUseParams.mockReturnValue({
+      listId: list.id,
+      itemId: list.items[0].id,
+    });
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders play view", () => {
+  it("renders play with itemId is provided", () => {
+    render(() => (
+      <Router>
+        <StoreProvider initalStore={{ lists: [list] }}>
+          <Play />
+        </StoreProvider>
+      </Router>
+    ));
+
+    expect(screen.getByText(list.name)).toBeInTheDocument();
+    expect(screen.getByText(list.items[0].name)).toBeInTheDocument();
+  });
+
+  it("renders play view without itemId", () => {
+    mockUseParams.mockReturnValue({
+      listId: list.id,
+    });
     render(() => (
       <Router>
         <StoreProvider initalStore={{ lists: [list] }}>
@@ -49,9 +67,6 @@ describe("NewItem", () => {
   });
 
   it("redirects when list is not found", () => {
-    const mockNavigate = vi.fn();
-    mockUseNavigate.mockReturnValue(mockNavigate);
-
     render(() => (
       <Router>
         <StoreProvider initalStore={{ lists: [] }}>
@@ -60,14 +75,11 @@ describe("NewItem", () => {
       </Router>
     ));
 
-    expect(mockNavigate).toHaveBeenCalledOnce();
+    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
   });
 
   it("redirects when item is not found", () => {
     mockUseParams.mockReturnValue({ listId: list.id, itemId: "fake" });
-    const mockNavigate = vi.fn();
-    mockUseNavigate.mockReturnValue(mockNavigate);
-
     render(() => (
       <Router>
         <StoreProvider initalStore={{ lists: [list] }}>
@@ -76,6 +88,25 @@ describe("NewItem", () => {
       </Router>
     ));
 
-    expect(mockNavigate).toHaveBeenCalledOnce();
+    expect(mockNavigateComponent).toHaveBeenCalledWith({
+      href: `/list/${list.id}`,
+    });
+  });
+
+  it("redirects when there is no items in a list and no itemId", () => {
+    mockUseParams.mockReturnValue({
+      listId: list.id,
+    });
+    render(() => (
+      <Router>
+        <StoreProvider initalStore={{ lists: [{ ...list, items: [] }] }}>
+          <Play />
+        </StoreProvider>
+      </Router>
+    ));
+
+    expect(mockNavigateComponent).toHaveBeenCalledWith({
+      href: `/list/${list.id}`,
+    });
   });
 });

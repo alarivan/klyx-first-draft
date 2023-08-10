@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 
-import { Router, useNavigate, useParams } from "@solidjs/router";
+import { Navigate, Router, useParams } from "@solidjs/router";
 import { render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 import "@testing-library/jest-dom";
@@ -19,17 +19,16 @@ vi.mock("@solidjs/router", async () => {
   return {
     ...mod,
     useParams: vi.fn(),
-    useNavigate: vi.fn(),
+    Navigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
-const mockUseNavigate = useNavigate as Mock;
+const mockNavigateComponent = Navigate as Mock;
 
 describe("PlayDone", () => {
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
-    mockUseNavigate.mockReturnValue(vi.fn());
   });
 
   afterEach(() => {
@@ -58,8 +57,6 @@ describe("PlayDone", () => {
 
   it("redirects when list is not found", () => {
     mockUseParams.mockReturnValue({ listId: "fake" });
-    const mockNavigate = vi.fn();
-    mockUseNavigate.mockReturnValue(mockNavigate);
 
     render(() => (
       <Router>
@@ -69,6 +66,6 @@ describe("PlayDone", () => {
       </Router>
     ));
 
-    expect(mockNavigate).toHaveBeenCalledOnce();
+    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
   });
 });

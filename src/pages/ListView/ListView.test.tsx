@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 
-import { Router, useNavigate, useParams } from "@solidjs/router";
+import { Navigate, Router, useParams } from "@solidjs/router";
 import { render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
@@ -18,18 +18,16 @@ vi.mock("@solidjs/router", async () => {
   return {
     ...mod,
     useParams: vi.fn(),
-    useNavigate: vi.fn(),
+    Navigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
-const mockUseNavigate = useNavigate as Mock;
+const mockNavigateComponent = Navigate as Mock;
 
 describe("ListView", () => {
-  const mockNavigate = vi.fn();
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
-    mockUseNavigate.mockReturnValue(mockNavigate);
   });
 
   afterEach(() => {
@@ -47,6 +45,25 @@ describe("ListView", () => {
 
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list1desc")).toBeInTheDocument();
+    expect(screen.getByText("item1")).toBeInTheDocument();
+    expect(screen.getByText("Add item")).toHaveAttribute(
+      "href",
+      `/list/${list.id}/item/new`,
+    );
+  });
+
+  it("renders list without description", () => {
+    render(() => (
+      <Router>
+        <StoreProvider
+          initalStore={{ lists: [{ ...list, description: undefined }] }}
+        >
+          <ListView />
+        </StoreProvider>
+      </Router>
+    ));
+
+    expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("item1")).toBeInTheDocument();
     expect(screen.getByText("Add item")).toHaveAttribute(
       "href",
@@ -76,6 +93,6 @@ describe("ListView", () => {
       </Router>
     ));
 
-    expect(mockNavigate).toHaveBeenCalledOnce();
+    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
   });
 });
