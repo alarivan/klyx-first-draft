@@ -35,6 +35,7 @@
     "vitest": "^0.32.2"
   },
   "dependencies": {
+    "@solid-primitives/storage": "^2.1.0",
     "@solidjs/router": "^0.8.2",
     "@thisbeyond/solid-dnd": "^0.7.4",
     "solid-icons": "^1.0.11",

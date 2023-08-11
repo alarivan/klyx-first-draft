@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@solid-primitives/storage':
+    specifier: ^2.1.0
+    version: 2.1.0(solid-js@1.7.10)
   '@solidjs/router':
     specifier: ^0.8.2
     version: 0.8.2(solid-js@1.7.10)
@@ -810,6 +813,19 @@ packages:
       solid-js: 1.7.10
     dev: false
 
+  /@solid-primitives/storage@2.1.0(solid-js@1.7.10):
+    resolution: {integrity: sha512-7FxV+2BU7iePNHffl9qMTpIBg+Z+rUSTC7ZL7m3zRqz/7gEQlI51P/I+GxZXnh2Yo4GIJ3YSq5mlYR9I+KmKIA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+      solid-start: ^0.2.26
+    peerDependenciesMeta:
+      solid-start:
+        optional: true
+    dependencies:
+      '@solid-primitives/utils': 6.2.1(solid-js@1.7.10)
+      solid-js: 1.7.10
+    dev: false
+
   /@solid-primitives/transition-group@1.0.2(solid-js@1.7.10):
     resolution: {integrity: sha512-+o3J7TnU0/Sok+LKA0z0wvhim88dpd2eFBk8/05adE6wVypVlME8sKqTMO+xRv8HoT4Kq3sczmvwV07FKg2n+g==}
     peerDependencies:
@@ -820,6 +836,14 @@ packages:
 
   /@solid-primitives/utils@6.2.0(solid-js@1.7.10):
     resolution: {integrity: sha512-T62WlLwKkbmicsw/xpwMQyv9MmZRSaVyutXfS5icc9v0cb8qGMUxRxr5LVvZHYQCZ9DEFboZB0r711xsbVBbeA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.7.10
+    dev: false
+
+  /@solid-primitives/utils@6.2.1(solid-js@1.7.10):
+    resolution: {integrity: sha512-TsecNzxiO5bLfzqb4OOuzfUmdOROcssuGqgh5rXMMaasoFZ3GoveUgdY1wcf17frMJM7kCNGNuK34EjErneZkg==}
     peerDependencies:
       solid-js: ^1.6.12
     dependencies:

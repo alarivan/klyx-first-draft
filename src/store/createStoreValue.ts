@@ -1,11 +1,15 @@
 import type { IListItem, IStore, IStoreContextValue } from "./types";
 
+import { makePersisted } from "@solid-primitives/storage";
 import { createStore, produce } from "solid-js/store";
 
 import { createList, createListItem } from "./helpers";
 
 export const createStoreValue = (initialState?: IStore) => {
-  const [state, setState] = createStore<IStore>(initialState || { lists: [] });
+  const [state, setState] = makePersisted(
+    createStore<IStore>(initialState || { lists: [] }),
+    { name: "todoplus" },
+  );
   const value: IStoreContextValue = [
     state,
     {
