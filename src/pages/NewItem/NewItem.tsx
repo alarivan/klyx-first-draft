@@ -7,8 +7,6 @@ import { Show } from "solid-js";
 import { NewItemForm } from "../../components/NewItemForm";
 import { useStoreContext } from "../../store/context";
 
-import styles from "./NewItem.module.css";
-
 export const NewItem: Component = () => {
   const params = useParams();
   const navigate = useNavigate();

@@ -5,8 +5,6 @@ import { For, Show } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
 
-import styles from "./ListView.module.css";
-
 export const ListView: Component = () => {
   const params = useParams();
   const [_, actions] = useStoreContext();

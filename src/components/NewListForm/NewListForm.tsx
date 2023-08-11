@@ -7,8 +7,6 @@ import { Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
 
-import styles from "./NewListForm.module.css";
-
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
 }> = (props) => {

@@ -1,12 +1,12 @@
-import { createStore } from "solid-js/store";
-
-import {
+import type {
   ExcludeFromTypeInference,
   IFormErrorRecord,
   IFormFieldRecord,
   IFormInputElement,
   IValidatorFn,
 } from "./types";
+
+import { createStore } from "solid-js/store";
 
 function checkValidity(element: IFormInputElement) {
   element.setCustomValidity("");

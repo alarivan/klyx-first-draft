@@ -6,8 +6,6 @@ import { Show } from "solid-js";
 import { PlayView } from "../../components/PlayView";
 import { useStoreContext } from "../../store/context";
 
-import styles from "./Play.module.css";
-
 export const Play: Component = () => {
   const params = useParams();
   const [_, actions] = useStoreContext();

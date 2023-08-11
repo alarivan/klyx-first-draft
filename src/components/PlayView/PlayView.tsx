@@ -4,8 +4,6 @@ import type { Component } from "solid-js";
 import { A } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
 
-import styles from "./PlayView.module.css";
-
 export const PlayView: Component<{ list: IList; item: IListItemWithIndex }> = (
   props,
 ) => {

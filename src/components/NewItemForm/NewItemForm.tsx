@@ -7,8 +7,6 @@ import { Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
 
-import styles from "./NewItemForm.module.css";
-
 export const NewItemForm: Component<{
   listId: string;
   onSubmit: (values: IListItemDataObject) => void;

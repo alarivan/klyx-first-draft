@@ -1,37 +1,10 @@
-import type { IList, IListItemDataObject } from "./types";
+import type { IListItemDataObject } from "./types";
 
 import { createRoot } from "solid-js";
 import { describe, expect, it } from "vitest";
 
 import { createStoreValue } from "./createStoreValue";
-import { createList, createListItem, createListWithItems } from "./helpers";
-
-const lists = [
-  Array(4)
-    .fill(undefined)
-    .map((_, idx) => ({
-      name: `item${idx + 1}name`,
-      description: `item${idx + 1}desc`,
-    })),
-  Array(4)
-    .fill(undefined)
-    .map((_, idx) => ({
-      name: `item${idx + 1}name`,
-      description: `item${idx + 1}desc`,
-      completed: true,
-      counterType: "limited",
-      counterLimit: 10,
-      counterProgress: 0,
-      timerSeconds: 60,
-      timerProgress: 20,
-    })),
-  [],
-].map((items, lidx) =>
-  createListWithItems(
-    { name: `list${lidx + 1}`, description: `list${lidx}dec` },
-    items,
-  ),
-);
+import { createListWithItems } from "./helpers";
 
 const newMockState = () => {
   const lists = [
