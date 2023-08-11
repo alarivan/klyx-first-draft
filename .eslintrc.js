@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
-  plugins: ["solid", "prettier", "@typescript-eslint"],
+  plugins: ["solid", "prettier", "@typescript-eslint", "unused-imports"],
   extends: [
     "eslint:recommended",
     "plugin:solid/typescript",
@@ -53,11 +53,16 @@ module.exports = {
         },
       },
     ],
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
       {
-        argsIgnorePattern: "^_",
+        vars: "all",
         varsIgnorePattern: "^_",
+        args: "after-used",
+        argsIgnorePattern: "^_",
         caughtErrorsIgnorePattern: "^_",
       },
     ],
