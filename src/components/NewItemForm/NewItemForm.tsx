@@ -13,12 +13,16 @@ export const NewItemForm: Component<{
 }> = (props) => {
   const fieldNamesConst = ["name", "description"] as const;
   const fieldNames = fieldNamesConst as unknown as string[];
-  const { validate, formSubmit, errors } = useForm({
+  const {
+    validate: _validate,
+    formSubmit: _formSubmit,
+    errors,
+  } = useForm({
     fieldNames,
     errorClass: "err",
   });
 
-  const submitForm = (e: HTMLFormElement) => {
+  const submitForm = () => (e: HTMLFormElement) => {
     const elements = e.elements as unknown as {
       name: HTMLInputElement;
       description: HTMLTextAreaElement;
@@ -41,14 +45,14 @@ export const NewItemForm: Component<{
   };
 
   return (
-    <form use:formSubmit={submitForm}>
+    <form use:_formSubmit={submitForm()}>
       <div class="field-block">
         <input
           name="name"
           type="text"
           placeholder="Item name"
           required
-          use:validate={[lg]}
+          use:_validate={[lg]}
         />
         <Show when={errors.name}>{errors.name}</Show>
       </div>
@@ -57,7 +61,7 @@ export const NewItemForm: Component<{
           name="description"
           aria-label="item description"
           rows="3"
-          use:validate={[lg]}
+          use:_validate={[lg]}
         />
         <Show when={errors.description}>{errors.description}</Show>
       </div>
