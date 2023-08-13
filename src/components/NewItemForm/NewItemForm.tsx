@@ -7,6 +7,8 @@ import { Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
 
+import styles from "./NewItemForm.module.css";
+
 export const NewItemForm: Component<{
   listId: string;
   onSubmit: (values: IListItemDataObject) => void;
@@ -25,7 +27,7 @@ export const NewItemForm: Component<{
     values,
   } = useForm({
     fieldNames,
-    errorClass: "err",
+    errorClass: "error",
   });
 
   const submitForm = (e: HTMLFormElement) => {
@@ -64,19 +66,20 @@ export const NewItemForm: Component<{
 
   return (
     <form use:_formSubmit={submitForm}>
-      <div class="field-block">
-        <label for="name">Item name</label>
+      <div class={styles.inputGroup}>
+        <label for="name">Item name*</label>
         <input
           id="name"
           name="name"
           type="text"
-          placeholder="Item name"
           required
           use:_initFormInput={[minLength(3)]}
         />
-        <Show when={errors.name}>{errors.name}</Show>
+        <Show when={errors.name}>
+          <div class={styles.inputError}>{errors.name}</div>
+        </Show>
       </div>
-      <div class="field-block">
+      <div class={styles.inputGroup}>
         <label for="description">Description</label>
         <textarea
           id="description"
@@ -86,7 +89,7 @@ export const NewItemForm: Component<{
           use:_initFormInput
         />
       </div>
-      <div class="field-block">
+      <div class={styles.inputGroup}>
         <label for="counterType">Counter</label>
         <select id="counterType" name="counterType" use:_initFormInput>
           <option value="none">None</option>
@@ -96,7 +99,7 @@ export const NewItemForm: Component<{
       </div>
       <Show when={values().counterType === "limited"}>
         <label for="counterLimit">Counter limit</label>
-        <div class="field-block">
+        <div class={styles.inputGroup}>
           <input
             id="counterLimit"
             name="counterLimit"
@@ -107,7 +110,7 @@ export const NewItemForm: Component<{
           />
         </div>
       </Show>
-      <div class="field-block">
+      <div class={styles.inputGroup}>
         <label for="timerSeconds">Timer</label>
         <input
           id="timerSeconds"
@@ -117,8 +120,14 @@ export const NewItemForm: Component<{
           use:_initFormInput
         />
       </div>
-      <button type="submit">Add item</button>
-      <A href={`/list/${props.listId}`}>Cancel</A>
+      <div class={styles.actions}>
+        <button class={styles.submit} type="submit">
+          Add item
+        </button>
+        <div class={styles.cancel}>
+          <A href={`/list/${props.listId}`}>Cancel</A>
+        </div>
+      </div>
     </form>
   );
 };

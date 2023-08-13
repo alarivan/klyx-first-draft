@@ -1,0 +1,44 @@
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+.inputGroup:not(:last-child) {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.inputGroup label {
+  margin-bottom: 4px;
+}
+
+.inputGroup input,
+.inputGroup select {
+  padding: 8px;
+}
+
+.inputGroup :global(.error) {
+  border-color: var(--error);
+}
+
+.inputError {
+  color: #fff;
+  background-color: var(--error);
+  padding: 4px;
+}
+
+.actions * {
+  margin-top: 16px;
+  display: block;
+}
+
+.cancel {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.submit {
+  width: 100%;
+  composes: addListButton from "../../pages/Home/Home.module.css";
+}
