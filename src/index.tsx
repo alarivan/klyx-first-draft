@@ -2,6 +2,7 @@
 import { Router } from "@solidjs/router";
 import { render } from "solid-js/web";
 
+import "modern-normalize";
 import "./index.css";
 import App from "./App";
 import { StoreProvider } from "./store/context";
