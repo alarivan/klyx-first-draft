@@ -10,8 +10,7 @@ import { useForm } from "../../lib/form";
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
 }> = (props) => {
-  const fieldNamesConst = ["name", "description"] as const;
-  const fieldNames = fieldNamesConst as unknown as string[];
+  const fieldNames = ["name", "description"] as const;
   const {
     validate: _validate,
     formSubmit: _formSubmit,
@@ -21,12 +20,12 @@ export const NewListForm: Component<{
     errorClass: "err",
   });
 
-  const submitForm = () => (e: HTMLFormElement) => {
+  const submitForm = (e: HTMLFormElement) => {
     const elements = e.elements as unknown as {
       name: HTMLInputElement;
       description: HTMLTextAreaElement;
     };
-    const values: Pick<IList, "name" | "description"> = fieldNamesConst.reduce(
+    const values: Pick<IList, "name" | "description"> = fieldNames.reduce(
       (acc, name) => {
         if (elements[name].value) {
           acc[name] = elements[name].value;

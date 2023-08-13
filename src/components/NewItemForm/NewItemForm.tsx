@@ -11,8 +11,7 @@ export const NewItemForm: Component<{
   listId: string;
   onSubmit: (values: IListItemDataObject) => void;
 }> = (props) => {
-  const fieldNamesConst = ["name", "description"] as const;
-  const fieldNames = fieldNamesConst as unknown as string[];
+  const fieldNames = ["name", "description"] as const;
   const {
     validate: _validate,
     formSubmit: _formSubmit,
@@ -22,12 +21,12 @@ export const NewItemForm: Component<{
     errorClass: "err",
   });
 
-  const submitForm = () => (e: HTMLFormElement) => {
+  const submitForm = (e: HTMLFormElement) => {
     const elements = e.elements as unknown as {
       name: HTMLInputElement;
       description: HTMLTextAreaElement;
     };
-    const values = fieldNamesConst.reduce((acc, name) => {
+    const values = fieldNames.reduce((acc, name) => {
       if (elements[name].value) {
         acc[name] = elements[name].value;
       }
@@ -45,7 +44,7 @@ export const NewItemForm: Component<{
   };
 
   return (
-    <form use:_formSubmit={submitForm()}>
+    <form use:_formSubmit={submitForm}>
       <div class="field-block">
         <input
           name="name"

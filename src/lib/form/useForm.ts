@@ -46,7 +46,7 @@ export function useForm<T extends string>({
   fieldNames,
   errorClass,
 }: {
-  fieldNames: T[];
+  fieldNames: readonly T[];
   errorClass: string;
 }) {
   const [errors, setErrors] = createStore<
