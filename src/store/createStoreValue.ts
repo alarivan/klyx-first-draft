@@ -49,7 +49,7 @@ export const createStoreValue = (initialState?: IStore) => {
           (list) => ({
             items: list.items.map((item) => ({
               ...item,
-              counterProgress: item.counterType ? 0 : undefined,
+              counterProgress: item.counterType === "none" ? undefined : 0,
               timerProgress: item.timerSeconds ? 0 : undefined,
               completed: false,
             })),

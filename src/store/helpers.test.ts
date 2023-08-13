@@ -22,8 +22,8 @@ describe("helpers", () => {
         name: "name",
         description: "desc",
         counterType: "limited",
-        counterLimit: 10,
-        timerSeconds: 60,
+        counterLimit: "10",
+        timerSeconds: "60",
       });
       expect(listItem).toEqual(
         expect.objectContaining({
@@ -39,6 +39,7 @@ describe("helpers", () => {
         name: "name",
         description: "desc",
         completed: true,
+        counterType: "none",
       });
       expect(listItem).toEqual(
         expect.objectContaining({
@@ -54,8 +55,8 @@ describe("helpers", () => {
         name: "name",
         description: "desc",
         counterType: "limited",
-        counterLimit: 10,
-        timerSeconds: 60,
+        counterLimit: "10",
+        timerSeconds: "60",
       });
       expect(listItem).toEqual(
         expect.objectContaining({
@@ -63,9 +64,9 @@ describe("helpers", () => {
           description: "desc",
           completed: false,
           counterType: "limited",
-          counterLimit: 10,
+          counterLimit: "10",
           counterProgress: 0,
-          timerSeconds: 60,
+          timerSeconds: "60",
           timerProgress: 0,
         }),
       );

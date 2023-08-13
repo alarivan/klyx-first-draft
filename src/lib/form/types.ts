@@ -2,7 +2,10 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ExcludeFromTypeInference<T> = [T][T extends any ? 0 : never];
 
-export type IFormInputElement = HTMLInputElement | HTMLTextAreaElement;
+export type IFormInputElement =
+  | HTMLInputElement
+  | HTMLTextAreaElement
+  | HTMLSelectElement;
 
 export type IValidatorFn = (element: IFormInputElement) => string | undefined;
 

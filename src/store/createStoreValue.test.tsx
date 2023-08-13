@@ -32,8 +32,8 @@ const newMockState = () => {
         counterType: "limited",
         counterLimit: 10,
         counterProgress: 0,
-        timerSeconds: 60,
-        timerProgress: 20,
+        timerSeconds: "60",
+        timerProgress: "20",
       })),
     [],
   ].map((items, lidx) =>
@@ -278,9 +278,9 @@ describe(createStoreValue, () => {
             description: "descUpd",
             completed: true,
             counterType: "limited",
-            counterLimit: 10,
+            counterLimit: "10",
             counterProgress: 0,
-            timerSeconds: 60,
+            timerSeconds: "60",
             timerProgress: 20,
           };
 

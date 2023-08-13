@@ -5,7 +5,7 @@ import { useForm } from "./useForm";
 
 describe("useForm", () => {
   describe("formSubmit", () => {
-    it("should run accessor when there is no inputs to validate", () => {
+    it("should run accessor when there is no inputs to initFormInput", () => {
       createRoot((dispose) => {
         const { formSubmit } = useForm({
           fieldNames: ["name"],
@@ -29,9 +29,9 @@ describe("useForm", () => {
       });
     });
 
-    it("should run accessor when with inputs to validate", () => {
+    it("should run accessor when with inputs to initFormInput", () => {
       createRoot((dispose) => {
-        const { formSubmit, validate } = useForm({
+        const { formSubmit, initFormInput } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
@@ -44,7 +44,7 @@ describe("useForm", () => {
         const accessor = vi.fn();
         const validator = vi.fn().mockReturnValue("error");
 
-        validate(inputElement, () => [validator]);
+        initFormInput(inputElement, () => [validator]);
         formSubmit(formElement, () => accessor);
 
         formElement.onsubmit?.({
@@ -59,10 +59,10 @@ describe("useForm", () => {
     });
   });
 
-  describe("validate", () => {
+  describe("initFormInput", () => {
     it("should set errors and add class on blur and remove both on input", () => {
       createRoot(async (dispose) => {
-        const { validate, errors } = useForm({
+        const { initFormInput, errors } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
@@ -71,7 +71,7 @@ describe("useForm", () => {
         inputElement.name = "name";
         const validator = vi.fn().mockReturnValue("error");
 
-        validate(inputElement, () => [validator]);
+        initFormInput(inputElement, () => [validator]);
 
         await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
         expect(validator).toHaveBeenCalledOnce();
@@ -89,7 +89,7 @@ describe("useForm", () => {
 
     it("should run oninput when errors there is no errors", () => {
       createRoot(async (dispose) => {
-        const { validate } = useForm({
+        const { initFormInput } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
@@ -98,7 +98,7 @@ describe("useForm", () => {
         inputElement.name = "name";
         const validator = vi.fn().mockReturnValue("error");
 
-        validate(inputElement, () => [validator]);
+        initFormInput(inputElement, () => [validator]);
 
         await inputElement.oninput?.(vi.fn() as unknown as Event);
 
@@ -110,7 +110,7 @@ describe("useForm", () => {
 
     it("should run with validator as boolean", () => {
       createRoot(async (dispose) => {
-        const { validate } = useForm({
+        const { initFormInput } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
@@ -118,7 +118,7 @@ describe("useForm", () => {
         const inputElement = document.createElement("input");
         inputElement.name = "name";
 
-        validate(inputElement, () => true);
+        initFormInput(inputElement, () => true);
 
         await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
 
@@ -130,7 +130,7 @@ describe("useForm", () => {
 
     it("should run when there is no errors returend by validators", () => {
       createRoot(async (dispose) => {
-        const { validate } = useForm({
+        const { initFormInput } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
@@ -139,11 +139,35 @@ describe("useForm", () => {
         inputElement.name = "name";
         const validator = vi.fn().mockReturnValue(undefined);
 
-        validate(inputElement, () => [validator]);
+        initFormInput(inputElement, () => [validator]);
 
         await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
 
         expect(inputElement.className).toEqual("");
+
+        dispose();
+      });
+    });
+  });
+
+  describe("values", () => {
+    it("should return values", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput } = useForm({
+          fieldNames: ["name"],
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "name";
+        inputElement.value = "val";
+        const validator = vi.fn().mockReturnValue(undefined);
+
+        initFormInput(inputElement, () => [validator]);
+
+        await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
+
+        expect(values()).toEqual({ name: "val" });
 
         dispose();
       });

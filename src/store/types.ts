@@ -3,10 +3,10 @@ export interface IListItem {
   name: string;
   description?: string;
   completed: boolean;
-  counterType?: "limited" | "unlimited";
-  counterLimit?: number;
+  counterType: "none" | "limited" | "unlimited";
+  counterLimit?: string;
   counterProgress?: number;
-  timerSeconds?: number;
+  timerSeconds?: string;
   timerProgress?: number;
 }
 

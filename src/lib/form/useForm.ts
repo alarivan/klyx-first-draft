@@ -6,6 +6,7 @@ import type {
   IValidatorFn,
 } from "./types";
 
+import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
 
 function checkValidity(element: IFormInputElement) {
@@ -53,8 +54,11 @@ export function useForm<T extends string>({
     IFormErrorRecord<ExcludeFromTypeInference<T>>
   >({});
   const fields: IFormFieldRecord<T> = {} as IFormFieldRecord<T>;
+  const [values, setValues] = createSignal<
+    Partial<Record<ExcludeFromTypeInference<T>, string>>
+  >({});
 
-  const validate = (
+  const initFormInput = (
     ref: IFormInputElement,
     accessor: () => Array<IValidatorFn> | boolean,
   ) => {
@@ -64,6 +68,7 @@ export function useForm<T extends string>({
 
     const config = { element: ref, validators };
     fields[name] = config;
+    setValues((v) => ({ ...v, [name]: ref.value }));
 
     ref.onblur = () => {
       const message = getInputError(ref, validators);
@@ -73,6 +78,7 @@ export function useForm<T extends string>({
       }
     };
     ref.oninput = () => {
+      setValues((v) => ({ ...v, [name]: ref.value }));
       if (!errors[name]) return;
 
       setErrors({ [name]: undefined } as typeof errors);
@@ -112,5 +118,5 @@ export function useForm<T extends string>({
     };
   };
 
-  return { validate, formSubmit, errors };
+  return { initFormInput, formSubmit, errors, values };
 }

@@ -12,7 +12,7 @@ export const NewListForm: Component<{
 }> = (props) => {
   const fieldNames = ["name", "description"] as const;
   const {
-    validate: _validate,
+    initFormInput: _initFormInput,
     formSubmit: _formSubmit,
     errors,
   } = useForm({
@@ -52,7 +52,7 @@ export const NewListForm: Component<{
           type="text"
           placeholder="List name"
           required
-          use:_validate={[lg]}
+          use:_initFormInput={[lg]}
         />
         <Show when={errors.name}>{errors.name}</Show>
       </div>
@@ -61,7 +61,7 @@ export const NewListForm: Component<{
           name="description"
           aria-label="list description"
           rows="3"
-          use:_validate={[lg]}
+          use:_initFormInput={[lg]}
         />
         <Show when={errors.description}>{errors.description}</Show>
       </div>

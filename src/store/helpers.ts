@@ -14,7 +14,7 @@ export const createListItem = ({
   description,
   completed = false,
   counterLimit,
-  counterType,
+  counterType = "none",
   timerSeconds,
 }: IListItemDataObject): IListItem => {
   return {
@@ -23,7 +23,7 @@ export const createListItem = ({
     description,
     completed,
     counterLimit,
-    counterProgress: counterType ? 0 : undefined,
+    counterProgress: counterType === "none" ? undefined : 0,
     counterType,
     timerSeconds,
     timerProgress: timerSeconds ? 0 : undefined,
