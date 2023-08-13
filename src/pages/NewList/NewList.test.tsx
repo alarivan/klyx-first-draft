@@ -9,7 +9,8 @@ import { StoreProvider } from "../../store/context";
 import { NewList } from "./NewList";
 
 vi.mock("@solidjs/router", async () => {
-  const mod: any = await vi.importActual("@solidjs/router");
+  const type = await import("@solidjs/router");
+  const mod: typeof type = await vi.importActual("@solidjs/router");
   return {
     ...mod,
     useNavigate: vi.fn(),

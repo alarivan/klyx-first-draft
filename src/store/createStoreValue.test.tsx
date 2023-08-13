@@ -7,11 +7,11 @@ import { createStoreValue } from "./createStoreValue";
 import { createListWithItems } from "./helpers";
 
 vi.mock("@solid-primitives/storage", async () => {
-  const mod: any = await vi.importActual("@solid-primitives/storage");
+  const type = await import("@solid-primitives/storage");
+  const mod: typeof type = await vi.importActual("@solid-primitives/storage");
   return {
     ...mod,
     makePersisted: vi.fn().mockImplementation((store) => store),
-    Navigate: vi.fn(),
   };
 });
 
