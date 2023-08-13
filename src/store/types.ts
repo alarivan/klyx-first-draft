@@ -42,7 +42,7 @@ export type IStoreActions = {
   ): void;
   find(findId: IList["id"]): IList | undefined;
   play(playId: IList["id"]): void;
-  resetStatus(listId: IList["id"]): void;
+  resetItemsState(listId: IList["id"]): void;
   reorderItems(listId: IList["id"], items: IList["items"]): void;
   addItem(listId: IList["id"], item: IListItemDataObject): void;
   removeItem(listId: IList["id"], itemId: IListItem["id"]): void;

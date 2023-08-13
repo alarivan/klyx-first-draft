@@ -69,125 +69,135 @@ describe(createStoreValue, () => {
   });
 
   describe("actions", () => {
-    it("adds list to store", () => {
-      createRoot((dispose) => {
-        const [state, actions] = createStoreValue();
-        actions.add({ name: "name" });
-        expect(state.lists[0]).toEqual(
-          expect.objectContaining({
-            name: "name",
+    describe("add", () => {
+      it("adds list to store", () => {
+        createRoot((dispose) => {
+          const [state, actions] = createStoreValue();
+          actions.add({ name: "name" });
+          expect(state.lists[0]).toEqual(
+            expect.objectContaining({
+              name: "name",
+              description: undefined,
+              items: [],
+            }),
+          );
+          dispose();
+        });
+      });
+
+      it("adds list to store with description", () => {
+        createRoot((dispose) => {
+          const [state, actions] = createStoreValue();
+          actions.add({ name: "name", description: "desc" });
+          expect(state.lists[0]).toEqual(
+            expect.objectContaining({
+              name: "name",
+              description: "desc",
+              items: [],
+            }),
+          );
+          dispose();
+        });
+      });
+    });
+
+    describe("remove", () => {
+      it("removes list from the store", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [state, actions] = createStoreValue({ ...mockState });
+          actions.remove(mockState.lists[0].id);
+          expect(state.lists).toEqual(mockState.lists.slice(1));
+          dispose();
+        });
+      });
+    });
+
+    describe("find", () => {
+      it("returns a list by id", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const list = actions.find(mockState.lists[1].id);
+          expect(list).toEqual(mockState.lists[1]);
+          dispose();
+        });
+      });
+    });
+
+    describe("update", () => {
+      it("updates name and description", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const id = mockState.lists[0].id;
+          const updatedValues = { name: "nameU", description: "descU" };
+          actions.update(id, updatedValues);
+          expect(actions.find(id)).toEqual({
+            ...mockState.lists[0],
+            ...updatedValues,
+          });
+          dispose();
+        });
+      });
+
+      it("updates name and removes description when description is not prvided", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const id = mockState.lists[0].id;
+          const updatedValues = { name: "nameU" };
+          actions.update(id, updatedValues);
+          expect(actions.find(id)).toEqual({
+            ...mockState.lists[0],
+            ...updatedValues,
             description: undefined,
-            items: [],
-          }),
-        );
-        dispose();
-      });
-    });
-
-    it("adds list to store with description", () => {
-      createRoot((dispose) => {
-        const [state, actions] = createStoreValue();
-        actions.add({ name: "name", description: "desc" });
-        expect(state.lists[0]).toEqual(
-          expect.objectContaining({
-            name: "name",
-            description: "desc",
-            items: [],
-          }),
-        );
-        dispose();
-      });
-    });
-
-    it("removes list from the store", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [state, actions] = createStoreValue({ ...mockState });
-        actions.remove(mockState.lists[0].id);
-        expect(state.lists).toEqual(mockState.lists.slice(1));
-        dispose();
-      });
-    });
-
-    it("returns a list by id", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [_, actions] = createStoreValue(mockState);
-        const list = actions.find(mockState.lists[1].id);
-        expect(list).toEqual(mockState.lists[1]);
-        dispose();
-      });
-    });
-
-    it("updates name and description", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [_, actions] = createStoreValue(mockState);
-        const id = mockState.lists[0].id;
-        const updatedValues = { name: "nameU", description: "descU" };
-        actions.update(id, updatedValues);
-        expect(actions.find(id)).toEqual({
-          ...mockState.lists[0],
-          ...updatedValues,
+          });
+          dispose();
         });
-        dispose();
       });
     });
 
-    it("updates name and removes description when description is not prvided", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [_, actions] = createStoreValue(mockState);
-        const id = mockState.lists[0].id;
-        const updatedValues = { name: "nameU" };
-        actions.update(id, updatedValues);
-        expect(actions.find(id)).toEqual({
-          ...mockState.lists[0],
-          ...updatedValues,
-          description: undefined,
+    describe("play", () => {
+      it("updates currentItems to the first item in items array when array is not empty", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const id = mockState.lists[0].id;
+          const updatedValues = { currentItem: actions.find(id)?.items[0]?.id };
+          actions.play(id);
+          expect(actions.find(id)).toEqual({
+            ...mockState.lists[0],
+            ...updatedValues,
+          });
+          dispose();
         });
-        dispose();
       });
-    });
 
-    it("updates currentItems to the first item in items array when array is not empty", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [_, actions] = createStoreValue(mockState);
-        const id = mockState.lists[0].id;
-        const updatedValues = { currentItem: actions.find(id)?.items[0]?.id };
-        actions.play(id);
-        expect(actions.find(id)).toEqual({
-          ...mockState.lists[0],
-          ...updatedValues,
+      it("does not update current item if items array is empty", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const id = mockState.lists[1].id;
+          actions.play(id);
+          expect(actions.find(id)).toEqual({ ...mockState.lists[1] });
+          dispose();
         });
-        dispose();
+      });
+
+      it("updates completed to false for all the items in the list", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const id = mockState.lists[1].id;
+          actions.play(id);
+          expect(actions.find(id)).toEqual({ ...mockState.lists[1] });
+          dispose();
+        });
       });
     });
 
-    it("does not update current item if items array is empty", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [_, actions] = createStoreValue(mockState);
-        const id = mockState.lists[1].id;
-        actions.play(id);
-        expect(actions.find(id)).toEqual({ ...mockState.lists[1] });
-        dispose();
-      });
-    });
-
-    it("updates completed to false for all the items in the list", () => {
-      createRoot((dispose) => {
-        const mockState = newMockState();
-        const [_, actions] = createStoreValue(mockState);
-        const id = mockState.lists[1].id;
-        actions.play(id);
-        expect(actions.find(id)).toEqual({ ...mockState.lists[1] });
-        dispose();
-      });
-    });
-
-    describe("items", () => {
+    describe("addItem", () => {
       it("adds item to a list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
@@ -207,7 +217,9 @@ describe(createStoreValue, () => {
           dispose();
         });
       });
+    });
 
+    describe("findItem", () => {
       it("finds item in a list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
@@ -234,7 +246,9 @@ describe(createStoreValue, () => {
           dispose();
         });
       });
+    });
 
+    describe("removeItem", () => {
       it("removes item from list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
@@ -250,7 +264,9 @@ describe(createStoreValue, () => {
           dispose();
         });
       });
+    });
 
+    describe("updateItem", () => {
       it("updates item in a list", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
@@ -277,13 +293,15 @@ describe(createStoreValue, () => {
           dispose();
         });
       });
+    });
 
+    describe("resetItemsState", () => {
       it("resets all items state", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
           const [_, actions] = createStoreValue(mockState);
           const id = mockState.lists[0].id;
-          actions.resetStatus(id);
+          actions.resetItemsState(id);
           const items = actions.find(id)?.items;
           expect(items?.every((item) => !item.completed)).toEqual(true);
           dispose();
@@ -295,7 +313,7 @@ describe(createStoreValue, () => {
           const mockState = newMockState();
           const [_, actions] = createStoreValue(mockState);
           const id = mockState.lists[1].id;
-          actions.resetStatus(id);
+          actions.resetItemsState(id);
 
           const items = actions.find(id)?.items;
           expect(
@@ -316,7 +334,9 @@ describe(createStoreValue, () => {
           dispose();
         });
       });
+    });
 
+    describe("reorderItems", () => {
       it("updates items order", () => {
         createRoot((dispose) => {
           const mockState = newMockState();

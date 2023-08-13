@@ -42,7 +42,7 @@ export const createStoreValue = (initialState?: IStore) => {
           (list) => ({ currentItem: list.items[0]?.id }),
         );
       },
-      resetStatus(listId) {
+      resetItemsState(listId) {
         setState(
           "lists",
           (list) => list.id === listId,
