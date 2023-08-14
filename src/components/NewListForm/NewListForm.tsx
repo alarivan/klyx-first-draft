@@ -46,7 +46,7 @@ export const NewListForm: Component<{
 
   return (
     <form use:_formSubmit={submitForm}>
-      <div class="field-block">
+      <div class="inputGroup">
         <input
           name="name"
           type="text"
@@ -54,19 +54,26 @@ export const NewListForm: Component<{
           required
           use:_initFormInput={[lg]}
         />
-        <Show when={errors.name}>{errors.name}</Show>
+        <Show when={errors.name}>
+          <div class="inputError">{errors.name}</div>
+        </Show>
       </div>
-      <div class="field-block">
+      <div class="inputGroup">
         <textarea
           name="description"
           aria-label="list description"
           rows="3"
           use:_initFormInput={[lg]}
         />
-        <Show when={errors.description}>{errors.description}</Show>
       </div>
-      <button type="submit">Add list</button>
-      <A href="/">Cancel</A>
+      <div class="formActions">
+        <button class="buttonPrimary submit" type="submit">
+          Add list
+        </button>
+        <div class="cancel">
+          <A href="/">Cancel</A>
+        </div>
+      </div>
     </form>
   );
 };

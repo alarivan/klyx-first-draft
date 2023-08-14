@@ -7,8 +7,6 @@ import { Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
 
-import styles from "./NewItemForm.module.css";
-
 export const NewItemForm: Component<{
   listId: string;
   onSubmit: (values: IListItemDataObject) => void;
@@ -66,7 +64,7 @@ export const NewItemForm: Component<{
 
   return (
     <form use:_formSubmit={submitForm}>
-      <div class={styles.inputGroup}>
+      <div class="inputGroup">
         <label for="name">Item name*</label>
         <input
           id="name"
@@ -76,10 +74,10 @@ export const NewItemForm: Component<{
           use:_initFormInput={[minLength(3)]}
         />
         <Show when={errors.name}>
-          <div class={styles.inputError}>{errors.name}</div>
+          <div class="inputError">{errors.name}</div>
         </Show>
       </div>
-      <div class={styles.inputGroup}>
+      <div class="inputGroup">
         <label for="description">Description</label>
         <textarea
           id="description"
@@ -89,7 +87,7 @@ export const NewItemForm: Component<{
           use:_initFormInput
         />
       </div>
-      <div class={styles.inputGroup}>
+      <div class="inputGroup">
         <label for="counterType">Counter</label>
         <select id="counterType" name="counterType" use:_initFormInput>
           <option value="none">None</option>
@@ -99,7 +97,7 @@ export const NewItemForm: Component<{
       </div>
       <Show when={values().counterType === "limited"}>
         <label for="counterLimit">Counter limit</label>
-        <div class={styles.inputGroup}>
+        <div class="inputGroup">
           <input
             id="counterLimit"
             name="counterLimit"
@@ -110,7 +108,7 @@ export const NewItemForm: Component<{
           />
         </div>
       </Show>
-      <div class={styles.inputGroup}>
+      <div class="inputGroup">
         <label for="timerSeconds">Timer</label>
         <input
           id="timerSeconds"
@@ -120,11 +118,11 @@ export const NewItemForm: Component<{
           use:_initFormInput
         />
       </div>
-      <div class={styles.actions}>
-        <button class={styles.submit} type="submit">
+      <div class="formActions">
+        <button class="buttonPrimary submit" type="submit">
           Add item
         </button>
-        <div class={styles.cancel}>
+        <div class="cancel">
           <A href={`/list/${props.listId}`}>Cancel</A>
         </div>
       </div>

@@ -27,3 +27,77 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+.inputGroup:not(:last-child) {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.inputGroup label {
+  margin-bottom: 4px;
+}
+
+.inputGroup input,
+.inputGroup select {
+  padding: 8px;
+}
+
+.inputGroup :global(.error) {
+  border-color: var(--error);
+}
+
+.inputError {
+  color: #fff;
+  background-color: var(--error);
+  padding: 4px;
+}
+
+.formActions * {
+  margin-top: 16px;
+  display: block;
+}
+
+.formActions .cancel {
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.formActions .submit {
+  width: 100%;
+  composes: addListButton from "../../pages/Home/Home.module.css";
+}
+
+.buttonPrimary {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-family: inconsolata, Sans-serif;
+  font-size: 28px;
+  color: var(--text-color);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05px;
+  background-color: var(--base-400);
+  border-style: solid;
+  border-width: 2px;
+  border-color: var(--base-800);
+  box-shadow: 4px 4px 0 0 var(--base-800);
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 200ms ease-in-out;
+  text-decoration: none;
+}
+.buttonPrimary:hover {
+  background-color: var(--base-500);
+}
+.buttonPrimary:focus {
+  box-shadow: none;
+  border-color: var(--base-300);
+  box-shadow: 4px 4px 0 0 var(--base-300);
+}
