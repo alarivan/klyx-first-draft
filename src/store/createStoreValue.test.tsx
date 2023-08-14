@@ -77,7 +77,8 @@ describe(createStoreValue, () => {
           expect(state.lists[0]).toEqual(
             expect.objectContaining({
               name: "name",
-              description: undefined,
+              description: null,
+              currentItem: null,
               items: [],
             }),
           );
@@ -93,6 +94,7 @@ describe(createStoreValue, () => {
             expect.objectContaining({
               name: "name",
               description: "desc",
+              currentItem: null,
               items: [],
             }),
           );
@@ -212,6 +214,11 @@ describe(createStoreValue, () => {
               name: "itemNew",
               description: "itemNew",
               completed: false,
+              counterType: "none",
+              counterLimit: null,
+              counterProgress: null,
+              timerSeconds: null,
+              timerProgress: null,
             }),
           );
           dispose();
@@ -320,14 +327,14 @@ describe(createStoreValue, () => {
             items?.every((item) =>
               item.counterType
                 ? item.counterProgress === 0
-                : item.counterType === undefined,
+                : item.counterType === "none",
             ),
           ).toEqual(true);
           expect(
             items?.every((item) =>
               item.timerSeconds
                 ? item.timerProgress === 0
-                : item.timerProgress === undefined,
+                : item.timerProgress === null,
             ),
           ).toEqual(true);
 

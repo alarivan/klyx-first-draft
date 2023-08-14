@@ -1,4 +1,4 @@
-import type { IList } from "../../store/types";
+import type { IListDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { useNavigate } from "@solidjs/router";
@@ -10,7 +10,7 @@ export const NewList: Component = () => {
   const [_, actions] = useStoreContext();
   const navigate = useNavigate();
 
-  const onSubmit = (values: Pick<IList, "name" | "description">) => {
+  const onSubmit = (values: IListDataObject) => {
     actions.add(values);
     navigate("/");
   };

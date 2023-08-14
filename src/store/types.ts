@@ -1,13 +1,19 @@
 export interface IListItem {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
   completed: boolean;
   counterType: "none" | "limited" | "unlimited";
-  counterLimit?: string;
-  counterProgress?: number;
-  timerSeconds?: string;
-  timerProgress?: number;
+  counterLimit: string | null;
+  counterProgress: number | null;
+  timerSeconds: string | null;
+  timerProgress: number | null;
+}
+
+export interface IListDataObject {
+  name: IList["name"];
+  description?: IList["description"];
+  currentItem?: IList["currentItem"];
 }
 
 export interface IListItemDataObject {
@@ -24,8 +30,8 @@ export interface IListItemDataObject {
 export interface IList {
   id: string;
   name: string;
-  description?: string;
-  currentItem?: string;
+  description: string | null;
+  currentItem: string | null;
   items: Array<IListItem>;
 }
 
@@ -34,12 +40,9 @@ export type IStore = { lists: Array<IList> };
 export type IListItemWithIndex = { data: IListItem; index: number };
 
 export type IStoreActions = {
-  add(list: Pick<IList, "name" | "description">): void;
+  add(list: IListDataObject): void;
   remove(removeId: IList["id"]): void;
-  update(
-    updateId: IList["id"],
-    list: Pick<IList, "name" | "description">,
-  ): void;
+  update(updateId: IList["id"], list: IListDataObject): void;
   find(findId: IList["id"]): IList | undefined;
   play(playId: IList["id"]): void;
   resetItemsState(listId: IList["id"]): void;
