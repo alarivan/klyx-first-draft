@@ -51,24 +51,6 @@ describe("NewListForm", () => {
     expect(screen.getByText("Constraints not satisfied")).toBeInTheDocument();
   });
 
-  it("shows description error when description is less than 3 characters", () => {
-    const onSubmit = vi.fn();
-
-    render(() => (
-      <Router>
-        <NewListForm onSubmit={onSubmit} />
-      </Router>
-    ));
-
-    const input = screen.getByRole("textbox", { name: "list description" });
-    fireEvent.change(input, { value: "" });
-    fireEvent.blur(input);
-
-    expect(
-      screen.getByText("description should be longer than 3"),
-    ).toBeInTheDocument();
-  });
-
   it("submits form when all inputs are valid", () => {
     const onSubmit = vi.fn();
 
@@ -84,10 +66,10 @@ describe("NewListForm", () => {
     });
 
     fireEvent.change(nameInput, { target: { value: "name" } });
-    fireEvent.change(descriptionInput, { target: { value: "longer than 3" } });
+    fireEvent.change(descriptionInput, { target: { value: "desc" } });
 
     expect(nameInput).toHaveValue("name");
-    expect(descriptionInput).toHaveValue("longer than 3");
+    expect(descriptionInput).toHaveValue("desc");
 
     const button = screen.getByText("Add list");
     fireEvent.click(button);

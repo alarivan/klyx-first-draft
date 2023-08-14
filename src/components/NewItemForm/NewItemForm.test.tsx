@@ -17,7 +17,7 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    expect(screen.getByLabelText("Item name")).toBeInTheDocument();
+    expect(screen.getByLabelText(/Item name/)).toBeInTheDocument();
     expect(screen.getByLabelText("Description")).toBeInTheDocument();
     expect(screen.getByLabelText("Counter")).toBeInTheDocument();
     expect(screen.queryByLabelText("Counter limit")).not.toBeInTheDocument();
@@ -49,7 +49,7 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    const input = screen.getByLabelText("Item name");
+    const input = screen.getByLabelText(/Item name/);
     fireEvent.change(input, { target: { value: "" } });
     fireEvent.blur(input);
 
@@ -65,7 +65,7 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    const input = screen.getByLabelText("Item name");
+    const input = screen.getByLabelText(/Item name/);
     fireEvent.change(input, { target: { value: "12" } });
     fireEvent.blur(input);
 
@@ -98,13 +98,13 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    const nameInput = screen.getByLabelText("Item name");
+    const nameInput = screen.getByLabelText(/Item name/);
     const descriptionInput = screen.getByLabelText("Description");
     const counterInput = screen.getByLabelText("Counter");
     const timerInput = screen.getByLabelText("Timer");
 
     fireEvent.change(nameInput, { target: { value: "name" } });
-    fireEvent.change(descriptionInput, { target: { value: "longer than 3" } });
+    fireEvent.change(descriptionInput, { target: { value: "desc" } });
     fireEvent.input(counterInput, { target: { value: "limited" } });
     fireEvent.input(timerInput, { target: { value: "60" } });
 

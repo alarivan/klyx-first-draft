@@ -73,7 +73,7 @@ describe("NewItem", () => {
       </Router>
     ));
 
-    const nameInput = screen.getByPlaceholderText("Item name");
+    const nameInput = screen.getByLabelText(/Item name/);
     const descriptionInput = screen.getByRole("textbox", {
       name: "item description",
     });
