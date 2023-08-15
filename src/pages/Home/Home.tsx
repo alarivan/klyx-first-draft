@@ -23,19 +23,21 @@ export const Home: Component = () => {
         </div>
       }
     >
-      <ul class={styles.lists}>
-        <For each={state.lists}>
-          {(list) => (
-            <li>
-              <ListSummaryLine list={list} />
-            </li>
-          )}
-        </For>
-      </ul>
-      <div class={styles.addListButtonWrapper}>
-        <A href="/list/new" class="buttonPrimary">
-          add new list <FiPlus style={{ display: "block" }} size={40} />
-        </A>
+      <div class={styles.container}>
+        <ul class={styles.lists}>
+          <For each={state.lists}>
+            {(list) => (
+              <li>
+                <ListSummaryLine list={list} />
+              </li>
+            )}
+          </For>
+        </ul>
+        <div class={styles.addListButtonWrapperBottom}>
+          <A href="/list/new" class="buttonPrimary">
+            add new list
+          </A>
+        </div>
       </div>
     </Show>
   );
