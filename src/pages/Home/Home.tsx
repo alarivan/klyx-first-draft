@@ -4,6 +4,7 @@ import { A } from "@solidjs/router";
 import { FiPlus } from "solid-icons/fi";
 import { Show, For } from "solid-js";
 
+import { ListSummaryLine } from "../../components/ListSummaryLine";
 import { useStoreContext } from "../../store/context";
 
 import styles from "./Home.module.css";
@@ -22,11 +23,11 @@ export const Home: Component = () => {
         </div>
       }
     >
-      <ul>
+      <ul class={styles.lists}>
         <For each={state.lists}>
           {(list) => (
             <li>
-              <A href={`/list/${list.id}`}>{list.name}</A>
+              <ListSummaryLine list={list} />
             </li>
           )}
         </For>

@@ -1,0 +1,29 @@
+.container {
+  color: inherit;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  background-color: var(--base-100);
+}
+.main {
+  width: 80%;
+}
+.name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+.description {
+  font-size: 0.9rem;
+  height: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.secondary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
