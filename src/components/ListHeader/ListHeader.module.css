@@ -1,0 +1,30 @@
+.container {
+  display: block;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actions {
+  display: flex;
+}
+
+.action {
+  cursor: pointer;
+  display: block;
+  padding: 8px;
+  color: inherit;
+  background: none;
+  border: 2px solid var(--base-300);
+  color: var(--base-900);
+}
+.action:not(:last-child) {
+  margin-right: 8px;
+}
+
+.description {
+  white-space: pre-wrap;
+}

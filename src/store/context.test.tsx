@@ -1,9 +1,7 @@
-import { render, screen, cleanup } from "@solidjs/testing-library";
-import { describe, expect, it, afterEach } from "vitest";
+import { render, screen } from "@solidjs/testing-library";
+import { describe, expect, it } from "vitest";
 
 import { StoreProvider, useStoreContext } from "./context";
-
-afterEach(cleanup);
 
 describe("StoreProvider", () => {
   it("renders provider with children", () => {

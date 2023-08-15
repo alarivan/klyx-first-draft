@@ -3,6 +3,7 @@ import type { Component } from "solid-js";
 import { A, Navigate, useParams } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
+import { ListHeader } from "../../components/ListHeader";
 import { useStoreContext } from "../../store/context";
 
 export const ListView: Component = () => {
@@ -15,10 +16,7 @@ export const ListView: Component = () => {
     <Show when={maybeList()} fallback={<Navigate href="/" />}>
       {(list) => (
         <>
-          <h1>{list().name}</h1>
-          <Show when={list().description} fallback={<Navigate href="/" />}>
-            <p>{list().description}</p>
-          </Show>
+          <ListHeader list={list()} />
           <A href={`/list/${params.listId}/item/new`}>Add item</A>
           <A href={`/list/${params.listId}/play`}>Start</A>
           <For each={list()?.items}>{(item) => <h4>{item.name}</h4>}</For>
