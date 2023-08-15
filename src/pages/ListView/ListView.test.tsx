@@ -57,7 +57,7 @@ describe("ListView", () => {
     render(() => (
       <Router>
         <StoreProvider
-          initalStore={{ lists: [{ ...list, description: undefined }] }}
+          initalStore={{ lists: [{ ...list, description: null }] }}
         >
           <ListView />
         </StoreProvider>
