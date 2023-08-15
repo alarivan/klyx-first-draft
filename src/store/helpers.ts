@@ -5,14 +5,12 @@ import type {
   IListItemDataObject,
 } from "./types";
 
-import { createUniqueId } from "solid-js";
-
 export const createList = ({
   name,
   description = null,
 }: IListDataObject): IList => {
   return {
-    id: createUniqueId(),
+    id: crypto.randomUUID(),
     name,
     description,
     currentItem: null,
@@ -29,7 +27,7 @@ export const createListItem = ({
   timerSeconds = null,
 }: IListItemDataObject): IListItem => {
   return {
-    id: createUniqueId(),
+    id: crypto.randomUUID(),
     name,
     description,
     completed,
