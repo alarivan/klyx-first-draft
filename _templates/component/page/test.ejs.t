@@ -1,9 +1,9 @@
 ---
-to: src/pages/<%= name %>/<%= name %>.test.tsx
+to: "src/<%= dir %>/<%= name %>/<%= name %>.test.tsx"
 ---
 import type { Mock } from "vitest";
 
-import { Router, useParams } from "@solidjs/router";
+import { Navigate, Router, useParams } from "@solidjs/router";
 import { render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
@@ -21,11 +21,12 @@ vi.mock("@solidjs/router", async () => {
   return {
     ...mod,
     useParams: vi.fn(),
+    Navigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
-
+const mockNavigateComponent = Navigate as Mock;
 
 describe("<%= name %>", () => {
   beforeEach(() => {
@@ -46,5 +47,17 @@ describe("<%= name %>", () => {
     ));
 
     expect(screen.getByText("<%= name %>")).toBeInTheDocument();
+  });
+
+  it("redirects when list is not found", () => {
+    render(() => (
+      <Router>
+        <StoreProvider initalStore={{ lists: [] }}>
+          <<%= name %> />
+        </StoreProvider>
+      </Router>
+    ));
+
+    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
   });
 });
