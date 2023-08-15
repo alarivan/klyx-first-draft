@@ -20,7 +20,8 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
 ]);
 
 vi.mock("@solidjs/router", async () => {
-  const mod: any = await vi.importActual("@solidjs/router");
+  const type = await import("@solidjs/router");
+  const mod: typeof type = await vi.importActual("@solidjs/router");
   return {
     ...mod,
     useParams: vi.fn(),
