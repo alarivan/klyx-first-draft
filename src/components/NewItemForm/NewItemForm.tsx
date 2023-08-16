@@ -1,14 +1,15 @@
-import type { IValidatorFn } from "../../lib/form";
-import type { IListItemDataObject } from "../../store/types";
+import type { IListItem, IListItemDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
-import { useForm } from "../../lib/form";
+import { minLength, useForm } from "../../lib/form";
 
 export const NewItemForm: Component<{
   listId: string;
+  buttonLabel?: string;
+  item?: IListItem;
   onSubmit: (values: IListItemDataObject) => void;
 }> = (props) => {
   const fieldNames = [
@@ -53,15 +54,6 @@ export const NewItemForm: Component<{
     props.onSubmit(values);
   };
 
-  const minLength = (num: number): IValidatorFn => {
-    return (element) => {
-      if (element.value.length < num) {
-        return `${element.name} should be longer than ${num}`;
-      }
-      return undefined;
-    };
-  };
-
   return (
     <form use:_formSubmit={submitForm}>
       <div class="inputGroup">
@@ -71,6 +63,7 @@ export const NewItemForm: Component<{
           name="name"
           type="text"
           required
+          value={props.item?.name || ""}
           use:_initFormInput={[minLength(3)]}
         />
         <Show when={errors.name}>
@@ -84,25 +77,36 @@ export const NewItemForm: Component<{
           name="description"
           aria-label="item description"
           rows="3"
+          value={props.item?.description || ""}
           use:_initFormInput
         />
       </div>
       <div class="inputGroup">
         <label for="counterType">Counter</label>
-        <select id="counterType" name="counterType" use:_initFormInput>
+        <select
+          id="counterType"
+          name="counterType"
+          value={props.item?.counterType || "none"}
+          use:_initFormInput
+        >
           <option value="none">None</option>
           <option value="limited">Limited</option>
           <option value="unlimited">Unlimited</option>
         </select>
       </div>
-      <Show when={values().counterType === "limited"}>
+      <Show
+        when={
+          values().counterType === "limited" ||
+          props.item?.counterType === "limited"
+        }
+      >
         <label for="counterLimit">Counter limit</label>
         <div class="inputGroup">
           <input
             id="counterLimit"
             name="counterLimit"
             type="number"
-            value="0"
+            value={props.item?.counterLimit || "0"}
             min="0"
             use:_initFormInput
           />
@@ -114,13 +118,13 @@ export const NewItemForm: Component<{
           id="timerSeconds"
           name="timerSeconds"
           type="number"
-          value="0"
+          value={props.item?.timerSeconds || "0"}
           use:_initFormInput
         />
       </div>
       <div class="formActions">
         <button class="buttonPrimary submit" type="submit">
-          Add item
+          {props.buttonLabel || "Submit"}
         </button>
         <div class="cancel">
           <A href={`/list/${props.listId}`}>Cancel</A>

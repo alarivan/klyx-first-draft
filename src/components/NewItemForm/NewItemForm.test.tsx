@@ -3,7 +3,20 @@ import { cleanup, fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 import "@testing-library/jest-dom";
 
+import { createListWithItems } from "../../store/helpers";
+
 import { NewItemForm } from "./NewItemForm";
+
+const list = createListWithItems({ name: "list1", description: "list1desc" }, [
+  {
+    name: "item1",
+    description: "item1desc",
+    counterType: "limited",
+    counterLimit: "4",
+    timerSeconds: "60",
+  },
+]);
+const item = list.items[0];
 
 describe("NewItemForm", () => {
   afterEach(cleanup);
@@ -22,7 +35,25 @@ describe("NewItemForm", () => {
     expect(screen.getByLabelText("Counter")).toBeInTheDocument();
     expect(screen.queryByLabelText("Counter limit")).not.toBeInTheDocument();
     expect(screen.getByLabelText("Timer")).toBeInTheDocument();
-    expect(screen.getByText("Add item")).toBeInTheDocument();
+    expect(screen.getByText("Submit")).toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
+  });
+
+  it("renders component with initial values", () => {
+    const onSubmit = vi.fn();
+
+    render(() => (
+      <Router>
+        <NewItemForm item={item} listId="listid" onSubmit={onSubmit} />
+      </Router>
+    ));
+
+    expect(screen.getByLabelText(/Item name/)).toHaveValue("item1");
+    expect(screen.getByLabelText("Description")).toHaveValue("item1desc");
+    expect(screen.getByLabelText("Counter")).toHaveValue("limited");
+    expect(screen.getByLabelText("Counter limit")).toHaveValue(4);
+    expect(screen.getByLabelText("Timer")).toHaveValue(60);
+    expect(screen.getByText("Submit")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
   });
 
@@ -35,7 +66,7 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    const button = screen.getByText("Add item");
+    const button = screen.getByText("Submit");
     fireEvent.click(button);
     expect(onSubmit).not.toHaveBeenCalled();
   });
@@ -111,7 +142,7 @@ describe("NewItemForm", () => {
     const counterLimitInput = screen.getByLabelText("Counter limit");
     fireEvent.input(counterLimitInput, { target: { value: "10" } });
 
-    const button = screen.getByText("Add item");
+    const button = screen.getByText("Submit");
     fireEvent.click(button);
 
     expect(onSubmit).toHaveBeenCalledOnce();
