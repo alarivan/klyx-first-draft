@@ -3,7 +3,13 @@ import { cleanup, fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 import "@testing-library/jest-dom";
 
+import { createListWithItems } from "../../store/helpers";
+
 import { NewListForm } from "./NewListForm";
+
+const list = createListWithItems({ name: "list1", description: "list1desc" }, [
+  { name: "item1", description: "item1desc" },
+]);
 
 describe("NewListForm", () => {
   afterEach(cleanup);
@@ -17,7 +23,22 @@ describe("NewListForm", () => {
       </Router>
     ));
 
-    expect(screen.getByText("Add list")).toBeInTheDocument();
+    expect(screen.getByText("Submit")).toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
+  });
+
+  it("renders component with initial values", () => {
+    const onSubmit = vi.fn();
+
+    render(() => (
+      <Router>
+        <NewListForm onSubmit={onSubmit} list={list} />
+      </Router>
+    ));
+
+    expect(screen.getByLabelText(/List name/)).toHaveValue("list1");
+    expect(screen.getByLabelText("Description")).toHaveValue("list1desc");
+    expect(screen.getByText("Submit")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
   });
 
@@ -30,7 +51,7 @@ describe("NewListForm", () => {
       </Router>
     ));
 
-    const button = screen.getByText("Add list");
+    const button = screen.getByText("Submit");
     fireEvent.click(button);
     expect(onSubmit).not.toHaveBeenCalled();
   });
@@ -44,7 +65,7 @@ describe("NewListForm", () => {
       </Router>
     ));
 
-    const input = screen.getByPlaceholderText("List name");
+    const input = screen.getByLabelText(/List name/);
     fireEvent.change(input, { value: "" });
     fireEvent.blur(input);
 
@@ -60,10 +81,8 @@ describe("NewListForm", () => {
       </Router>
     ));
 
-    const nameInput = screen.getByPlaceholderText("List name");
-    const descriptionInput = screen.getByRole("textbox", {
-      name: "list description",
-    });
+    const nameInput = screen.getByLabelText(/List name/);
+    const descriptionInput = screen.getByLabelText("Description");
 
     fireEvent.change(nameInput, { target: { value: "name" } });
     fireEvent.change(descriptionInput, { target: { value: "desc" } });
@@ -71,7 +90,7 @@ describe("NewListForm", () => {
     expect(nameInput).toHaveValue("name");
     expect(descriptionInput).toHaveValue("desc");
 
-    const button = screen.getByText("Add list");
+    const button = screen.getByText("Submit");
     fireEvent.click(button);
 
     expect(onSubmit).toHaveBeenCalledOnce();

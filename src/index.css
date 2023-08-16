@@ -44,6 +44,7 @@ svg {
 }
 
 .inputGroup input,
+.inputGroup textarea,
 .inputGroup select {
   padding: 8px;
 }

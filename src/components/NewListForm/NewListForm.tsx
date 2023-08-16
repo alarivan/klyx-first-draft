@@ -1,14 +1,15 @@
-import type { IValidatorFn } from "../../lib/form";
 import type { IList, IStoreActions } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
-import { useForm } from "../../lib/form";
+import { minLength, useForm } from "../../lib/form";
 
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
+  buttonLabel?: string;
+  list?: IList;
 }> = (props) => {
   const fieldNames = ["name", "description"] as const;
   const {
@@ -37,38 +38,36 @@ export const NewListForm: Component<{
     props.onSubmit(values);
   };
 
-  const lg: IValidatorFn = (r) => {
-    if (r.value.length < 3) {
-      return `${r.name} should be longer than 3`;
-    }
-    return undefined;
-  };
-
   return (
     <form use:_formSubmit={submitForm}>
       <div class="inputGroup">
+        <label for="name">List name*</label>
         <input
+          id="name"
           name="name"
           type="text"
-          placeholder="List name"
           required
-          use:_initFormInput={[lg]}
+          value={props.list?.name || ""}
+          use:_initFormInput={[minLength(3)]}
         />
         <Show when={errors.name}>
           <div class="inputError">{errors.name}</div>
         </Show>
       </div>
       <div class="inputGroup">
+        <label for="description">Description</label>
         <textarea
+          id="description"
           name="description"
           aria-label="list description"
           rows="3"
-          use:_initFormInput={[lg]}
+          value={props.list?.description || ""}
+          use:_initFormInput
         />
       </div>
       <div class="formActions">
         <button class="buttonPrimary submit" type="submit">
-          Add list
+          {props.buttonLabel || "Submit"}
         </button>
         <div class="cancel">
           <A href="/">Cancel</A>
