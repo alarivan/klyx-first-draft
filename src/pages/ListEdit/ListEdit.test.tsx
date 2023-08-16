@@ -1,7 +1,7 @@
 import type { Mock } from "vitest";
 
-import { Navigate, Router, useParams } from "@solidjs/router";
-import { render, screen } from "@solidjs/testing-library";
+import { Router, useNavigate, useParams } from "@solidjs/router";
+import { fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { StoreProvider } from "../../store/context";
@@ -19,16 +19,18 @@ vi.mock("@solidjs/router", async () => {
   return {
     ...mod,
     useParams: vi.fn(),
-    Navigate: vi.fn(),
+    useNavigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
-const mockNavigateComponent = Navigate as Mock;
+const mockUseNavigate = useNavigate as Mock;
 
 describe("ListEdit", () => {
+  const mockNavigate = vi.fn();
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
+    mockUseNavigate.mockReturnValue(mockNavigate);
   });
 
   afterEach(() => {
@@ -44,18 +46,27 @@ describe("ListEdit", () => {
       </Router>
     ));
 
-    expect(screen.getByText("ListEdit")).toBeInTheDocument();
+    expect(screen.getByText("Save list")).toBeInTheDocument();
   });
 
-  it("redirects when list is not found", () => {
+  it("submits form when all inputs are valid", () => {
     render(() => (
       <Router>
-        <StoreProvider initalStore={{ lists: [] }}>
+        <StoreProvider initalStore={{ lists: [list] }}>
           <ListEdit />
         </StoreProvider>
       </Router>
     ));
 
-    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
+    const nameInput = screen.getByLabelText(/List name/);
+
+    fireEvent.change(nameInput, { target: { value: "name" } });
+
+    expect(nameInput).toHaveValue("name");
+
+    const button = screen.getByText("Save list");
+    fireEvent.click(button);
+
+    expect(mockNavigate).toHaveBeenCalledWith(`/list/${list.id}`);
   });
 });

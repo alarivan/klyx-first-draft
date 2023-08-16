@@ -84,16 +84,4 @@ describe("ListView", () => {
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list1desc")).toBeInTheDocument();
   });
-
-  it("redirects when list is not found", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [] }}>
-          <ListView />
-        </StoreProvider>
-      </Router>
-    ));
-
-    expect(mockNavigateComponent).toHaveBeenCalledWith({ href: "/" });
-  });
 });

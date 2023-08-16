@@ -1,18 +1,14 @@
 import type { Component } from "solid-js";
 
-import { A, Navigate, useParams } from "@solidjs/router";
-import { Show } from "solid-js";
+import { A, useParams } from "@solidjs/router";
 
-import { useStoreContext } from "../../store/context";
+import { ListGuard } from "../../components/ListGuard";
 
 export const PlayDone: Component = () => {
   const params = useParams();
-  const [_, actions] = useStoreContext();
-
-  const maybeList = () => actions.find(params.listId);
 
   return (
-    <Show when={maybeList()} fallback={<Navigate href="/" />}>
+    <ListGuard>
       {(list) => (
         <div>
           <h1>Done</h1>
@@ -24,6 +20,6 @@ export const PlayDone: Component = () => {
           <A href={`/list/${params.listId}/play`}>Restart</A>
         </div>
       )}
-    </Show>
+    </ListGuard>
   );
 };
