@@ -48,6 +48,7 @@ describe("<%= name %>", () => {
     ));
 
     expect(screen.getByText("<%= name %>")).toBeInTheDocument();
+    expect(screen.getByText(list.name)).toBeInTheDocument();
   });
 
   it("redirects when list is not found", () => {
