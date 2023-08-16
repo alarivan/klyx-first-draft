@@ -18,7 +18,9 @@ export const <%= name %>: Component = () => {
 
   return (
     <Show when={maybeList()} fallback={<Navigate href="/" />}>
-      <div class={styles.container}><%= name %></div>
+      {(list) => (
+        <div class={styles.container}><%= name %></div>
+      )}
     </Show>
   );
 };
