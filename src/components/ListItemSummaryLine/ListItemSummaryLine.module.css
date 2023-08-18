@@ -1,0 +1,74 @@
+.container {
+  padding: 8px;
+  background: var(--base-200);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.number {
+  flex: 0 0 auto;
+  font-weight: bold;
+  padding: 4px 12px 4px 4px;
+  display: flex;
+  align-items: center;
+}
+
+.name {
+  flex: 1;
+  margin: 0;
+}
+
+.options {
+  display: flex;
+  margin-bottom: 4px;
+}
+.options > * {
+  margin-right: 4px;
+  padding: 4px 4px 4px 0;
+}
+.options > :not(:last-child) {
+  margin-right: 8px;
+}
+
+.description {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow: hidden;
+  max-height: 2.2rem;
+}
+
+.descriptionFull {
+  max-height: none;
+}
+
+.expandDescription {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.action {
+  cursor: pointer;
+  display: block;
+  padding: 8px;
+  color: inherit;
+  background: none;
+  border: none;
+  color: var(--base-900);
+}
+.action:not(:last-child) {
+  margin-right: 8px;
+}

@@ -5,6 +5,7 @@ import { For } from "solid-js";
 
 import { ListGuard } from "../../components/ListGuard";
 import { ListHeader } from "../../components/ListHeader";
+import { ListItemSummaryLine } from "../../components/ListItemSummaryLine";
 
 export const ListView: Component = () => {
   return (
@@ -14,16 +15,19 @@ export const ListView: Component = () => {
           <ListHeader list={list()} />
           <A href={`/list/${list().id}/item/new`}>Add item</A>
           <A href={`/list/${list().id}/play`}>Start</A>
-          <For each={list()?.items}>
-            {(item) => (
-              <>
-                <h4>{item.name}</h4>
-                <A href={`/list/${list().id}/item/${item.id}/edit`}>
-                  Edit item
-                </A>
-              </>
-            )}
-          </For>
+          <ul>
+            <For each={list()?.items}>
+              {(item, index) => (
+                <li>
+                  <ListItemSummaryLine
+                    index={index()}
+                    item={item}
+                    listId={list().id}
+                  />
+                </li>
+              )}
+            </For>
+          </ul>
         </>
       )}
     </ListGuard>
