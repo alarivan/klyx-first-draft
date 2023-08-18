@@ -1,12 +1,12 @@
 import type { Component } from "solid-js";
 
 import { ListItemGuard } from "../../components/ListItemGuard";
-import { PlayView } from "../../components/PlayView";
+import { PlayHeader } from "../../components/PlayHeader";
 
 export const Play: Component = () => {
   return (
     <ListItemGuard>
-      {(value) => <PlayView list={value().list} item={value().item} />}
+      {(value) => <PlayHeader list={value().list} index={value().item.index} />}
     </ListItemGuard>
   );
 };

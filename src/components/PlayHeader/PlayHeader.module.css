@@ -1,0 +1,10 @@
+.container {
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progress {
+  font-weight: bold;
+}
