@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { StoreProvider } from "../../store/context";
 import { createListWithItems } from "../../store/helpers";
 
-import { ListView } from "./ListView";
+import { ListViewActions } from "./ListViewActions";
 
 const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   { name: "item1", description: "item1desc" },
@@ -19,13 +19,12 @@ vi.mock("@solidjs/router", async () => {
   return {
     ...mod,
     useParams: vi.fn(),
-    Navigate: vi.fn(),
   };
 });
 
 const mockUseParams = useParams as Mock;
 
-describe("ListView", () => {
+describe("ListViewActions", () => {
   beforeEach(() => {
     mockUseParams.mockReturnValue({ listId: list.id });
   });
@@ -34,21 +33,22 @@ describe("ListView", () => {
     vi.clearAllMocks();
   });
 
-  it("renders list when list is in store", () => {
+  it("renders component", () => {
     render(() => (
       <Router>
         <StoreProvider initalStore={{ lists: [list] }}>
-          <ListView />
+          <ListViewActions listId={list.id} />
         </StoreProvider>
       </Router>
     ));
 
-    expect(screen.getByText("list1")).toBeInTheDocument();
-    expect(screen.getByText("list1desc")).toBeInTheDocument();
-    expect(screen.getByText("item1")).toBeInTheDocument();
     expect(screen.getByLabelText("Add item")).toHaveAttribute(
       "href",
       `/list/${list.id}/item/new`,
+    );
+    expect(screen.getByLabelText("Play list")).toHaveAttribute(
+      "href",
+      `/list/${list.id}/play`,
     );
   });
 });

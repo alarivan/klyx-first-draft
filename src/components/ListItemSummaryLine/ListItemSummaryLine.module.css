@@ -67,7 +67,8 @@
   color: inherit;
   background: none;
   border: none;
-  color: var(--base-900);
+  color: var(--text-color-dark-bg);
+  background-color: var(--base-500);
 }
 .action:not(:last-child) {
   margin-right: 8px;
