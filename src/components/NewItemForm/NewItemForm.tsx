@@ -83,15 +83,22 @@ export const NewItemForm: Component<{
       </div>
       <div class="inputGroup">
         <label for="counterType">Counter</label>
-        <select
-          id="counterType"
-          name="counterType"
-          value={props.item?.counterType || "none"}
-          use:_initFormInput
-        >
-          <option value="none">None</option>
-          <option value="limited">Limited</option>
-          <option value="unlimited">Unlimited</option>
+        <select id="counterType" name="counterType" use:_initFormInput>
+          <option selected={props.item?.counterType === "none"} value="none">
+            None
+          </option>
+          <option
+            selected={props.item?.counterType === "limited"}
+            value="limited"
+          >
+            Limited
+          </option>
+          <option
+            selected={props.item?.counterType === "unlimited"}
+            value="unlimited"
+          >
+            Unlimited
+          </option>
         </select>
       </div>
       <Show
