@@ -24,7 +24,7 @@ export const Home: Component = () => {
       }
     >
       <div class={styles.container}>
-        <ul class={styles.lists}>
+        <ul>
           <For each={state.lists}>
             {(list) => (
               <li>
