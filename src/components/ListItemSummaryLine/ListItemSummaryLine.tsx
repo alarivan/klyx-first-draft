@@ -54,7 +54,9 @@ export const ListItemSummaryLine: Component<{
         </div>
       </div>
       <div class={styles.options}>
-        <Show when={props.item.counterType !== "none"}>
+        <Show
+          when={props.item.counterType !== "none" && props.item.counterLimit}
+        >
           <div>
             Counter:{" "}
             <b>

@@ -1,0 +1,9 @@
+.container {
+  display: block;
+}
+
+.description {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
