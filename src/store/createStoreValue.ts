@@ -83,7 +83,14 @@ export const createStoreValue = (initialState?: IStore) => {
           (list) => list.id === listId,
           "items",
           (item) => item.id === itemId,
-          (item: IListItem) => ({ ...item, ...newItem }),
+          (item: IListItem) => ({
+            ...item,
+            ...newItem,
+            counterLimit:
+              newItem.counterLimit === "0" ? null : newItem.counterLimit,
+            timerSeconds:
+              newItem.timerSeconds === "0" ? null : newItem.timerSeconds,
+          }),
         );
       },
       findItem(listId, itemId) {

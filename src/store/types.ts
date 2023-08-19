@@ -1,6 +1,6 @@
 export interface IListItem {
   id: string;
-  name: string;
+  name: string | null;
   description: string | null;
   completed: boolean;
   counterType: "none" | "limited" | "unlimited";
@@ -17,7 +17,7 @@ export interface IListDataObject {
 }
 
 export interface IListItemDataObject {
-  name: IListItem["name"];
+  name?: IListItem["name"];
   description?: IListItem["description"];
   completed?: IListItem["completed"];
   counterType?: IListItem["counterType"];

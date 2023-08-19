@@ -4,20 +4,18 @@ import { describe, expect, it } from "vitest";
 import { useForm } from "./useForm";
 
 describe("useForm", () => {
-  describe("formSubmit", () => {
-    it("should run accessor when there is no inputs to initFormInput", () => {
+  describe("initForm", () => {
+    it("should run accessor when form is submitted", () => {
       createRoot((dispose) => {
-        const { formSubmit } = useForm({
+        const { initForm } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
 
-        const formElement = {
-          setAttribute: vi.fn(),
-        } as unknown as HTMLFormElement;
+        const formElement = document.createElement("form");
         const accessor = vi.fn();
 
-        formSubmit(formElement, () => accessor);
+        initForm(formElement, () => accessor);
 
         formElement.onsubmit?.({
           preventDefault: vi.fn(),
@@ -29,23 +27,83 @@ describe("useForm", () => {
       });
     });
 
-    it("should run accessor when with inputs to initFormInput", () => {
+    it("should validate form inputs when form is submitted", () => {
       createRoot((dispose) => {
-        const { formSubmit, initFormInput } = useForm({
+        const { initForm, initFormInput } = useForm({
           fieldNames: ["name"],
           errorClass: "err",
         });
 
-        const formElement = {
-          setAttribute: vi.fn(),
-        } as unknown as HTMLFormElement;
+        const formElement = document.createElement("form");
         const inputElement = document.createElement("input");
         inputElement.name = "name";
+        formElement.appendChild(inputElement);
+
+        const accessor = vi.fn();
+        const validator = vi.fn().mockReturnValue("error");
+
+        initForm(formElement, () => accessor);
+        initFormInput(inputElement, () => [validator]);
+
+        formElement.onsubmit?.({
+          preventDefault: vi.fn(),
+        } as unknown as SubmitEvent);
+
+        expect(accessor).not.toHaveBeenCalled();
+        expect(validator).toHaveBeenCalledOnce();
+
+        dispose();
+      });
+    });
+
+    it("should validate form inputs when form input is re-added to the form", () => {
+      createRoot((dispose) => {
+        const { initForm, initFormInput } = useForm({
+          fieldNames: ["name"],
+          errorClass: "err",
+        });
+
+        const formElement = document.createElement("form");
+        const inputElement = document.createElement("input");
+        inputElement.name = "name";
+        formElement.appendChild(inputElement);
+
+        const accessor = vi.fn();
+        const validator = vi.fn().mockReturnValue("error");
+
+        initForm(formElement, () => accessor);
+        initFormInput(inputElement, () => [validator]);
+        initFormInput(inputElement, () => [validator]);
+
+        formElement.onsubmit?.({
+          preventDefault: vi.fn(),
+        } as unknown as SubmitEvent);
+
+        expect(accessor).not.toHaveBeenCalled();
+        expect(validator).toHaveBeenCalledOnce();
+
+        dispose();
+      });
+    });
+
+    it("should validate form input is initialized before form", () => {
+      createRoot((dispose) => {
+        const { initForm, initFormInput } = useForm({
+          fieldNames: ["name"],
+          errorClass: "err",
+        });
+
+        const formElement = document.createElement("form");
+        const inputElement = document.createElement("input");
+        inputElement.name = "name";
+        formElement.appendChild(inputElement);
+
         const accessor = vi.fn();
         const validator = vi.fn().mockReturnValue("error");
 
         initFormInput(inputElement, () => [validator]);
-        formSubmit(formElement, () => accessor);
+        initForm(formElement, () => accessor);
+        initFormInput(inputElement, () => [validator]);
 
         formElement.onsubmit?.({
           preventDefault: vi.fn(),
@@ -171,6 +229,26 @@ describe("useForm", () => {
 
         dispose();
       });
+    });
+  });
+
+  it("should init input with initial values", () => {
+    createRoot(async (dispose) => {
+      const { values, initFormInput } = useForm({
+        initialValues: { name: "initial" },
+        fieldNames: ["name"],
+        errorClass: "err",
+      });
+
+      const inputElement = document.createElement("input");
+      inputElement.name = "name";
+      inputElement.value = "val";
+
+      initFormInput(inputElement, () => []);
+
+      expect(values()).toEqual({ name: "initial" });
+
+      dispose();
     });
   });
 });

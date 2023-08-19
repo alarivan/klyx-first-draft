@@ -300,6 +300,28 @@ describe(createStoreValue, () => {
           dispose();
         });
       });
+
+      it("sets counterLimit and timerSeconds to null when value is '0'", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const listId = mockState.lists[0].id;
+          const item = mockState.lists[0].items[0];
+          const updatedValues: IListItemDataObject = {
+            counterLimit: "0",
+            timerSeconds: "0",
+          };
+
+          actions.updateItem(listId, item.id, updatedValues);
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
+            ...item,
+            counterLimit: null,
+            timerSeconds: null,
+          });
+
+          dispose();
+        });
+      });
     });
 
     describe("resetItemsState", () => {

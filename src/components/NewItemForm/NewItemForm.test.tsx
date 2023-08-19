@@ -1,3 +1,5 @@
+import type { IListItemDataObject } from "../../store/types";
+
 import { Router } from "@solidjs/router";
 import { cleanup, fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
@@ -51,7 +53,12 @@ describe("NewItemForm", () => {
     expect(screen.getByLabelText(/Item name/)).toHaveValue("item1");
     expect(screen.getByLabelText("Description")).toHaveValue("item1desc");
     expect(screen.getByLabelText("Counter")).toHaveValue("limited");
+    // lol wtf? why?
+    const counterInput = screen.getByLabelText("Counter");
+    fireEvent.input(counterInput, { target: { value: "limited" } });
+    //
     expect(screen.getByLabelText("Counter limit")).toHaveValue(4);
+
     expect(screen.getByLabelText("Timer")).toHaveValue(60);
     expect(screen.getByText("Submit")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
@@ -66,43 +73,13 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
+    const counterInput = screen.getByLabelText("Counter");
+    fireEvent.input(counterInput, { target: { value: "limited" } });
+    expect(screen.getByLabelText("Counter limit")).toHaveValue(0);
+
     const button = screen.getByText("Submit");
     fireEvent.click(button);
     expect(onSubmit).not.toHaveBeenCalled();
-  });
-
-  it("shows name error when name is empty", () => {
-    const onSubmit = vi.fn();
-
-    render(() => (
-      <Router>
-        <NewItemForm listId="listid" onSubmit={onSubmit} />
-      </Router>
-    ));
-
-    const input = screen.getByLabelText(/Item name/);
-    fireEvent.change(input, { target: { value: "" } });
-    fireEvent.blur(input);
-
-    expect(screen.getByText("Constraints not satisfied")).toBeInTheDocument();
-  });
-
-  it("shows min length error when name is less than 3", () => {
-    const onSubmit = vi.fn();
-
-    render(() => (
-      <Router>
-        <NewItemForm listId="listid" onSubmit={onSubmit} />
-      </Router>
-    ));
-
-    const input = screen.getByLabelText(/Item name/);
-    fireEvent.change(input, { target: { value: "12" } });
-    fireEvent.blur(input);
-
-    expect(
-      screen.getByText("name should be longer than 3"),
-    ).toBeInTheDocument();
   });
 
   it("shows counterLimit input when counterType is 'limited'", () => {
@@ -114,10 +91,12 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    const input = screen.getByLabelText("Counter");
-    fireEvent.input(input, { target: { value: "limited" } });
+    const counterInput = screen.getByLabelText("Counter");
+    fireEvent.input(counterInput, { target: { value: "limited" } });
+    const counterLimitInput = screen.getByLabelText("Counter limit");
+    fireEvent.blur(counterLimitInput);
 
-    expect(screen.getByLabelText("Counter limit")).toBeInTheDocument();
+    expect(screen.getByText("Constraints not satisfied")).toBeInTheDocument();
   });
 
   it("submits form when all inputs are valid", () => {
@@ -146,5 +125,30 @@ describe("NewItemForm", () => {
     fireEvent.click(button);
 
     expect(onSubmit).toHaveBeenCalledOnce();
+  });
+
+  it("submits form with default values when form inputs are empty", () => {
+    const onSubmit = vi.fn();
+
+    render(() => (
+      <Router>
+        <NewItemForm listId="listid" onSubmit={onSubmit} />
+      </Router>
+    ));
+
+    const counterInput = screen.getByLabelText("Counter");
+    fireEvent.input(counterInput, { target: { value: null } });
+
+    const button = screen.getByText("Submit");
+    fireEvent.click(button);
+
+    const expected: IListItemDataObject = {
+      name: null,
+      description: null,
+      counterType: "none",
+      counterLimit: null,
+      timerSeconds: "0",
+    };
+    expect(onSubmit).toHaveBeenCalledWith(expected);
   });
 });

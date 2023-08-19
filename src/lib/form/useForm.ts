@@ -1,9 +1,9 @@
 import type {
-  ExcludeFromTypeInference,
   IFormErrorRecord,
   IFormFieldRecord,
   IFormInputElement,
   IValidatorFn,
+  ExcludeFromTypeInference,
 } from "./types";
 
 import { createSignal } from "solid-js";
@@ -44,19 +44,55 @@ function getInputError(
 }
 
 export function useForm<T extends string>({
+  initialValues,
   fieldNames,
   errorClass,
 }: {
   fieldNames: readonly T[];
+  initialValues?: Partial<Record<ExcludeFromTypeInference<T>, string>>;
   errorClass: string;
 }) {
-  const [errors, setErrors] = createStore<
-    IFormErrorRecord<ExcludeFromTypeInference<T>>
-  >({});
+  type IFormFieldName = ExcludeFromTypeInference<T>;
+
   const fields: IFormFieldRecord<T> = {} as IFormFieldRecord<T>;
+  const [errors, setErrors] = createStore<IFormErrorRecord<IFormFieldName>>({});
   const [values, setValues] = createSignal<
-    Partial<Record<ExcludeFromTypeInference<T>, string>>
-  >({});
+    Partial<Record<IFormFieldName, string>>
+  >(initialValues || {});
+
+  const onInput = (name: IFormFieldName, ref: IFormInputElement) => {
+    setValues((v) => ({ ...v, [name]: ref.value }));
+    if (errors[name]) {
+      setErrors({ [name]: undefined } as typeof errors);
+      errorClass && ref.classList.toggle(errorClass, false);
+    }
+  };
+
+  const setErrorMessage = (name: IFormFieldName) => {
+    const field = fields?.[name];
+    if (field?.element && field?.validators) {
+      const { element, validators } = field;
+      const message = getInputError(element, validators);
+      if (message) {
+        errorClass && element.classList.toggle(errorClass, true);
+        setErrors({ [element.name]: message } as typeof errors);
+      }
+      return message;
+    }
+  };
+
+  const initInputElement = (
+    name: IFormFieldName,
+    element: IFormInputElement,
+  ) => {
+    setValues((v) => ({
+      ...v,
+      [name]: initialValues?.[name] || element.value,
+    }));
+    element.value = initialValues?.[name] || element.value || "";
+    element.oninput = () => onInput(name, element);
+    element.onblur = () => setErrorMessage(name);
+  };
 
   const initFormInput = (
     ref: IFormInputElement,
@@ -64,48 +100,54 @@ export function useForm<T extends string>({
   ) => {
     const accessorValue = accessor();
     const validators = Array.isArray(accessorValue) ? accessorValue : [];
-    const name = ref.name as ExcludeFromTypeInference<T>;
+    const name = ref.name as IFormFieldName;
 
-    const config = { element: ref, validators };
-    fields[name] = config;
-    setValues((v) => ({ ...v, [name]: ref.value }));
-
-    ref.onblur = () => {
-      const message = getInputError(ref, validators);
-      if (message) {
-        errorClass && ref.classList.toggle(errorClass, true);
-        setErrors({ [name]: message } as typeof errors);
-      }
-    };
-    ref.oninput = () => {
-      setValues((v) => ({ ...v, [name]: ref.value }));
-      if (!errors[name]) return;
-
-      setErrors({ [name]: undefined } as typeof errors);
-      errorClass && ref.classList.toggle(errorClass, false);
-    };
+    const elementRef = fields?.[name]?.element;
+    if (elementRef !== ref) {
+      fields[name] = { element: ref, validators };
+      initInputElement(name, ref);
+    } else {
+      fields[name] = { ...fields[name], validators };
+    }
   };
 
-  const formSubmit = (
+  const initForm = (
     ref: HTMLFormElement,
     accessor: () => (ref: HTMLFormElement) => void,
   ) => {
     const callback = accessor();
+
+    const formElements = ref.elements as Record<
+      IFormFieldName,
+      IFormInputElement
+    >;
+    for (const name of fieldNames) {
+      const elementRef = formElements[name];
+      const existingRef = fields?.[name]?.element;
+
+      if (elementRef !== existingRef) {
+        fields[name] = { element: elementRef, validators: [] };
+
+        initInputElement(name, elementRef);
+      }
+    }
+
     ref.setAttribute("novalidate", "");
     ref.onsubmit = async (e) => {
       e.preventDefault();
       let errored = false;
 
-      for (const k of fieldNames) {
-        const field = fields[k];
-        if (field) {
-          const { element, validators } = field;
-          const message = getInputError(element, validators);
+      const formElements = ref.elements as Record<
+        IFormFieldName,
+        IFormInputElement
+      >;
+      for (const name of fieldNames) {
+        const elementRef = formElements[name];
+        const field = fields[name];
+        if (elementRef && field) {
+          const { element } = field;
 
-          if (message) {
-            setErrors({ [element.name]: message } as typeof errors);
-            errorClass && element.classList.toggle(errorClass, true);
-          }
+          const message = setErrorMessage(name);
 
           if (!errored && message) {
             element.focus();
@@ -118,5 +160,5 @@ export function useForm<T extends string>({
     };
   };
 
-  return { initFormInput, formSubmit, errors, values };
+  return { initFormInput, initForm, errors, values };
 }

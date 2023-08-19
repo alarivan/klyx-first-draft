@@ -14,9 +14,13 @@ export const NewListForm: Component<{
   const fieldNames = ["name", "description"] as const;
   const {
     initFormInput: _initFormInput,
-    formSubmit: _formSubmit,
+    initForm: _initForm,
     errors,
   } = useForm({
+    initialValues: {
+      name: props.list?.name || "",
+      description: props.list?.description || "",
+    },
     fieldNames,
     errorClass: "err",
   });
@@ -39,7 +43,7 @@ export const NewListForm: Component<{
   };
 
   return (
-    <form use:_formSubmit={submitForm}>
+    <form use:_initForm={submitForm}>
       <div class="inputGroup">
         <label for="name">List name*</label>
         <input
@@ -47,7 +51,6 @@ export const NewListForm: Component<{
           name="name"
           type="text"
           required
-          value={props.list?.name || ""}
           use:_initFormInput={[minLength(3)]}
         />
         <Show when={errors.name}>
@@ -61,8 +64,6 @@ export const NewListForm: Component<{
           name="description"
           aria-label="list description"
           rows="3"
-          value={props.list?.description || ""}
-          use:_initFormInput
         />
       </div>
       <div class="formActions">

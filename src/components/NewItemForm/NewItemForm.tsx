@@ -4,7 +4,7 @@ import type { Component } from "solid-js";
 import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
-import { minLength, useForm } from "../../lib/form";
+import { useForm } from "../../lib/form";
 
 export const NewItemForm: Component<{
   listId: string;
@@ -21,15 +21,22 @@ export const NewItemForm: Component<{
   ] as const;
   const {
     initFormInput: _initFormInput,
-    formSubmit: _formSubmit,
+    initForm: _initForm,
     errors,
     values,
   } = useForm({
+    initialValues: {
+      name: props.item?.name || "",
+      description: props.item?.description || "",
+      counterLimit: props.item?.counterLimit || "0",
+      counterType: props.item?.counterType || "none",
+      timerSeconds: props.item?.timerSeconds || "0",
+    },
     fieldNames,
     errorClass: "error",
   });
 
-  const submitForm = (e: HTMLFormElement) => {
+  const onFormSubmit = (e: HTMLFormElement) => {
     const elements = e.elements as unknown as {
       name: HTMLInputElement;
       description: HTMLTextAreaElement;
@@ -47,7 +54,14 @@ export const NewItemForm: Component<{
         } else {
           acc[name] = elements[name].value;
         }
+      } else {
+        if (name === "counterType") {
+          acc[name] = "none";
+        } else {
+          acc[name] = null;
+        }
       }
+
       return acc;
     }, {} as IListItemDataObject);
 
@@ -55,20 +69,10 @@ export const NewItemForm: Component<{
   };
 
   return (
-    <form use:_formSubmit={submitForm}>
+    <form use:_initForm={onFormSubmit}>
       <div class="inputGroup">
         <label for="name">Item name*</label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          value={props.item?.name || ""}
-          use:_initFormInput={[minLength(3)]}
-        />
-        <Show when={errors.name}>
-          <div class="inputError">{errors.name}</div>
-        </Show>
+        <input id="name" name="name" type="text" />
       </div>
       <div class="inputGroup">
         <label for="description">Description</label>
@@ -77,56 +81,38 @@ export const NewItemForm: Component<{
           name="description"
           aria-label="item description"
           rows="3"
-          value={props.item?.description || ""}
-          use:_initFormInput
         />
       </div>
       <div class="inputGroup">
         <label for="counterType">Counter</label>
-        <select id="counterType" name="counterType" use:_initFormInput>
-          <option selected={props.item?.counterType === "none"} value="none">
-            None
-          </option>
-          <option
-            selected={props.item?.counterType === "limited"}
-            value="limited"
-          >
-            Limited
-          </option>
-          <option
-            selected={props.item?.counterType === "unlimited"}
-            value="unlimited"
-          >
-            Unlimited
-          </option>
+        <select id="counterType" name="counterType">
+          <option value="none">None</option>
+          <option value="limited">Limited</option>
+          <option value="unlimited">Unlimited</option>
         </select>
       </div>
-      <Show
-        when={
-          values().counterType === "limited" ||
-          props.item?.counterType === "limited"
-        }
-      >
+      <Show when={values().counterType === "limited"}>
         <label for="counterLimit">Counter limit</label>
         <div class="inputGroup">
           <input
             id="counterLimit"
             name="counterLimit"
             type="number"
-            value={props.item?.counterLimit || "0"}
-            min="0"
+            min="1"
             use:_initFormInput
           />
+          <Show when={errors.counterLimit}>
+            <div class="inputError">{errors.counterLimit}</div>
+          </Show>
         </div>
       </Show>
       <div class="inputGroup">
         <label for="timerSeconds">Timer</label>
         <input
+          use:_initFormInput
           id="timerSeconds"
           name="timerSeconds"
           type="number"
-          value={props.item?.timerSeconds || "0"}
-          use:_initFormInput
         />
       </div>
       <div class="formActions">

@@ -19,7 +19,7 @@ export const createList = ({
 };
 
 export const createListItem = ({
-  name,
+  name = null,
   description = null,
   completed = false,
   counterLimit = null,
