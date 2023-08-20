@@ -67,7 +67,7 @@ export const NewListForm: Component<{
         />
       </div>
       <div class="formActions">
-        <button class="buttonPrimary submit" type="submit">
+        <button class="action__fancy submit" type="submit">
           {props.buttonLabel || "Submit"}
         </button>
         <div class="cancel">

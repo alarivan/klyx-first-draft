@@ -23,9 +23,6 @@
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  background-color: var(--base-500);
-  color: var(--text-color-dark-bg);
 }
 .container a:not(:last-child) {
   margin-right: 8px;

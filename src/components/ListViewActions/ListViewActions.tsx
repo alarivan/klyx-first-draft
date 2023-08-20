@@ -11,14 +11,14 @@ export const ListViewActions: Component<{ listId: string }> = (props) => {
       <div class={styles.wrapper2}>
         <div class={styles.container}>
           <A
-            class="a-reset"
+            class={`a-reset action action__primary`}
             aria-label="Add item"
             href={`/list/${props.listId}/item/new`}
           >
             <FiPlus size={32} />
           </A>
           <A
-            class="a-reset"
+            class={`a-reset action action__primary`}
             aria-label="Play list"
             href={`/list/${props.listId}/play`}
           >

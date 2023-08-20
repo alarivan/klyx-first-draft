@@ -87,10 +87,9 @@ li {
 
 .formActions .submit {
   width: 100%;
-  composes: addListButton from "../../pages/Home/Home.module.css";
 }
 
-.buttonPrimary {
+.action__fancy {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -110,10 +109,10 @@ li {
   transition: all 200ms ease-in-out;
   text-decoration: none;
 }
-.buttonPrimary:hover {
+.action__fancy:hover {
   background-color: var(--base-500);
 }
-.buttonPrimary:focus {
+.action__fancy:focus {
   box-shadow: none;
   border-color: var(--base-300);
   box-shadow: 4px 4px 0 0 var(--base-300);
@@ -122,4 +121,42 @@ li {
 .a-reset {
   text-decoration: none;
   color: inherit;
+}
+
+.action {
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  padding: 8px;
+}
+.action:disabled {
+  background-color: #a5a5a5;
+}
+.action__primary {
+  background-color: var(--base-700);
+  color: var(--text-color-dark-bg);
+}
+.action__primary svg {
+  color: var(--text-color-dark-bg);
+}
+.action__primary:hover {
+  background-color: var(--base-500);
+}
+.action__primary:active {
+  background-color: var(--base-600);
+}
+
+.action_secondary {
+  background-color: var(--base-500);
+  color: var(--text-color-dark-bg);
+}
+.action_secondary svg {
+  color: var(--text-color-dark-bg);
+}
+.action_secondary:hover {
+  background-color: var(--base-700);
+}
+.action_secondary:active {
+  background-color: var(--base-600);
 }

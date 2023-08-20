@@ -24,7 +24,7 @@ export const ListHeader: Component<{ list: IList }> = (props) => {
         <h1>{props.list.name}</h1>
         <div class={styles.actions}>
           <A
-            class={styles.action}
+            class={`action action_secondary ${styles.action}`}
             aria-label="Edit list"
             href={`/list/${props.list.id}/edit`}
           >
@@ -33,7 +33,7 @@ export const ListHeader: Component<{ list: IList }> = (props) => {
           <button
             aria-label="Delete list"
             type="button"
-            class={styles.action}
+            class={`action action_secondary ${styles.action}`}
             onClick={deleteList}
           >
             <FiTrash />
