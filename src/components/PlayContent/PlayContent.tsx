@@ -8,6 +8,7 @@ import styles from "./PlayContent.module.css";
 export const PlayContent: Component<{ item: IListItem }> = (props) => {
   return (
     <div class={styles.container}>
+      <h2>{props.item.completed ? 1 : 0}</h2>
       <Show when={props.item.name}>
         <h2>{props.item.name}</h2>
       </Show>

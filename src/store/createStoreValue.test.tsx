@@ -6,15 +6,6 @@ import { describe, expect, it } from "vitest";
 import { createStoreValue } from "./createStoreValue";
 import { createListWithItems } from "./helpers";
 
-vi.mock("@solid-primitives/storage", async () => {
-  const type = await import("@solid-primitives/storage");
-  const mod: typeof type = await vi.importActual("@solid-primitives/storage");
-  return {
-    ...mod,
-    makePersisted: vi.fn().mockImplementation((store) => store),
-  };
-});
-
 const newMockState = () => {
   const lists = [
     Array(4)

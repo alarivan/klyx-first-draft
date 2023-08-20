@@ -1,0 +1,37 @@
+.container {
+  padding: 16px 0;
+}
+
+.state {
+  padding: 8px 16px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.extra {
+  margin-top: 12px;
+}
+
+.nextOnComplete {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+.nextOnComplete input {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 8px;
+}
