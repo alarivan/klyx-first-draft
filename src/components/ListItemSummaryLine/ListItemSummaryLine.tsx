@@ -40,16 +40,17 @@ export const ListItemSummaryLine: Component<{
     <div class={styles.container}>
       <div class={styles.header}>
         <div class={styles.number}>{props.index + 1}</div>
-        <p class={styles.name}>{props.item.completed ? 1 : 0}</p>
         <p class={styles.name}>{props.item.name}</p>
         <div class={styles.actions}>
           <A
+            aria-label="Edit item"
             class={`action action_secondary ${styles.action}`}
             href={`/list/${props.listId}/item/${props.item.id}/edit`}
           >
             <FiEdit2 />
           </A>
           <button
+            aria-label="Delete item"
             class={`action action_secondary ${styles.action}`}
             type="button"
             onClick={deleteItem}
@@ -60,10 +61,13 @@ export const ListItemSummaryLine: Component<{
       </div>
       <div class={styles.options}>
         <Show
-          when={props.item.counterType !== "none" && props.item.counterLimit}
+          when={
+            (props.item.counterType === "limited" && props.item.counterLimit) ||
+            props.item.counterType === "unlimited"
+          }
         >
           <div>
-            Counter:{" "}
+            Repeat:{" "}
             <b>
               {props.item.counterType === "limited"
                 ? props.item.counterLimit
