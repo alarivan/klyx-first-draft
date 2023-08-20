@@ -24,6 +24,7 @@ export const createListItem = ({
   completed = false,
   counterLimit = null,
   counterType = "none",
+  counterAutoswitch = true,
   timerSeconds = null,
 }: IListItemDataObject): IListItem => {
   return {
@@ -32,6 +33,7 @@ export const createListItem = ({
     description,
     completed,
     counterLimit,
+    counterAutoswitch,
     counterProgress: counterType === "none" ? null : 0,
     counterType,
     timerSeconds,
@@ -46,4 +48,24 @@ export const createListWithItems = (
   return items.reduce((list: IList, item) => {
     return { ...list, items: [...list.items, createListItem(item)] };
   }, createList(list));
+};
+
+export const isComleted = (item: IListItem) => {
+  let completed = item.completed;
+
+  if (
+    item.counterType === "limited" &&
+    item.counterLimit &&
+    item.timerSeconds
+  ) {
+    completed =
+      parseInt(item.counterLimit) === item.counterProgress &&
+      parseInt(item.timerSeconds) === item.timerProgress;
+  } else if (item.counterType === "limited" && item.counterLimit) {
+    completed = parseInt(item.counterLimit) === item.counterProgress;
+  } else if (item.timerSeconds && item.timerProgress) {
+    completed = parseInt(item.timerSeconds) === item.timerProgress;
+  }
+
+  return completed;
 };

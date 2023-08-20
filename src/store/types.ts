@@ -5,6 +5,7 @@ export interface IListItem {
   completed: boolean;
   counterType: "none" | "limited" | "unlimited";
   counterLimit: string | null;
+  counterAutoswitch: boolean;
   counterProgress: number | null;
   timerSeconds: string | null;
   timerProgress: number | null;
@@ -22,6 +23,7 @@ export interface IListItemDataObject {
   completed?: IListItem["completed"];
   counterType?: IListItem["counterType"];
   counterLimit?: IListItem["counterLimit"];
+  counterAutoswitch?: IListItem["counterAutoswitch"];
   counterProgress?: IListItem["counterProgress"];
   timerSeconds?: IListItem["timerSeconds"];
   timerProgress?: IListItem["timerProgress"];

@@ -3,7 +3,7 @@ import type { IListItem, IStore, IStoreContextValue } from "./types";
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore, produce } from "solid-js/store";
 
-import { createList, createListItem } from "./helpers";
+import { createList, createListItem, isComleted } from "./helpers";
 
 export const createStoreValue = (initialState?: IStore) => {
   const [state, setState] = makePersisted(
@@ -83,14 +83,22 @@ export const createStoreValue = (initialState?: IStore) => {
           (list) => list.id === listId,
           "items",
           (item) => item.id === itemId,
-          (item: IListItem) => ({
-            ...item,
-            ...newItem,
-            counterLimit:
-              newItem.counterLimit === "0" ? null : newItem.counterLimit,
-            timerSeconds:
-              newItem.timerSeconds === "0" ? null : newItem.timerSeconds,
-          }),
+          (item: IListItem) => {
+            const nextItem = {
+              ...item,
+              ...newItem,
+              counterLimit:
+                newItem.counterLimit === "0"
+                  ? null
+                  : newItem.counterLimit || item.counterLimit,
+              timerSeconds:
+                newItem.timerSeconds === "0"
+                  ? null
+                  : newItem.timerSeconds || item.timerSeconds,
+            };
+
+            return { ...nextItem, completed: isComleted(nextItem) };
+          },
         );
       },
       findItem(listId, itemId) {

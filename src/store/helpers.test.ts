@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { createList, createListItem, createListWithItems } from "./helpers";
+import {
+  createList,
+  createListItem,
+  createListWithItems,
+  isComleted,
+} from "./helpers";
 
 describe("helpers", () => {
   describe(createList, () => {
@@ -32,6 +37,7 @@ describe("helpers", () => {
           description: "desc",
           counterType: "limited",
           counterLimit: "10",
+          counterAutoswitch: true,
           counterProgress: 0,
           timerSeconds: "60",
           timerProgress: 0,
@@ -125,6 +131,110 @@ describe("helpers", () => {
           ],
         }),
       );
+    });
+  });
+
+  describe(isComleted, () => {
+    describe("default", () => {
+      const item = createListItem({
+        name: "name",
+        description: "desc",
+      });
+
+      it("returns items' completed whithout timer and limited counter", () => {
+        const completed = isComleted({
+          ...item,
+          completed: true,
+        });
+        expect(completed).toEqual(true);
+      });
+    });
+
+    describe("with limited counter and timer", () => {
+      const item = createListItem({
+        name: "name",
+        description: "desc",
+        counterType: "limited",
+        counterLimit: "10",
+        timerSeconds: "60",
+      });
+
+      it("retruns true when counter limit and timer seconds are reached", () => {
+        const completed = isComleted({
+          ...item,
+          timerProgress: 60,
+          counterProgress: 10,
+        });
+        expect(completed).toEqual(true);
+      });
+
+      it("retruns false when counter limit and timer seconds are not reached", () => {
+        const completed = isComleted({
+          ...item,
+          timerProgress: 59,
+          counterProgress: 9,
+        });
+        expect(completed).toEqual(false);
+      });
+
+      it("retruns false when counter limit or timer seconds are not reached", () => {
+        const completed = isComleted({
+          ...item,
+          timerProgress: 60,
+          counterProgress: 9,
+        });
+        expect(completed).toEqual(false);
+      });
+    });
+  });
+
+  describe("with timer", () => {
+    const item = createListItem({
+      name: "name",
+      description: "desc",
+      counterType: "none",
+      timerSeconds: "60",
+    });
+
+    it("retruns true when timer seconds are reached", () => {
+      const completed = isComleted({
+        ...item,
+        timerProgress: 60,
+      });
+      expect(completed).toEqual(true);
+    });
+
+    it("retruns false when timer seconds are not reached", () => {
+      const completed = isComleted({
+        ...item,
+        timerProgress: 59,
+      });
+      expect(completed).toEqual(false);
+    });
+  });
+
+  describe("with counter 'limited'", () => {
+    const item = createListItem({
+      name: "name",
+      description: "desc",
+      counterType: "limited",
+      counterLimit: "10",
+    });
+
+    it("retruns true when timer seconds are reached", () => {
+      const completed = isComleted({
+        ...item,
+        counterProgress: 10,
+      });
+      expect(completed).toEqual(true);
+    });
+
+    it("retruns false when timer seconds are not reached", () => {
+      const completed = isComleted({
+        ...item,
+        counterProgress: 9,
+      });
+      expect(completed).toEqual(false);
     });
   });
 });

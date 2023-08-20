@@ -216,6 +216,7 @@ describe(createStoreValue, () => {
               completed: false,
               counterType: "none",
               counterLimit: null,
+              counterAutoswitch: true,
               counterProgress: null,
               timerSeconds: null,
               timerProgress: null,
@@ -286,9 +287,10 @@ describe(createStoreValue, () => {
             completed: true,
             counterType: "limited",
             counterLimit: "10",
-            counterProgress: 0,
+            counterAutoswitch: false,
+            counterProgress: 10,
             timerSeconds: "60",
-            timerProgress: 20,
+            timerProgress: 60,
           };
 
           actions.updateItem(listId, item.id, updatedValues);
@@ -317,6 +319,27 @@ describe(createStoreValue, () => {
             ...item,
             counterLimit: null,
             timerSeconds: null,
+          });
+
+          dispose();
+        });
+      });
+
+      it("sets counterLimit and timerSeconds to previous value when value is not '0' and new value is not provided", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const listId = mockState.lists[0].id;
+          const item = mockState.lists[0].items[0];
+          const updatedValues: IListItemDataObject = {
+            name: "updated",
+          };
+
+          actions.updateItem(listId, item.id, updatedValues);
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
+            ...item,
+            counterLimit: item.counterLimit,
+            timerSeconds: item.timerSeconds,
           });
 
           dispose();
