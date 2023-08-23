@@ -1,22 +1,24 @@
-import type { IList, IListItem } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { createEffect, on } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
+import { useListItemGuardContext } from "../ListItemGuard";
 
 import styles from "./PlayTimer.module.css";
 
 export const PlayTimer: Component<{
   goNext: () => void;
-  list: IList;
-  item: IListItem;
 }> = (props) => {
+  const guard = useListItemGuardContext();
   const [_, actions] = useStoreContext();
+  const item = () => guard().item.data;
 
-  const timerProgress = () => props.item.timerProgress || 0;
-  const timerSeconds = () =>
-    props.item.timerSeconds ? parseInt(props.item.timerSeconds) : 0;
+  const timerProgress = () => item().timerProgress || 0;
+  const timerSeconds = () => {
+    const ts = item().timerSeconds;
+    return ts ? parseInt(ts) : 0;
+  };
 
   let timer: NodeJS.Timer | undefined;
 
@@ -27,7 +29,7 @@ export const PlayTimer: Component<{
   };
 
   const resetTimer = () => {
-    actions.updateItem(props.list.id, props.item.id, {
+    actions.updateItem(guard().list.id, item().id, {
       timerProgress: 0,
     });
     clearTimer();
@@ -39,12 +41,12 @@ export const PlayTimer: Component<{
     if (timerProgress() !== timerSeconds()) {
       timer = setInterval(() => {
         if (timerProgress() < timerSeconds()) {
-          actions.updateItem(props.list.id, props.item.id, {
+          actions.updateItem(guard().list.id, item().id, {
             timerProgress: timerProgress() + 1,
           });
         } else {
           clearTimer();
-          if (props.item.timerAutoswitch) {
+          if (item().timerAutoswitch) {
             props.goNext();
           }
         }
@@ -53,22 +55,22 @@ export const PlayTimer: Component<{
   };
 
   const toggleAutoswitch = () => {
-    actions.updateItem(props.list.id, props.item.id, {
-      timerAutoswitch: !props.item.timerAutoswitch,
+    actions.updateItem(guard().list.id, item().id, {
+      timerAutoswitch: !item().timerAutoswitch,
     });
   };
 
   const toggleAutostart = () => {
-    actions.updateItem(props.list.id, props.item.id, {
-      timerAutostart: !props.item.timerAutostart,
+    actions.updateItem(guard().list.id, item().id, {
+      timerAutostart: !item().timerAutostart,
     });
   };
 
   createEffect(
     on(
-      () => props.item.id,
+      () => item().id,
       () => {
-        if (props.item.timerAutostart) {
+        if (item().timerAutostart) {
           startTimer();
         }
       },
@@ -94,7 +96,7 @@ export const PlayTimer: Component<{
 
       <div class={`inputGroup inputGroup__checkbox`}>
         <input
-          checked={props.item.timerAutoswitch}
+          checked={item().timerAutoswitch}
           onChange={toggleAutoswitch}
           id="nextOnComplete"
           type="checkbox"
@@ -105,7 +107,7 @@ export const PlayTimer: Component<{
       </div>
       <div class={`inputGroup inputGroup__checkbox`}>
         <input
-          checked={props.item.timerAutostart}
+          checked={item().timerAutostart}
           onChange={toggleAutostart}
           id="timerAutoStart"
           type="checkbox"

@@ -1,49 +1,35 @@
-import type { Mock } from "vitest";
-
-import { Router } from "@solidjs/router";
-import { render, screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
+import { createRoot, createEffect } from "solid-js";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
-import { createStoreValue } from "../../store/createStoreValue";
 import { createListWithItems } from "../../store/helpers";
+import { renderInListItemGuardProvider } from "../../test/utils";
 
 import { PlayTimer } from "./PlayTimer";
 
-const list = createListWithItems({ name: "list1", description: "list1desc" }, [
-  { name: "item1", description: "item1desc", timerSeconds: "60" },
-  {
-    name: "item1",
-    description: "item1desc",
-    timerSeconds: "3",
-    timerAutostart: true,
-  },
-]);
-const item = list.items[0];
-const itemAutostart = list.items[1];
-
-vi.mock("../../store/createStoreValue", async () => {
-  const type = await import("../../store/createStoreValue");
-  const mod: typeof type = await vi.importActual(
-    "../../store/createStoreValue",
-  );
-  return {
-    ...mod,
-    createStoreValue: vi.fn(),
-  };
-});
-
-const mockCreateStoreValue = createStoreValue as Mock;
+const list = () =>
+  createListWithItems({ name: "list1", description: "list1desc" }, [
+    { name: "item1", timerSeconds: "60" },
+    {
+      name: "item2",
+      timerSeconds: "3",
+      timerAutostart: true,
+    },
+    {
+      name: "item3",
+      timerSeconds: "10",
+      timerProgress: 6,
+    },
+    {
+      name: "item4",
+      timerSeconds: null,
+    },
+  ]);
 
 describe("PlayTimer", () => {
-  const updateItemMock = vi.fn();
   const goNext = vi.fn();
-
   beforeEach(() => {
-    mockCreateStoreValue.mockReturnValue([
-      null,
-      { updateItem: updateItemMock },
-    ]);
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -51,13 +37,11 @@ describe("PlayTimer", () => {
   });
 
   it("renders component", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <PlayTimer goNext={goNext} list={list} item={item} />
-        </StoreProvider>
-      </Router>
-    ));
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      0,
+    );
 
     expect(screen.getByText("0/60")).toBeInTheDocument();
     expect(screen.getByText("Start timer")).toBeInTheDocument();
@@ -69,26 +53,111 @@ describe("PlayTimer", () => {
     expect(screen.getByText("Automatically start timer")).toBeInTheDocument();
   });
 
-  describe("with timerAutostart", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
+  it("renders with timer seconds null", () => {
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      3,
+    );
 
-    it("renders component", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayTimer goNext={goNext} list={list} item={itemAutostart} />
-          </StoreProvider>
-        </Router>
-      ));
+    expect(screen.getByText("0/0")).toBeInTheDocument();
+  });
 
-      vi.advanceTimersByTime(5001);
-      expect(updateItemMock).toHaveBeenCalledWith(list.id, itemAutostart.id, {
-        timerProgress: 1,
+  it("starts and pauses timer", () => {
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      0,
+    );
+
+    expect(screen.getByText("0/60")).toBeInTheDocument();
+
+    const start = screen.getByText("Start timer");
+    fireEvent.click(start);
+    vi.advanceTimersByTime(2000);
+    expect(screen.getByText("2/60")).toBeInTheDocument();
+
+    const pause = screen.getByText("Pause timer");
+    fireEvent.click(pause);
+    vi.advanceTimersByTime(2000);
+    expect(screen.getByText("2/60")).toBeInTheDocument();
+  });
+
+  it("resets timer", () => {
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      2,
+    );
+
+    expect(screen.getByText("6/10")).toBeInTheDocument();
+
+    const reset = screen.getByText("Reset timer");
+    fireEvent.click(reset);
+
+    expect(screen.getByText("0/10")).toBeInTheDocument();
+  });
+
+  describe("with timerAutoswitch", () => {
+    it("goes next when timer is finished", () => {
+      const autoSwitchList = list();
+      const [history] = renderInListItemGuardProvider(
+        () => <PlayTimer goNext={goNext} />,
+        autoSwitchList,
+        1,
+      );
+
+      vi.advanceTimersByTime(3000);
+
+      createRoot((dispose) => {
+        createEffect(() => {
+          expect(history().value).toEqual(
+            `/list/${autoSwitchList.id}/${autoSwitchList.items[2].id}`,
+          );
+        });
+        dispose();
       });
-
-      expect(updateItemMock).toHaveBeenCalledTimes(4);
     });
+  });
+
+  describe("with timerAutostart", () => {
+    it("starts timer automatically", () => {
+      renderInListItemGuardProvider(
+        () => <PlayTimer goNext={goNext} />,
+        list(),
+        1,
+      );
+
+      vi.advanceTimersByTime(2000);
+      expect(screen.getByText("2/3")).toBeInTheDocument();
+    });
+  });
+
+  it("toggle autoswitch", () => {
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      0,
+    );
+
+    const autoswitch = screen.getByLabelText(
+      "Automatically go next when timer is finished",
+    );
+    fireEvent.click(autoswitch);
+
+    expect(autoswitch).not.toBeChecked();
+  });
+
+  it("toggle autostart", () => {
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      0,
+    );
+
+    const autostart = screen.getByLabelText("Automatically start timer");
+    fireEvent.click(autostart);
+
+    expect(autostart).toBeChecked();
   });
 });
