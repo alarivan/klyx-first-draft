@@ -1,19 +1,23 @@
-import type { IListItem } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { Show } from "solid-js";
 
+import { useListItemGuardContext } from "../ListItemGuard";
+
 import styles from "./PlayContent.module.css";
 
-export const PlayContent: Component<{ item: IListItem }> = (props) => {
+export const PlayContent: Component = () => {
+  const guard = useListItemGuardContext();
+  const item = () => guard().item.data;
+
   return (
     <div class={styles.container}>
-      <h2>{props.item.completed ? 1 : 0}</h2>
-      <Show when={props.item.name}>
-        <h2>{props.item.name}</h2>
+      <h2>{item().completed ? 1 : 0}</h2>
+      <Show when={item().name}>
+        <h2>{item().name}</h2>
       </Show>
-      <Show when={props.item.description}>
-        <p class={styles.description}>{props.item.description}</p>
+      <Show when={item().description}>
+        <p class={styles.description}>{item().description}</p>
       </Show>
     </div>
   );

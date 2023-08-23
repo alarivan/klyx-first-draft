@@ -25,7 +25,11 @@ export const createListItem = ({
   counterLimit = null,
   counterType = "none",
   counterAutoswitch = true,
+  counterProgress = null,
   timerSeconds = null,
+  timerAutoswitch = true,
+  timerAutostart = false,
+  timerProgress = null,
 }: IListItemDataObject): IListItem => {
   return {
     id: crypto.randomUUID(),
@@ -34,10 +38,12 @@ export const createListItem = ({
     completed,
     counterLimit,
     counterAutoswitch,
-    counterProgress: counterType === "none" ? null : 0,
+    counterProgress: counterType === "none" ? null : counterProgress || 0,
     counterType,
     timerSeconds,
-    timerProgress: timerSeconds ? 0 : null,
+    timerProgress: timerProgress || timerSeconds ? 0 : null,
+    timerAutoswitch,
+    timerAutostart,
   };
 };
 
@@ -50,7 +56,7 @@ export const createListWithItems = (
   }, createList(list));
 };
 
-export const isComleted = (item: IListItem) => {
+export const isCompleted = (item: IListItem) => {
   let completed = item.completed;
 
   if (
@@ -63,7 +69,7 @@ export const isComleted = (item: IListItem) => {
       parseInt(item.timerSeconds) === item.timerProgress;
   } else if (item.counterType === "limited" && item.counterLimit) {
     completed = parseInt(item.counterLimit) === item.counterProgress;
-  } else if (item.timerSeconds && item.timerProgress) {
+  } else if (item.timerSeconds) {
     completed = parseInt(item.timerSeconds) === item.timerProgress;
   }
 

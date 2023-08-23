@@ -1,26 +1,25 @@
-import type { IList, IListItem } from "../../store/types";
 import type { Component } from "solid-js";
 
-import { useNavigate } from "@solidjs/router";
 import { FiMinus, FiPlus } from "solid-icons/fi";
 import { Show } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
+import { useListItemGuardContext } from "../ListItemGuard";
 
 import styles from "./PlayCounter.module.css";
 
 export const PlayCounter: Component<{
-  list: IList;
-  item: IListItem;
-  index: number;
+  goNext: () => void;
 }> = (props) => {
-  const navigate = useNavigate();
+  const guard = useListItemGuardContext();
+  const item = () => guard().item.data;
+
   const [_, actions] = useStoreContext();
-  const progress = () => props.item.counterProgress || 0;
+  const progress = () => item().counterProgress || 0;
 
   const state = () => {
-    if (props.item.counterType === "limited") {
-      return `${progress()}/${props.item.counterLimit}`;
+    if (item().counterType === "limited") {
+      return `${progress()}/${item().counterLimit}`;
     }
     return progress();
   };
@@ -28,9 +27,10 @@ export const PlayCounter: Component<{
   const compareToLimit = (
     n: number,
     cond = (a: number, limit: number) => a >= limit,
-  ) =>
-    props.item.counterLimit !== null &&
-    cond(n, parseInt(props.item.counterLimit));
+  ) => {
+    const counterLimit = item().counterLimit;
+    return counterLimit !== null && cond(n, parseInt(counterLimit));
+  };
 
   const disableDecrease = () => progress() <= 0;
   const disableIncrease = () => compareToLimit(progress());
@@ -39,21 +39,16 @@ export const PlayCounter: Component<{
     const next = progress() + 1;
     if (compareToLimit(next)) {
       if (compareToLimit(next, (next, l) => next <= l)) {
-        actions.updateItem(props.list.id, props.item.id, {
+        actions.updateItem(guard().list.id, item().id, {
           counterProgress: next,
         });
       }
 
-      if (props.item.counterAutoswitch) {
-        const nextItem = props.list.items[props.index + 1];
-        if (nextItem) {
-          navigate(`/list/${props.list.id}/play/${nextItem.id}`);
-        } else {
-          navigate(`/list/${props.list.id}/play/done`);
-        }
+      if (item().counterAutoswitch) {
+        props.goNext();
       }
     } else {
-      actions.updateItem(props.list.id, props.item.id, {
+      actions.updateItem(guard().list.id, item().id, {
         counterProgress: next,
       });
     }
@@ -61,20 +56,20 @@ export const PlayCounter: Component<{
   const decrease = () => {
     const next = progress() - 1;
     if (next >= 0) {
-      actions.updateItem(props.list.id, props.item.id, {
+      actions.updateItem(guard().list.id, item().id, {
         counterProgress: next,
       });
     }
   };
 
   const handleNextOnComplete = () => {
-    actions.updateItem(props.list.id, props.item.id, {
-      counterAutoswitch: !props.item.counterAutoswitch,
+    actions.updateItem(guard().list.id, item().id, {
+      counterAutoswitch: !item().counterAutoswitch,
     });
   };
 
   const handleReset = () => {
-    actions.updateItem(props.list.id, props.item.id, {
+    actions.updateItem(guard().list.id, item().id, {
       counterProgress: 0,
     });
   };
@@ -110,10 +105,12 @@ export const PlayCounter: Component<{
         >
           Reset counter
         </button>
-        <Show when={props.item.counterType === "limited"}>
-          <div class={styles.nextOnComplete}>
+        <Show when={item().counterType === "limited"}>
+          <div
+            class={`inputGroup inputGroup__checkbox ${styles.nextOnComplete}`}
+          >
             <input
-              checked={props.item.counterAutoswitch}
+              checked={item().counterAutoswitch}
               onChange={handleNextOnComplete}
               id="nextOnComplete"
               type="checkbox"

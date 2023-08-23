@@ -1,11 +1,9 @@
-import type { Mock } from "vitest";
-
-import { Router, useNavigate, useParams } from "@solidjs/router";
-import { fireEvent, render, screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
+import { createRoot, createEffect } from "solid-js";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
 import { createListWithItems } from "../../store/helpers";
+import { renderInListGuardProvider } from "../../test/utils";
 
 import { ListEdit } from "./ListEdit";
 
@@ -13,50 +11,9 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   { name: "item1", description: "item1desc" },
 ]);
 
-vi.mock("@solidjs/router", async () => {
-  const type = await import("@solidjs/router");
-  const mod: typeof type = await vi.importActual("@solidjs/router");
-  return {
-    ...mod,
-    useParams: vi.fn(),
-    useNavigate: vi.fn(),
-  };
-});
-
-const mockUseParams = useParams as Mock;
-const mockUseNavigate = useNavigate as Mock;
-
 describe("ListEdit", () => {
-  const mockNavigate = vi.fn();
-  beforeEach(() => {
-    mockUseParams.mockReturnValue({ listId: list.id });
-    mockUseNavigate.mockReturnValue(mockNavigate);
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it("renders component", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <ListEdit />
-        </StoreProvider>
-      </Router>
-    ));
-
-    expect(screen.getByText("Save list")).toBeInTheDocument();
-  });
-
   it("submits form when all inputs are valid", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <ListEdit />
-        </StoreProvider>
-      </Router>
-    ));
+    const [history] = renderInListGuardProvider(() => <ListEdit />, list);
 
     const nameInput = screen.getByLabelText(/List name/);
 
@@ -67,6 +24,11 @@ describe("ListEdit", () => {
     const button = screen.getByText("Save list");
     fireEvent.click(button);
 
-    expect(mockNavigate).toHaveBeenCalledWith(`/list/${list.id}`);
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/list/${list.id}`);
+        dispose();
+      });
+    });
   });
 });

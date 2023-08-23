@@ -1,9 +1,8 @@
-import { Router } from "@solidjs/router";
-import { render, screen } from "@solidjs/testing-library";
+import { screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
 import { createListWithItems } from "../../store/helpers";
+import { renderInRouter } from "../../test/utils";
 
 import { Home } from "./Home";
 
@@ -18,13 +17,7 @@ const lists = Array(3)
 
 describe("Home", () => {
   it("renders lists", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists }}>
-          <Home />
-        </StoreProvider>
-      </Router>
-    ));
+    renderInRouter(() => <Home />, { lists });
 
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list2")).toBeInTheDocument();
@@ -33,13 +26,7 @@ describe("Home", () => {
   });
 
   it("renders button when there is no lists", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [] }}>
-          <Home />
-        </StoreProvider>
-      </Router>
-    ));
+    renderInRouter(() => <Home />, { lists: [] });
 
     expect(screen.getByText("add new list")).toBeInTheDocument();
   });

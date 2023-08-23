@@ -1,89 +1,92 @@
-import type { Mock } from "vitest";
-
-import { Router, useNavigate, useParams } from "@solidjs/router";
-import { fireEvent, render, screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
-import { createStoreValue } from "../../store/createStoreValue";
 import { createListWithItems } from "../../store/helpers";
+import { renderInListItemGuardProvider } from "../../test/utils";
 
 import { PlayCounter } from "./PlayCounter";
 
-vi.mock("@solidjs/router", async () => {
-  const type = await import("@solidjs/router");
-  const mod: typeof type = await vi.importActual("@solidjs/router");
-  return {
-    ...mod,
-    useParams: vi.fn(),
-    useNavigate: vi.fn(),
-  };
-});
-
-vi.mock("../../store/createStoreValue", async () => {
-  const type = await import("../../store/createStoreValue");
-  const mod: typeof type = await vi.importActual(
-    "../../store/createStoreValue",
-  );
-  return {
-    ...mod,
-    createStoreValue: vi.fn(),
-  };
-});
-
-const mockUseParams = useParams as Mock;
-const mockUseNavigate = useNavigate as Mock;
-const mockCreateStoreValue = createStoreValue as Mock;
+/* vi.mock("@solidjs/router", async () => {
+ *   const type = await import("@solidjs/router");
+ *   const mod: typeof type = await vi.importActual("@solidjs/router");
+ *   return {
+ *     ...mod,
+ *     useParams: vi.fn(),
+ *     useNavigate: vi.fn(),
+ *   };
+ * });
+ *
+ * vi.mock("../../store/createStoreValue", async () => {
+ *   const type = await import("../../store/createStoreValue");
+ *   const mod: typeof type = await vi.importActual(
+ *     "../../store/createStoreValue",
+ *   );
+ *   return {
+ *     ...mod,
+ *     createStoreValue: vi.fn(),
+ *   };
+ * });
+ *
+ * const mockUseParams = useParams as Mock;
+ * const mockCreateStoreValue = createStoreValue as Mock; */
 
 describe("PlayCounter", () => {
-  const navigateMock = vi.fn();
-  const updateItemMock = vi.fn();
-  beforeEach(() => {
-    mockCreateStoreValue.mockReturnValue([
-      null,
-      { updateItem: updateItemMock },
-    ]);
-  });
+  /* const updateItemMock = vi.fn(); */
+  const goNextMock = vi.fn();
+  /* beforeEach(() => {
+   *   mockCreateStoreValue.mockReturnValue([
+   *     null,
+   *     { updateItem: updateItemMock },
+   *   ]);
+   * }); */
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
   describe("limited", () => {
-    const list = createListWithItems(
-      { name: "list1", description: "list1desc" },
-      [
+    const list = () =>
+      createListWithItems({ name: "list1", description: "list1desc" }, [
         {
           name: "item1",
           description: "item1desc",
           counterLimit: "2",
           counterType: "limited",
+          counterAutoswitch: false,
+        },
+        {
+          name: "item1",
+          description: "item1desc",
+          counterLimit: "2",
+          counterType: "limited",
+          counterProgress: 1,
+        },
+        {
+          name: "item1",
+          description: "item1desc",
+          counterLimit: "2",
+          counterType: "limited",
+          counterProgress: 2,
         },
         {
           name: "item2",
           description: "item2desc",
         },
-      ],
-    );
-    const limitedItem = list.items[0];
+      ]);
 
-    beforeEach(() => {
-      mockUseParams.mockReturnValue({ listId: list.id });
-      mockUseNavigate.mockReturnValue(navigateMock);
-    });
+    /* beforeEach(() => {
+*   mockUseParams.mockReturnValue({ listId: list.id });
+* });
 
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
+* afterEach(() => {
+*   vi.clearAllMocks();
+* }); */
 
     it("renders component with initial state 0", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter list={list} item={limitedItem} index={0} />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+      );
 
       expect(screen.getByLabelText("Decrease counter")).toBeDisabled();
       expect(screen.getByLabelText("Increase counter")).not.toBeDisabled();
@@ -96,17 +99,11 @@ describe("PlayCounter", () => {
     });
 
     it("renders component with initial state limit", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter
-              list={list}
-              item={{ ...limitedItem, counterProgress: 2 }}
-              index={0}
-            />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+        2,
+      );
 
       expect(screen.getByLabelText("Decrease counter")).not.toBeDisabled();
       expect(screen.getByLabelText("Increase counter")).toBeDisabled();
@@ -114,151 +111,85 @@ describe("PlayCounter", () => {
     });
 
     it("decreases counter", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter
-              list={list}
-              item={{ ...limitedItem, counterProgress: 2 }}
-              index={0}
-            />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+        2,
+      );
 
       expect(screen.getByText("2/2")).toBeInTheDocument();
 
       const decrease = screen.getByLabelText("Decrease counter");
       fireEvent.click(decrease);
-      expect(updateItemMock).toHaveBeenCalledWith(list.id, limitedItem.id, {
-        counterProgress: 1,
-      });
+
+      expect(screen.getByText("1/2")).toBeInTheDocument();
     });
 
     it("increases counter", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter
-              list={list}
-              item={{ ...limitedItem, counterProgress: 1 }}
-              index={0}
-            />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+        0,
+      );
 
-      expect(screen.getByText("1/2")).toBeInTheDocument();
+      expect(screen.getByText("0/2")).toBeInTheDocument();
 
       const decrease = screen.getByLabelText("Increase counter");
       fireEvent.click(decrease);
-      expect(updateItemMock).toHaveBeenCalledWith(list.id, limitedItem.id, {
-        counterProgress: 2,
-      });
+
+      expect(screen.getByText("1/2")).toBeInTheDocument();
     });
 
     it("resets counter", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter
-              list={list}
-              item={{ ...limitedItem, counterProgress: 1 }}
-              index={0}
-            />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+        2,
+      );
 
-      expect(screen.getByText("1/2")).toBeInTheDocument();
+      expect(screen.getByText("2/2")).toBeInTheDocument();
 
       const reset = screen.getByText("Reset counter");
       fireEvent.click(reset);
-      expect(updateItemMock).toHaveBeenCalledWith(list.id, limitedItem.id, {
-        counterProgress: 0,
-      });
+
+      expect(screen.getByText("0/2")).toBeInTheDocument();
     });
 
     it("updates counterAutoswitch", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter
-              list={list}
-              item={{ ...limitedItem, counterProgress: 1 }}
-              index={0}
-            />
-          </StoreProvider>
-        </Router>
-      ));
-
-      expect(screen.getByText("1/2")).toBeInTheDocument();
+      const autoswitchList = list();
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        autoswitchList,
+        0,
+      );
 
       const checkbox = screen.getByLabelText(
         "Automatically go next when counter is completed",
       );
       fireEvent.click(checkbox);
 
-      expect(updateItemMock).toHaveBeenCalledWith(list.id, limitedItem.id, {
-        counterAutoswitch: false,
-      });
+      expect(checkbox).toBeChecked();
     });
 
-    describe("when counterAutocomplete is true", () => {
-      it("calls navigate to next item when counter is completed", () => {
-        render(() => (
-          <Router>
-            <StoreProvider initalStore={{ lists: [list] }}>
-              <PlayCounter
-                list={list}
-                item={{ ...limitedItem, counterProgress: 1 }}
-                index={0}
-              />
-            </StoreProvider>
-          </Router>
-        ));
+    it("calls navigate to next item when counter is completed", () => {
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+        1,
+      );
 
-        expect(screen.getByText("1/2")).toBeInTheDocument();
+      expect(screen.getByText("1/2")).toBeInTheDocument();
 
-        const increase = screen.getByLabelText("Increase counter");
-        fireEvent.click(increase);
+      const increase = screen.getByLabelText("Increase counter");
+      fireEvent.click(increase);
 
-        expect(navigateMock).toHaveBeenCalledWith(
-          `/list/${list.id}/play/${list.items[1].id}`,
-        );
-      });
-
-      it("calls navigate to done when counter is completed and last item", () => {
-        const listWithSingleItem = { ...list, items: [list.items[0]] };
-
-        render(() => (
-          <Router>
-            <StoreProvider initalStore={{ lists: [listWithSingleItem] }}>
-              <PlayCounter
-                list={listWithSingleItem}
-                item={{ ...listWithSingleItem.items[0], counterProgress: 1 }}
-                index={0}
-              />
-            </StoreProvider>
-          </Router>
-        ));
-
-        expect(screen.getByText("1/2")).toBeInTheDocument();
-
-        const increase = screen.getByLabelText("Increase counter");
-        fireEvent.click(increase);
-
-        expect(navigateMock).toHaveBeenCalledWith(
-          `/list/${listWithSingleItem.id}/play/done`,
-        );
-      });
+      expect(goNextMock).toHaveBeenCalled();
     });
   });
 
   describe("unlimited", () => {
-    const list = createListWithItems(
-      { name: "list1", description: "list1desc" },
-      [
+    const list = () =>
+      createListWithItems({ name: "list1", description: "list1desc" }, [
         {
           name: "item1",
           description: "item1desc",
@@ -270,27 +201,13 @@ describe("PlayCounter", () => {
           counterLimit: "2",
           counterType: "limited",
         },
-      ],
-    );
-    const unlimitedItem = list.items[0];
-
-    beforeEach(() => {
-      mockUseParams.mockReturnValue({ listId: list.id });
-      mockUseNavigate.mockReturnValue(navigateMock);
-    });
-
-    afterEach(() => {
-      vi.clearAllMocks();
-    });
+      ]);
 
     it("renders component with initial state", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter list={list} item={unlimitedItem} index={0} />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+      );
 
       expect(screen.getByLabelText("Decrease counter")).toBeDisabled();
       expect(screen.getByLabelText("Increase counter")).not.toBeDisabled();
@@ -303,25 +220,17 @@ describe("PlayCounter", () => {
     });
 
     it("increases counter", () => {
-      render(() => (
-        <Router>
-          <StoreProvider initalStore={{ lists: [list] }}>
-            <PlayCounter
-              list={list}
-              item={{ ...unlimitedItem, counterProgress: 1 }}
-              index={0}
-            />
-          </StoreProvider>
-        </Router>
-      ));
+      renderInListItemGuardProvider(
+        () => <PlayCounter goNext={goNextMock} />,
+        list(),
+      );
 
-      expect(screen.getByText("1")).toBeInTheDocument();
+      expect(screen.getByText("0")).toBeInTheDocument();
 
       const decrease = screen.getByLabelText("Increase counter");
       fireEvent.click(decrease);
-      expect(updateItemMock).toHaveBeenCalledWith(list.id, unlimitedItem.id, {
-        counterProgress: 2,
-      });
+
+      expect(screen.getByText("1")).toBeInTheDocument();
     });
   });
 });

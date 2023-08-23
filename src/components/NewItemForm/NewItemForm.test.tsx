@@ -146,8 +146,8 @@ describe("NewItemForm", () => {
       name: null,
       description: null,
       counterType: "none",
-      counterLimit: null,
       timerSeconds: "0",
+      timerAutostart: false,
     };
     expect(onSubmit).toHaveBeenCalledWith(expected);
   });

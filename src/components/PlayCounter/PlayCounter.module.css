@@ -27,11 +27,4 @@
 
 .nextOnComplete {
   margin-top: 8px;
-  display: flex;
-  align-items: center;
-}
-.nextOnComplete input {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 8px;
 }

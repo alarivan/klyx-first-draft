@@ -4,7 +4,7 @@ import {
   createList,
   createListItem,
   createListWithItems,
-  isComleted,
+  isCompleted,
 } from "./helpers";
 
 describe("helpers", () => {
@@ -41,6 +41,8 @@ describe("helpers", () => {
           counterProgress: 0,
           timerSeconds: "60",
           timerProgress: 0,
+          timerAutoswitch: true,
+          timerAutostart: false,
           completed: false,
         }),
       );
@@ -134,7 +136,7 @@ describe("helpers", () => {
     });
   });
 
-  describe(isComleted, () => {
+  describe(isCompleted, () => {
     describe("default", () => {
       const item = createListItem({
         name: "name",
@@ -142,7 +144,7 @@ describe("helpers", () => {
       });
 
       it("returns items' completed whithout timer and limited counter", () => {
-        const completed = isComleted({
+        const completed = isCompleted({
           ...item,
           completed: true,
         });
@@ -160,7 +162,7 @@ describe("helpers", () => {
       });
 
       it("retruns true when counter limit and timer seconds are reached", () => {
-        const completed = isComleted({
+        const completed = isCompleted({
           ...item,
           timerProgress: 60,
           counterProgress: 10,
@@ -169,7 +171,7 @@ describe("helpers", () => {
       });
 
       it("retruns false when counter limit and timer seconds are not reached", () => {
-        const completed = isComleted({
+        const completed = isCompleted({
           ...item,
           timerProgress: 59,
           counterProgress: 9,
@@ -178,7 +180,7 @@ describe("helpers", () => {
       });
 
       it("retruns false when counter limit or timer seconds are not reached", () => {
-        const completed = isComleted({
+        const completed = isCompleted({
           ...item,
           timerProgress: 60,
           counterProgress: 9,
@@ -197,7 +199,7 @@ describe("helpers", () => {
     });
 
     it("retruns true when timer seconds are reached", () => {
-      const completed = isComleted({
+      const completed = isCompleted({
         ...item,
         timerProgress: 60,
       });
@@ -205,7 +207,7 @@ describe("helpers", () => {
     });
 
     it("retruns false when timer seconds are not reached", () => {
-      const completed = isComleted({
+      const completed = isCompleted({
         ...item,
         timerProgress: 59,
       });
@@ -222,7 +224,7 @@ describe("helpers", () => {
     });
 
     it("retruns true when timer seconds are reached", () => {
-      const completed = isComleted({
+      const completed = isCompleted({
         ...item,
         counterProgress: 10,
       });
@@ -230,7 +232,7 @@ describe("helpers", () => {
     });
 
     it("retruns false when timer seconds are not reached", () => {
-      const completed = isComleted({
+      const completed = isCompleted({
         ...item,
         counterProgress: 9,
       });

@@ -3,7 +3,6 @@ import type { Component } from "solid-js";
 
 import { useNavigate, useParams } from "@solidjs/router";
 
-import { ListGuard } from "../../components/ListGuard";
 import { NewItemForm } from "../../components/NewItemForm";
 import { useStoreContext } from "../../store/context";
 
@@ -18,14 +17,10 @@ export const NewItem: Component = () => {
   };
 
   return (
-    <ListGuard>
-      {() => (
-        <NewItemForm
-          listId={params.listId}
-          onSubmit={onSubmit}
-          buttonLabel="Add item"
-        />
-      )}
-    </ListGuard>
+    <NewItemForm
+      listId={params.listId}
+      onSubmit={onSubmit}
+      buttonLabel="Add item"
+    />
   );
 };

@@ -49,7 +49,9 @@ export function useForm<T extends string>({
   errorClass,
 }: {
   fieldNames: readonly T[];
-  initialValues?: Partial<Record<ExcludeFromTypeInference<T>, string>>;
+  initialValues?: Partial<
+    Record<ExcludeFromTypeInference<T>, string | boolean>
+  >;
   errorClass: string;
 }) {
   type IFormFieldName = ExcludeFromTypeInference<T>;
@@ -57,11 +59,16 @@ export function useForm<T extends string>({
   const fields: IFormFieldRecord<T> = {} as IFormFieldRecord<T>;
   const [errors, setErrors] = createStore<IFormErrorRecord<IFormFieldName>>({});
   const [values, setValues] = createSignal<
-    Partial<Record<IFormFieldName, string>>
+    Partial<Record<IFormFieldName, string | boolean>>
   >(initialValues || {});
 
   const onInput = (name: IFormFieldName, ref: IFormInputElement) => {
-    setValues((v) => ({ ...v, [name]: ref.value }));
+    let value: string | boolean = ref.value;
+    if (ref.type === "checkbox") {
+      value = (ref as HTMLInputElement).checked;
+    }
+
+    setValues((v) => ({ ...v, [name]: value }));
     if (errors[name]) {
       setErrors({ [name]: undefined } as typeof errors);
       errorClass && ref.classList.toggle(errorClass, false);
@@ -85,11 +92,25 @@ export function useForm<T extends string>({
     name: IFormFieldName,
     element: IFormInputElement,
   ) => {
+    const initialValue = initialValues?.[name];
+    let value = initialValue;
+    if (element.type === "checkbox") {
+      const checkboxElement = element as HTMLInputElement;
+      if (typeof initialValue === "boolean") {
+        value = initialValue || checkboxElement.checked || false;
+        checkboxElement.checked = value;
+      }
+    } else if (
+      typeof initialValue === "string" ||
+      typeof initialValue === "undefined"
+    ) {
+      value = initialValue || element.value || "";
+      element.value = value;
+    }
     setValues((v) => ({
       ...v,
-      [name]: initialValues?.[name] || element.value,
+      [name]: value,
     }));
-    element.value = initialValues?.[name] || element.value || "";
     element.oninput = () => onInput(name, element);
     element.onblur = () => setErrorMessage(name);
   };

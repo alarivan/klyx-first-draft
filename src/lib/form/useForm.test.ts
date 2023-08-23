@@ -230,25 +230,93 @@ describe("useForm", () => {
         dispose();
       });
     });
+
+    it("should return values with checkbox input", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput } = useForm({
+          fieldNames: ["toggle"],
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "toggle";
+        inputElement.type = "checkbox";
+        inputElement.checked = true;
+        const validator = vi.fn().mockReturnValue(undefined);
+
+        initFormInput(inputElement, () => [validator]);
+
+        await inputElement.oninput?.(vi.fn() as unknown as Event);
+        await inputElement.onblur?.(vi.fn() as unknown as FocusEvent);
+
+        expect(values()).toEqual({ toggle: true });
+
+        dispose();
+      });
+    });
   });
 
-  it("should init input with initial values", () => {
-    createRoot(async (dispose) => {
-      const { values, initFormInput } = useForm({
-        initialValues: { name: "initial" },
-        fieldNames: ["name"],
-        errorClass: "err",
+  describe("initialValues", () => {
+    it("should init input with initial values", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput } = useForm({
+          initialValues: { name: "initial" },
+          fieldNames: ["name"],
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "name";
+        inputElement.value = "val";
+
+        initFormInput(inputElement, () => []);
+
+        expect(values()).toEqual({ name: "initial" });
+
+        dispose();
       });
+    });
 
-      const inputElement = document.createElement("input");
-      inputElement.name = "name";
-      inputElement.value = "val";
+    it("should set initial value for checkbox", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput } = useForm({
+          initialValues: { toggle: true },
+          fieldNames: ["toggle"],
+          errorClass: "err",
+        });
 
-      initFormInput(inputElement, () => []);
+        const inputElement = document.createElement("input");
+        inputElement.name = "toggle";
+        inputElement.checked = false;
+        inputElement.type = "checkbox";
 
-      expect(values()).toEqual({ name: "initial" });
+        initFormInput(inputElement, () => []);
 
-      dispose();
+        expect(values()).toEqual({ toggle: true });
+
+        dispose();
+      });
+    });
+
+    it("should set initial value for checkbox when false", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput } = useForm({
+          initialValues: { toggle: false },
+          fieldNames: ["toggle"],
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "toggle";
+        inputElement.checked = false;
+        inputElement.type = "checkbox";
+
+        initFormInput(inputElement, () => []);
+
+        expect(values()).toEqual({ toggle: false });
+
+        dispose();
+      });
     });
   });
 });

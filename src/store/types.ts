@@ -9,6 +9,8 @@ export interface IListItem {
   counterProgress: number | null;
   timerSeconds: string | null;
   timerProgress: number | null;
+  timerAutoswitch: boolean;
+  timerAutostart: boolean;
 }
 
 export interface IListDataObject {
@@ -27,6 +29,8 @@ export interface IListItemDataObject {
   counterProgress?: IListItem["counterProgress"];
   timerSeconds?: IListItem["timerSeconds"];
   timerProgress?: IListItem["timerProgress"];
+  timerAutoswitch?: IListItem["timerAutoswitch"];
+  timerAutostart?: IListItem["timerAutostart"];
 }
 
 export interface IList {

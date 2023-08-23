@@ -64,6 +64,21 @@ li {
   padding: 8px;
 }
 
+.inputGroup.inputGroup__checkbox {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.inputGroup__checkbox input {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.inputGroup__checkbox label {
+  margin-left: 8px;
+  margin-bottom: 0;
+}
+
 .inputGroup :global(.error) {
   border-color: var(--error);
 }

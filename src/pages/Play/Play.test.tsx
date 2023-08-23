@@ -1,137 +1,71 @@
-import type { Mock } from "vitest";
-
-import { Router, useNavigate, useParams } from "@solidjs/router";
-import { fireEvent, render, screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
+import { createEffect, createRoot } from "solid-js";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
 import { createListWithItems } from "../../store/helpers";
+import { renderInListItemGuardProvider } from "../../test/utils";
 
 import { Play } from "./Play";
 
 const list = createListWithItems({ name: "list1", description: "list1desc" }, [
-  { name: "item1", description: "item1desc" },
+  {
+    name: "item1",
+  },
   {
     name: "item2",
-    description: "item2desc",
-    counterType: "limited",
-    counterLimit: "10",
+    counterType: "unlimited",
   },
-  { name: "item3" },
+  {
+    name: "item2",
+    timerSeconds: "10",
+  },
 ]);
 
-vi.mock("@solidjs/router", async () => {
-  const type = await import("@solidjs/router");
-  const mod: typeof type = await vi.importActual("@solidjs/router");
-  return {
-    ...mod,
-    useParams: vi.fn(),
-    useNavigate: vi.fn(),
-  };
-});
-
-const mockUseParams = useParams as Mock;
-const mockUseNavigate = useNavigate as Mock;
-
 describe("Play", () => {
-  const navigateMock = vi.fn();
-  beforeEach(() => {
-    mockUseParams.mockReturnValue({
-      listId: list.id,
-      itemId: list.items[0].id,
-    });
-    mockUseNavigate.mockReturnValue(navigateMock);
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it("renders play", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <Play />
-        </StoreProvider>
-      </Router>
-    ));
+  it("renders play view", () => {
+    renderInListItemGuardProvider(() => <Play />, list, 0);
 
     expect(screen.getByText(list.name)).toBeInTheDocument();
-    expect(screen.getByText("item1")).toBeInTheDocument();
+    expect(screen.getByText(list.items[0].name!)).toBeInTheDocument();
   });
 
-  it("renders play with counter", () => {
-    mockUseParams.mockReturnValue({
-      listId: list.id,
-      itemId: list.items[1].id,
-    });
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <Play />
-        </StoreProvider>
-      </Router>
-    ));
+  it("renders play view with counter", () => {
+    renderInListItemGuardProvider(() => <Play />, list, 1);
 
-    expect(screen.getByText(list.name)).toBeInTheDocument();
-    expect(screen.getByText("item2")).toBeInTheDocument();
     expect(screen.getByLabelText("Increase counter")).toBeInTheDocument();
   });
 
-  it("increases counter", () => {
-    mockUseParams.mockReturnValue({
-      listId: list.id,
-      itemId: list.items[1].id,
-    });
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <Play />
-        </StoreProvider>
-      </Router>
-    ));
+  it("renders play view with timer", () => {
+    renderInListItemGuardProvider(() => <Play />, list, 2);
 
-    expect(screen.getByText("0/10")).toBeInTheDocument();
-
-    const increase = screen.getByLabelText("Increase counter");
-    fireEvent.click(increase);
-
-    expect(screen.getByText("1/10")).toBeInTheDocument();
+    expect(screen.getByText("Start timer")).toBeInTheDocument();
   });
 
-  it("navigates to next item when counter is completed", () => {
-    mockUseParams.mockReturnValue({
-      listId: list.id,
-      itemId: list.items[1].id,
+  it("goes next", () => {
+    const [history] = renderInListItemGuardProvider(() => <Play />, list, 0);
+
+    const next = screen.getByText("Next");
+    fireEvent.click(next);
+
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/list/${list.id}/${list.items[1].id}`);
+      });
+      dispose();
     });
-    render(() => (
-      <Router>
-        <StoreProvider
-          initalStore={{
-            lists: [
-              {
-                ...list,
-                items: [
-                  list.items[0],
-                  { ...list.items[1], counterProgress: 9 },
-                  list.items[2],
-                ],
-              },
-            ],
-          }}
-        >
-          <Play />
-        </StoreProvider>
-      </Router>
-    ));
+  });
 
-    expect(screen.getByText("9/10")).toBeInTheDocument();
+  it("goes back", () => {
+    const [history] = renderInListItemGuardProvider(() => <Play />, list, 1);
 
-    const increase = screen.getByLabelText("Increase counter");
-    fireEvent.click(increase);
+    const prev = screen.getByText("Previous");
+    fireEvent.click(prev);
 
-    expect(navigateMock).toHaveBeenCalledWith(
-      `/list/${list.id}/play/${list.items[2].id}`,
-    );
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/list/${list.id}/${list.items[0].id}`);
+      });
+      dispose();
+    });
   });
 });

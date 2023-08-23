@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 
-import { Router, useParams } from "@solidjs/router";
+import { Router } from "@solidjs/router";
 import { fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
@@ -25,21 +25,10 @@ vi.mock("../../store/createStoreValue", async () => {
   };
 });
 
-vi.mock("@solidjs/router", async () => {
-  const type = await import("@solidjs/router");
-  const mod: typeof type = await vi.importActual("@solidjs/router");
-  return {
-    ...mod,
-    useParams: vi.fn(),
-  };
-});
-
-const mockUseParams = useParams as Mock;
 const mockCreateStoreValue = createStoreValue as Mock;
 
 describe("ListHeader", () => {
   beforeEach(() => {
-    mockUseParams.mockReturnValue({ listId: list.id });
     mockCreateStoreValue.mockReturnValue([null, { remove: vi.fn() }]);
   });
 

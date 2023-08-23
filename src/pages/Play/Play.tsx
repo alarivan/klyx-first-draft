@@ -1,30 +1,61 @@
 import type { Component } from "solid-js";
 
-import { Show } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import { createMemo, Show } from "solid-js";
 
-import { ListItemGuard } from "../../components/ListItemGuard";
+import { useListItemGuardContext } from "../../components/ListItemGuard";
+import { PlayActions } from "../../components/PlayActions";
 import { PlayContent } from "../../components/PlayContent";
 import { PlayCounter } from "../../components/PlayCounter";
 import { PlayHeader } from "../../components/PlayHeader";
+import { PlayTimer } from "../../components/PlayTimer";
 
 import styles from "./Play.module.css";
 
 export const Play: Component = () => {
+  const guard = useListItemGuardContext();
+  const navigate = useNavigate();
+  const nextId = createMemo(() => {
+    const nextIndex = guard().item.index + 1;
+    return nextIndex !== guard().list.items.length
+      ? guard().list.items[nextIndex].id
+      : "done";
+  });
+
+  const prevId = createMemo(() => {
+    const prevIndex = guard().item.index - 1;
+    return prevIndex >= 0 ? guard().list.items[prevIndex].id : null;
+  });
+
+  const goNext = () => {
+    const id = nextId();
+    navigate(`/list/${guard().list.id}/play/${id}`);
+  };
+  const goPrev = () => {
+    const id = prevId();
+    if (id) {
+      navigate(`/list/${guard().list.id}/play/${id}`);
+    }
+  };
+
   return (
-    <ListItemGuard>
-      {(value) => (
-        <div class={styles.container}>
-          <PlayHeader list={value().list} index={value().item.index} />
-          <PlayContent item={value().item.data} />
-          <Show when={value().item.data.counterType !== "none"}>
-            <PlayCounter
-              list={value().list}
-              index={value().item.index}
-              item={value().item.data}
-            />
-          </Show>
-        </div>
-      )}
-    </ListItemGuard>
+    <div class={styles.container}>
+      <PlayHeader />
+      <PlayContent />
+      <Show when={guard().item.data.counterType !== "none"}>
+        <>
+          <hr />
+          <PlayCounter goNext={goNext} />
+        </>
+      </Show>
+      <Show when={guard().item.data.timerSeconds}>
+        <>
+          <hr />
+          <PlayTimer goNext={goNext} />
+        </>
+      </Show>
+      <hr />
+      <PlayActions goNext={goNext} goPrev={goPrev} />
+    </div>
   );
 };

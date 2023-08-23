@@ -3,6 +3,8 @@ import type { Component } from "solid-js";
 import { Routes, Route } from "@solidjs/router";
 
 import styles from "./App.module.css";
+import { ListGuardProvider } from "./components/ListGuard";
+import { ListItemGuardProvider } from "./components/ListItemGuard";
 import { Home } from "./pages/Home";
 import { ListEdit } from "./pages/ListEdit";
 import { ListItemEdit } from "./pages/ListItemEdit";
@@ -18,16 +20,22 @@ const App: Component = () => {
       <Routes>
         <Route path="/" component={Home} />
         <Route path="/list/new" component={NewList} />
-        <Route path="/list/:listId" component={ListView} />
-        <Route path="/list/:listId/edit" component={ListEdit} />
+        <Route path="/list/:listId" component={ListGuardProvider}>
+          <Route path="/" component={ListView} />
+          <Route path="/edit" component={ListEdit} />
+          <Route path="/item/new" component={NewItem} />
+        </Route>
+        <Route path="/list/:listId/play" component={ListItemGuardProvider}>
+          <Route path="/" component={Play} />
+          <Route path="/done" component={PlayDone} />
+          <Route path="/:itemId" component={Play} />
+        </Route>
         <Route
-          path="/list/:listId/item/:itemId/edit"
-          component={ListItemEdit}
-        />
-        <Route path="/list/:listId/play" component={Play} />
-        <Route path="/list/:listId/play/done" component={PlayDone} />
-        <Route path="/list/:listId/play/:itemId" component={Play} />
-        <Route path="/list/:listId/item/new" component={NewItem} />
+          path="/list/:listId/item/:itemId"
+          component={ListItemGuardProvider}
+        >
+          <Route path="/edit" component={ListItemEdit} />
+        </Route>
       </Routes>
     </div>
   );

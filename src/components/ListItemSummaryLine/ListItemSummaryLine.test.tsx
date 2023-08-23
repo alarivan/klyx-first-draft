@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 
-import { Router, useParams } from "@solidjs/router";
+import { Router } from "@solidjs/router";
 import { fireEvent, render, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
@@ -29,14 +29,6 @@ const itemMinimal = list.items[0];
 const itemFull = list.items[1];
 const itemUnlimited = list.items[2];
 
-vi.mock("@solidjs/router", async () => {
-  const type = await import("@solidjs/router");
-  const mod: typeof type = await vi.importActual("@solidjs/router");
-  return {
-    ...mod,
-    useParams: vi.fn(),
-  };
-});
 vi.mock("../../store/createStoreValue", async () => {
   const type = await import("../../store/createStoreValue");
   const mod: typeof type = await vi.importActual(
@@ -48,12 +40,10 @@ vi.mock("../../store/createStoreValue", async () => {
   };
 });
 
-const mockUseParams = useParams as Mock;
 const mockCreateStoreValue = createStoreValue as Mock;
 
 describe("ListItemSummaryLine", () => {
   beforeEach(() => {
-    mockUseParams.mockReturnValue({ listId: list.id });
     mockCreateStoreValue.mockReturnValue([null, { removeItem: vi.fn() }]);
   });
 

@@ -1,9 +1,9 @@
-import type { IListItem, IStore, IStoreContextValue } from "./types";
+import type { IStore, IStoreContextValue } from "./types";
 
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore, produce } from "solid-js/store";
 
-import { createList, createListItem, isComleted } from "./helpers";
+import { createList, createListItem, isCompleted } from "./helpers";
 
 export const createStoreValue = (initialState?: IStore) => {
   const [state, setState] = makePersisted(
@@ -83,22 +83,48 @@ export const createStoreValue = (initialState?: IStore) => {
           (list) => list.id === listId,
           "items",
           (item) => item.id === itemId,
-          (item: IListItem) => {
-            const nextItem = {
-              ...item,
-              ...newItem,
-              counterLimit:
-                newItem.counterLimit === "0"
-                  ? null
-                  : newItem.counterLimit || item.counterLimit,
-              timerSeconds:
-                newItem.timerSeconds === "0"
-                  ? null
-                  : newItem.timerSeconds || item.timerSeconds,
-            };
+          produce((item) => {
+            const {
+              counterLimit,
+              counterProgress,
+              timerSeconds,
+              timerProgress,
+              ...rest
+            } = newItem;
 
-            return { ...nextItem, completed: isComleted(nextItem) };
-          },
+            if (counterLimit === "0") {
+              item.counterLimit = null;
+            } else if (typeof newItem.counterLimit !== "undefined") {
+              item.counterLimit = newItem.counterLimit;
+            }
+
+            if (timerSeconds === "0") {
+              item.timerSeconds = null;
+            } else if (typeof newItem.timerSeconds !== "undefined") {
+              item.timerSeconds = newItem.timerSeconds;
+            }
+
+            if (
+              typeof newItem.counterLimit !== "undefined" &&
+              counterLimit !== item.counterLimit
+            ) {
+              item.counterProgress = null;
+            } else if (typeof counterProgress !== "undefined") {
+              item.counterProgress = counterProgress;
+            }
+
+            if (
+              typeof newItem.timerSeconds !== "undefined" &&
+              timerSeconds !== item.timerSeconds
+            ) {
+              item.timerProgress = null;
+            } else if (typeof timerProgress !== "undefined") {
+              item.timerProgress = timerProgress;
+            }
+
+            Object.assign(item, rest);
+            item.completed = isCompleted(item);
+          }),
         );
       },
       findItem(listId, itemId) {

@@ -208,6 +208,8 @@ describe(createStoreValue, () => {
               counterType: "none",
               counterLimit: null,
               counterAutoswitch: true,
+              timerAutoswitch: true,
+              timerAutostart: false,
               counterProgress: null,
               timerSeconds: null,
               timerProgress: null,
@@ -279,6 +281,8 @@ describe(createStoreValue, () => {
             counterType: "limited",
             counterLimit: "10",
             counterAutoswitch: false,
+            timerAutoswitch: false,
+            timerAutostart: true,
             counterProgress: 10,
             timerSeconds: "60",
             timerProgress: 60,
@@ -334,6 +338,33 @@ describe(createStoreValue, () => {
           });
 
           dispose();
+        });
+
+        it("resets timer and counter progress", () => {
+          createRoot((dispose) => {
+            const mockState = newMockState();
+            const [_, actions] = createStoreValue(mockState);
+            const listId = mockState.lists[0].id;
+            const item = mockState.lists[0].items[0];
+            const updatedValues: IListItemDataObject = {
+              name: "updated",
+              timerSeconds: "60",
+              timerProgress: 10,
+              counterLimit: "12",
+              counterProgress: 10,
+            };
+
+            actions.updateItem(listId, item.id, updatedValues);
+            expect(actions.findItem(listId, item.id)?.data).toEqual({
+              ...item,
+              counterLimit: item.counterLimit,
+              timerProgress: null,
+              timerSeconds: item.timerSeconds,
+              counterProgress: null,
+            });
+
+            dispose();
+          });
         });
       });
     });

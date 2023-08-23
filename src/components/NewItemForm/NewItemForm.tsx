@@ -18,6 +18,7 @@ export const NewItemForm: Component<{
     "counterType",
     "counterLimit",
     "timerSeconds",
+    "timerAutostart",
   ] as const;
   const {
     initFormInput: _initFormInput,
@@ -31,6 +32,7 @@ export const NewItemForm: Component<{
       counterLimit: props.item?.counterLimit || "0",
       counterType: props.item?.counterType || "none",
       timerSeconds: props.item?.timerSeconds || "0",
+      timerAutostart: props.item?.timerAutostart || false,
     },
     fieldNames,
     errorClass: "error",
@@ -43,23 +45,21 @@ export const NewItemForm: Component<{
       counterType: HTMLSelectElement;
       counterLimit?: HTMLInputElement;
       timerSeconds: HTMLInputElement;
+      timerAutostart: HTMLInputElement;
     };
     const values = fieldNames.reduce((acc, name) => {
-      if (elements?.[name]?.value) {
-        if (name === "counterType") {
-          acc[name] = elements[name]
-            .value as IListItemDataObject["counterType"];
-        } else if (name === "counterLimit") {
-          acc[name] = elements?.[name]?.value;
-        } else {
-          acc[name] = elements[name].value;
-        }
+      const element = elements?.[name];
+      if (!element) return acc;
+
+      if (name === "timerAutostart") {
+        acc["timerAutostart"] = (element as HTMLInputElement).checked || false;
+        return acc;
+      } else if (name === "counterType") {
+        acc[name] =
+          (element.value as IListItemDataObject["counterType"]) || "none";
+        return acc;
       } else {
-        if (name === "counterType") {
-          acc[name] = "none";
-        } else {
-          acc[name] = null;
-        }
+        acc[name] = element.value || null;
       }
 
       return acc;
@@ -114,6 +114,10 @@ export const NewItemForm: Component<{
           name="timerSeconds"
           type="number"
         />
+      </div>
+      <div class="inputGroup inputGroup__checkbox">
+        <input id="timerAutostart" type="checkbox" />
+        <label for="timerAutostart">Automatically start timer</label>
       </div>
       <div class="formActions">
         <button class="action__fancy submit" type="submit">
