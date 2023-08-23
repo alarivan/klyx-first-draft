@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+}
+.container button {
+  flex: 1;
+}
+.container button:not(:last-child) {
+  margin-right: 8px;
+}

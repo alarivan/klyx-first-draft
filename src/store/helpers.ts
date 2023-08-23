@@ -41,7 +41,7 @@ export const createListItem = ({
     counterProgress: counterType === "none" ? null : counterProgress || 0,
     counterType,
     timerSeconds,
-    timerProgress: timerProgress || timerSeconds ? 0 : null,
+    timerProgress: timerSeconds ? timerProgress || 0 : null,
     timerAutoswitch,
     timerAutostart,
   };
