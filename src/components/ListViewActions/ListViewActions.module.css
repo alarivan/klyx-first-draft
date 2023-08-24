@@ -1,29 +1,15 @@
-.wrapper {
-  position: fixed;
-  bottom: 0;
-  left: 0;
+.container {
+  display: flex;
   width: 100%;
 }
 
-.wrapper2 {
-  max-width: 768px;
-  margin: 0 auto;
-  background-color: var(--base-50);
-  box-shadow: 0px -5px 3px -5px var(--base-200);
-}
-
-.container {
-  display: flex;
-  max-width: 420px;
-  margin: 0 auto;
-  padding: 0.5rem 1rem;
-}
 .container a {
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: center;
 }
+
 .container a:not(:last-child) {
   margin-right: 8px;
 }

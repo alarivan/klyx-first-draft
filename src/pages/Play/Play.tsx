@@ -3,14 +3,13 @@ import type { Component } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
 
+import { BottomActionsLayout } from "../../components/BottomActionsLayout";
 import { useListItemGuardContext } from "../../components/ListItemGuard";
 import { PlayActions } from "../../components/PlayActions";
 import { PlayContent } from "../../components/PlayContent";
 import { PlayCounter } from "../../components/PlayCounter";
 import { PlayHeader } from "../../components/PlayHeader";
 import { PlayTimer } from "../../components/PlayTimer";
-
-import styles from "./Play.module.css";
 
 export const Play: Component = () => {
   const guard = useListItemGuardContext();
@@ -39,7 +38,9 @@ export const Play: Component = () => {
   };
 
   return (
-    <div class={styles.container}>
+    <BottomActionsLayout
+      actions={<PlayActions goNext={goNext} goPrev={goPrev} />}
+    >
       <PlayHeader />
       <PlayContent />
       <Show when={guard().item.data.counterType !== "none"}>
@@ -54,8 +55,6 @@ export const Play: Component = () => {
           <PlayTimer goNext={goNext} />
         </>
       </Show>
-      <hr />
-      <PlayActions goNext={goNext} goPrev={goPrev} />
-    </div>
+    </BottomActionsLayout>
   );
 };
