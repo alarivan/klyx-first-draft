@@ -1,3 +1,46 @@
 .container {
   display: block;
 }
+
+.state {
+  display: flex;
+  margin-bottom: 16px;
+}
+.bar {
+  flex: 1;
+  display: flex;
+}
+.progressText,
+.progress {
+  background-color: var(--base-200);
+}
+.totalText,
+.total {
+  background-color: var(--base-100);
+}
+
+.progressText,
+.totalText {
+  font-weight: bold;
+  width: 3rem;
+  text-align: center;
+  padding: 8px;
+}
+.progress,
+.total {
+  transition: width ease 1000ms;
+}
+
+.actions {
+  display: flex;
+}
+.actions button {
+  flex: 1;
+}
+.actions :not(:last-child) {
+  margin-right: 8px;
+}
+
+.checkboxes {
+  margin-top: 24px;
+}

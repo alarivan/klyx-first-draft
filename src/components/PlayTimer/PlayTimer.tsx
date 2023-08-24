@@ -77,42 +77,70 @@ export const PlayTimer: Component<{
     ),
   );
 
+  const percentProgress = () => {
+    return timerProgress() / (timerSeconds() / 100) + "%";
+  };
+  const percentLeft = () => {
+    return 100 - timerProgress() / (timerSeconds() / 100) + "%";
+  };
+
   return (
     <div>
       <div class={styles.container}>
-        <div>
-          {timerProgress()}/{timerSeconds()}
+        <div class={styles.state}>
+          <div class={styles.progressText}>{timerProgress()}</div>
+          <div class={styles.bar}>
+            <div class={styles.progress} style={{ width: percentProgress() }} />
+            <div class={styles.total} style={{ width: percentLeft() }} />
+          </div>
+          <div class={styles.totalText}>{timerSeconds()}</div>
         </div>
-        <button type="button" onClick={resetTimer}>
-          Reset timer
-        </button>
-        <button type="button" onClick={startTimer}>
-          Start timer
-        </button>
-        <button type="button" onClick={clearTimer}>
-          Pause timer
-        </button>
+        <div class={styles.actions}>
+          <button
+            type="button"
+            class="action action__secondary"
+            onClick={resetTimer}
+          >
+            Reset timer
+          </button>
+          <button
+            type="button"
+            class="action action__secondary"
+            onClick={startTimer}
+          >
+            Start timer
+          </button>
+          <button
+            type="button"
+            class="action action__secondary"
+            onClick={clearTimer}
+          >
+            Pause timer
+          </button>
+        </div>
       </div>
 
-      <div class={`inputGroup inputGroup__checkbox`}>
-        <input
-          checked={item().timerAutoswitch}
-          onChange={toggleAutoswitch}
-          id="nextOnComplete"
-          type="checkbox"
-        />
-        <label for="nextOnComplete">
-          Automatically go next when timer is finished
-        </label>
-      </div>
-      <div class={`inputGroup inputGroup__checkbox`}>
-        <input
-          checked={item().timerAutostart}
-          onChange={toggleAutostart}
-          id="timerAutoStart"
-          type="checkbox"
-        />
-        <label for="timerAutoStart">Automatically start timer</label>
+      <div class={styles.checkboxes}>
+        <div class={`inputGroup inputGroup__checkbox`}>
+          <input
+            checked={item().timerAutoswitch}
+            onChange={toggleAutoswitch}
+            id="nextOnComplete"
+            type="checkbox"
+          />
+          <label for="nextOnComplete">
+            Automatically go next when timer is finished
+          </label>
+        </div>
+        <div class={`inputGroup inputGroup__checkbox`}>
+          <input
+            checked={item().timerAutostart}
+            onChange={toggleAutostart}
+            id="timerAutoStart"
+            type="checkbox"
+          />
+          <label for="timerAutoStart">Automatically start timer</label>
+        </div>
       </div>
     </div>
   );
