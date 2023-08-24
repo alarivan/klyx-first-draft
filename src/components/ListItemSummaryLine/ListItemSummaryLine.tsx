@@ -90,7 +90,7 @@ export const ListItemSummaryLine: Component<{
         </Show>
       </div>
       <p
-        ref={descriptionElement}
+        ref={/* c8 ignore next */ descriptionElement}
         classList={{
           [styles.description]: true,
           [styles.descriptionFull]: showDescription(),
