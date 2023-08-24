@@ -44,7 +44,7 @@ describe("Play", () => {
   it("goes next", () => {
     const [history] = renderInListItemGuardProvider(() => <Play />, list, 0);
 
-    const next = screen.getByText("Next");
+    const next = screen.getByLabelText("Next");
     fireEvent.click(next);
 
     createRoot((dispose) => {
@@ -58,7 +58,7 @@ describe("Play", () => {
   it("goes back", () => {
     const [history] = renderInListItemGuardProvider(() => <Play />, list, 1);
 
-    const prev = screen.getByText("Previous");
+    const prev = screen.getByLabelText("Previous");
     fireEvent.click(prev);
 
     createRoot((dispose) => {

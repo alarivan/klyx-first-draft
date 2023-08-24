@@ -6,39 +6,8 @@ import { renderInListItemGuardProvider } from "../../test/utils";
 
 import { PlayCounter } from "./PlayCounter";
 
-/* vi.mock("@solidjs/router", async () => {
- *   const type = await import("@solidjs/router");
- *   const mod: typeof type = await vi.importActual("@solidjs/router");
- *   return {
- *     ...mod,
- *     useParams: vi.fn(),
- *     useNavigate: vi.fn(),
- *   };
- * });
- *
- * vi.mock("../../store/createStoreValue", async () => {
- *   const type = await import("../../store/createStoreValue");
- *   const mod: typeof type = await vi.importActual(
- *     "../../store/createStoreValue",
- *   );
- *   return {
- *     ...mod,
- *     createStoreValue: vi.fn(),
- *   };
- * });
- *
- * const mockUseParams = useParams as Mock;
- * const mockCreateStoreValue = createStoreValue as Mock; */
-
 describe("PlayCounter", () => {
-  /* const updateItemMock = vi.fn(); */
   const goNextMock = vi.fn();
-  /* beforeEach(() => {
-   *   mockCreateStoreValue.mockReturnValue([
-   *     null,
-   *     { updateItem: updateItemMock },
-   *   ]);
-   * }); */
 
   afterEach(() => {
     vi.clearAllMocks();
@@ -73,14 +42,6 @@ describe("PlayCounter", () => {
           description: "item2desc",
         },
       ]);
-
-    /* beforeEach(() => {
-*   mockUseParams.mockReturnValue({ listId: list.id });
-* });
-
-* afterEach(() => {
-*   vi.clearAllMocks();
-* }); */
 
     it("renders component with initial state 0", () => {
       renderInListItemGuardProvider(

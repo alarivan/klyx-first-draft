@@ -14,7 +14,7 @@ describe("PlayActions", () => {
   it("calls goNext on next click", () => {
     render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
 
-    const next = screen.getByText("Next");
+    const next = screen.getByLabelText("Next");
     expect(next).toBeInTheDocument();
 
     fireEvent.click(next);
@@ -25,7 +25,7 @@ describe("PlayActions", () => {
   it("calls goPrev on previous click", () => {
     render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
 
-    const prev = screen.getByText("Previous");
+    const prev = screen.getByLabelText("Previous");
     expect(prev).toBeInTheDocument();
 
     fireEvent.click(prev);
