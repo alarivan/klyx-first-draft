@@ -19,7 +19,7 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
 describe("<%= name %>", () => {
   it("renders component", () => {
     renderInListGuardProvider(
-      () => <<%- h.ejsOutput('name') %> />,
+      () => <%= name %>,
       list(),
     );
 
