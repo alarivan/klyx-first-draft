@@ -79,7 +79,7 @@ export const PlayCounter: Component<{
       <div class={styles.main}>
         <button
           aria-label="Decrease counter"
-          class="action action_secondary"
+          class="action action__secondary"
           disabled={disableDecrease()}
           type="button"
           onClick={decrease}
@@ -89,7 +89,7 @@ export const PlayCounter: Component<{
         <div class={styles.state}> {state()}</div>
         <button
           aria-label="Increase counter"
-          class="action action_secondary"
+          class="action action__secondary"
           disabled={disableIncrease()}
           type="button"
           onClick={increase}
@@ -101,7 +101,7 @@ export const PlayCounter: Component<{
         <button
           onClick={handleReset}
           type="button"
-          class="action action_secondary"
+          class="action action__secondary"
         >
           Reset counter
         </button>

@@ -44,14 +44,14 @@ export const ListItemSummaryLine: Component<{
         <div class={styles.actions}>
           <A
             aria-label="Edit item"
-            class={`action action_secondary ${styles.action}`}
+            class={`action action__secondary ${styles.action}`}
             href={`/list/${props.listId}/item/${props.item.id}/edit`}
           >
             <FiEdit2 />
           </A>
           <button
             aria-label="Delete item"
-            class={`action action_secondary ${styles.action}`}
+            class={`action action__secondary ${styles.action}`}
             type="button"
             onClick={deleteItem}
           >

@@ -162,16 +162,16 @@ li {
   background-color: var(--base-600);
 }
 
-.action_secondary {
+.action__secondary {
   background-color: var(--base-500);
   color: var(--text-color-dark-bg);
 }
-.action_secondary svg {
+.action__secondary svg {
   color: var(--text-color-dark-bg);
 }
-.action_secondary:hover {
+.action__secondary:hover {
   background-color: var(--base-700);
 }
-.action_secondary:active {
+.action__secondary:active {
   background-color: var(--base-600);
 }
