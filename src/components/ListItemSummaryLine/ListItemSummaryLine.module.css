@@ -17,9 +17,15 @@
   align-items: center;
 }
 
+.nameLine {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
 .name {
   flex: 1;
-  margin: 0;
+  margin: 0 0 0 8px;
 }
 
 .options {

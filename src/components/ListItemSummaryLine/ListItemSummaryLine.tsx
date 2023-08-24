@@ -6,6 +6,7 @@ import { FiChevronDown, FiChevronUp, FiEdit2, FiTrash } from "solid-icons/fi";
 import { onMount, createSignal, Show } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
+import { ItemStatus } from "../ItemStatus";
 
 import styles from "./ListItemSummaryLine.module.css";
 
@@ -40,7 +41,10 @@ export const ListItemSummaryLine: Component<{
     <div class={styles.container}>
       <div class={styles.header}>
         <div class={styles.number}>{props.index + 1}</div>
-        <p class={styles.name}>{props.item.name}</p>
+        <div class={styles.nameLine}>
+          <ItemStatus status={props.item.completed} size={24} />
+          <p class={styles.name}>{props.item.name}</p>
+        </div>
         <div class={styles.actions}>
           <A
             aria-label="Edit item"

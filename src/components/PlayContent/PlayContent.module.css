@@ -2,6 +2,15 @@
   display: block;
 }
 
+.main {
+  display: flex;
+  align-items: center;
+}
+
+.status {
+  margin-right: 16px;
+}
+
 .description {
   margin: 0;
   white-space: pre-wrap;
