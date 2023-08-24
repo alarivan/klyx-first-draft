@@ -48,7 +48,7 @@ export const createListItem = ({
 };
 
 export const createListWithItems = (
-  list: Pick<IList, "name" | "description">,
+  list: IListDataObject,
   items: IListItemDataObject[] = [],
 ): IList => {
   return items.reduce((list: IList, item) => {

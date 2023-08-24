@@ -1,25 +1,45 @@
 import type { Component } from "solid-js";
 
-import { A, useParams } from "@solidjs/router";
+import { A } from "@solidjs/router";
+import { Show } from "solid-js";
 
-import { ListGuard } from "../../components/ListGuard";
+import { useListItemGuardContext } from "../../components/ListItemGuard";
+
+import styles from "./PlayDone.module.css";
 
 export const PlayDone: Component = () => {
-  const params = useParams();
+  const guard = useListItemGuardContext();
+  const itemsLength = () => guard().list.items.length;
 
   return (
-    <ListGuard>
-      {(list) => (
-        <div>
-          <h1>Done</h1>
-          <h3>{list().name}</h3>
-          <A href="/">Go home</A>
-          <br />
-          <A href={`/list/${params.listId}`}>Go to list</A>
-          <br />
-          <A href={`/list/${params.listId}/play`}>Restart</A>
-        </div>
-      )}
-    </ListGuard>
+    <div class={styles.container}>
+      <h1>Done</h1>
+      <b>
+        {itemsLength()}/{itemsLength()}
+      </b>
+      <h2>{guard().list.name}</h2>
+      <Show when={guard().list.description}>
+        <p>{guard().list.description}</p>
+      </Show>
+      <div class={styles.actions}>
+        <A class="a-reset action a-reset action__primary" href="/">
+          Go home
+        </A>
+        <br />
+        <A
+          class="a-reset action a-reset action__primary"
+          href={`/list/${guard().list.id}`}
+        >
+          Go to list
+        </A>
+        <br />
+        <A
+          class="a-reset action a-reset action__primary"
+          href={`/list/${guard().list.id}/play`}
+        >
+          Restart
+        </A>
+      </div>
+    </div>
   );
 };
