@@ -21,6 +21,7 @@ export const PlayContent: Component = () => {
           <h2>{item().name}</h2>
         </Show>
       </div>
+      <hr />
       <Show when={item().description}>
         <p class={styles.description}>{item().description}</p>
       </Show>

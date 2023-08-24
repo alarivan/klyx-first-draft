@@ -85,39 +85,38 @@ export const PlayTimer: Component<{
   };
 
   return (
-    <div>
-      <div class={styles.container}>
-        <div class={styles.state}>
-          <div class={styles.progressText}>{timerProgress()}</div>
-          <div class={styles.bar}>
-            <div class={styles.progress} style={{ width: percentProgress() }} />
-            <div class={styles.total} style={{ width: percentLeft() }} />
-          </div>
-          <div class={styles.totalText}>{timerSeconds()}</div>
+    <div class={styles.container}>
+      <h3>Timer</h3>
+      <div class={styles.state}>
+        <div class={styles.progressText}>{timerProgress()}</div>
+        <div class={styles.bar}>
+          <div class={styles.progress} style={{ width: percentProgress() }} />
+          <div class={styles.total} style={{ width: percentLeft() }} />
         </div>
-        <div class={styles.actions}>
-          <button
-            type="button"
-            class="action action__secondary"
-            onClick={resetTimer}
-          >
-            Reset timer
-          </button>
-          <button
-            type="button"
-            class="action action__secondary"
-            onClick={startTimer}
-          >
-            Start timer
-          </button>
-          <button
-            type="button"
-            class="action action__secondary"
-            onClick={clearTimer}
-          >
-            Pause timer
-          </button>
-        </div>
+        <div class={styles.totalText}>{timerSeconds()}</div>
+      </div>
+      <div class={styles.actions}>
+        <button
+          type="button"
+          class="action action__secondary"
+          onClick={resetTimer}
+        >
+          Reset timer
+        </button>
+        <button
+          type="button"
+          class="action action__secondary"
+          onClick={startTimer}
+        >
+          Start timer
+        </button>
+        <button
+          type="button"
+          class="action action__secondary"
+          onClick={clearTimer}
+        >
+          Pause timer
+        </button>
       </div>
 
       <div class={styles.checkboxes}>

@@ -42,6 +42,7 @@ export const Play: Component = () => {
       actions={<PlayActions goNext={goNext} goPrev={goPrev} />}
     >
       <PlayHeader />
+      <hr />
       <PlayContent />
       <Show when={guard().item.data.counterType !== "none"}>
         <>

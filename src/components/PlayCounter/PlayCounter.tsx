@@ -76,6 +76,7 @@ export const PlayCounter: Component<{
 
   return (
     <div class={styles.container}>
+      <h3>Repeat</h3>
       <div class={styles.main}>
         <button
           aria-label="Decrease counter"
