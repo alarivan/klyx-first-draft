@@ -1,10 +1,10 @@
 .container {
-  color: inherit;
   padding: 12px;
   display: flex;
   justify-content: space-between;
   text-decoration: none;
-  background-color: var(--base-100);
+  background-color: var(--card-bg);
+  color: var(--card-text);
 }
 
 .main {

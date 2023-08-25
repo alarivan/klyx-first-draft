@@ -1,6 +1,7 @@
 .container {
   padding: 8px;
-  background: var(--base-200);
+  background-color: var(--card-bg);
+  color: var(--card-text);
 }
 
 .header {

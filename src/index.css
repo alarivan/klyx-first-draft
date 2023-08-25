@@ -1,28 +1,43 @@
 :root {
-  --text-color-light-bg: #000000;
-  --text-color-dark-bg: #ffffff;
-  --base-50: #eee9fc;
-  --base-100: #ddd2f9;
-  --base-200: #bba5f3;
-  --base-300: #9a78ed;
-  --base-400: #784ce6;
-  --base-500: #561fe0;
-  --base-600: #4519b3;
-  --base-700: #341287;
-  --base-800: #220c5a;
-  --base-900: #11062d;
-  --error: #d0000d;
+  --error-text: #d0000d;
+  --error-bg: #d0000d;
+
+  --base-color: #696969;
+  --body-bg: #bdbdbd;
+  --body-text: #000;
+  --body-box-shadow: #979797;
+  --card-bg: #939393;
+  --card-text: #000;
+  --timer-progress-bg: #545454;
+  --timer-progress-text: #fff;
+  --timer-total-bg: #6d6d6d;
+  --timer-total-text: #fff;
+  --action-fancy-text: #fff;
+  --action-fancy-bg: #3f3f3f;
+  --action-fancy-bg-hover: #393939;
+  --action-fancy-bg-active: #454545;
+  --action-fancy-border: #191919;
+  --action-primary-text: #fff;
+  --action-primary-bg: #4a4a4a;
+  --action-primary-bg-hover: #585858;
+  --action-primary-bg-active: #515151;
+  --action-secondary-text: #fff;
+  --action-secondary-bg: #7e7e7e;
+  --action-secondary-bg-hover: #656565;
+  --action-secondary-bg-active: #717171;
+  --action-disabled-bg: #a5a5a5;
+  --action-disabled-text: #000;
 }
 
 body {
-  color: var(--text-color-light-bg);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--base-50);
+  color: var(--body-text);
+  background-color: var(--body-bg);
 }
 
 svg {
@@ -32,6 +47,7 @@ svg {
 button,
 a {
   border-radius: 4px;
+  color: inherit;
 }
 
 ul,
@@ -50,12 +66,11 @@ li {
   flex-direction: column;
 }
 .inputGroup:not(:last-child) {
-  display: flex;
-  flex-direction: column;
   margin-bottom: 8px;
 }
 
 .inputGroup label {
+  display: inline-block;
   margin-bottom: 4px;
 }
 
@@ -85,8 +100,8 @@ li {
 }
 
 .inputError {
-  color: #fff;
-  background-color: var(--error);
+  color: var(--error-text);
+  background-color: var(--error-bg);
   padding: 4px;
 }
 
@@ -111,27 +126,30 @@ li {
   flex-direction: column;
   font-family: inconsolata, Sans-serif;
   font-size: 28px;
-  color: var(--text-color-dark-bg);
+  color: var(--action-fancy-text);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.05px;
-  background-color: var(--base-400);
+  background-color: var(--action-fancy-bg);
   border-style: solid;
   border-width: 2px;
-  border-color: var(--base-800);
-  box-shadow: 4px 4px 0 0 var(--base-800);
+  border-color: var(--action-fancy-border);
+  box-shadow: 4px 4px 0 0 var(--action-fancy-border);
   padding: 8px 20px;
   cursor: pointer;
   transition: all 200ms ease-in-out;
   text-decoration: none;
 }
 .action__fancy:hover {
-  background-color: var(--base-500);
+  background-color: var(--action-fancy-bg-hover);
+}
+.action__fancy:active {
+  background-color: var(--action-fancy-bg-active);
 }
 .action__fancy:focus {
   box-shadow: none;
-  border-color: var(--base-300);
-  box-shadow: 4px 4px 0 0 var(--base-300);
+  /* border-color: var(--ac); */
+  /* box-shadow: 4px 4px 0 0 var(--base-300); */
 }
 
 .a-reset {
@@ -147,32 +165,33 @@ li {
   padding: 8px;
 }
 .action:disabled {
-  background-color: #a5a5a5;
+  background-color: var(--action-disabled-bg);
+  color: var(--action-disabled-text);
 }
 .action__primary {
-  background-color: var(--base-700);
-  color: var(--text-color-dark-bg);
+  background-color: var(--action-primary-bg);
+  color: var(--action-primary-text);
 }
 .action__primary svg {
-  color: var(--text-color-dark-bg);
+  color: var(--action-primary-text);
 }
 .action__primary:hover {
-  background-color: var(--base-500);
+  background-color: var(--action-primary-bg-hover);
 }
 .action__primary:active {
-  background-color: var(--base-600);
+  background-color: var(--action-primary-bg-active);
 }
 
 .action__secondary {
-  background-color: var(--base-500);
-  color: var(--text-color-dark-bg);
+  background-color: var(--action-secondary-bg);
+  color: var(--action-secondary-text);
 }
 .action__secondary svg {
-  color: var(--text-color-dark-bg);
+  color: var(--action-secondary-text);
 }
 .action__secondary:hover {
-  background-color: var(--base-700);
+  background-color: var(--action-secondary-bg-hover);
 }
 .action__secondary:active {
-  background-color: var(--base-600);
+  background-color: var(--action-secondary-bg-active);
 }

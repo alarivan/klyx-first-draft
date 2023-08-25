@@ -8,7 +8,7 @@ import { createList, createListItem, isCompleted } from "./helpers";
 export const createStoreValue = (initialState?: IStore) => {
   const [state, setState] = makePersisted(
     createStore<IStore>(initialState || { lists: [] }),
-    { name: "todoplus" },
+    { name: "klyx-store" },
   );
   const value: IStoreContextValue = [
     state,

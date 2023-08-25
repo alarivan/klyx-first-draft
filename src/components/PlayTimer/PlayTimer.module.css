@@ -12,11 +12,13 @@
 }
 .progressText,
 .progress {
-  background-color: var(--base-200);
+  background-color: var(--timer-progress-bg);
+  color: var(--timer-progress-text);
 }
 .totalText,
 .total {
-  background-color: var(--base-100);
+  background-color: var(--timer-total-bg);
+  color: var(--timer-total-text);
 }
 
 .progressText,

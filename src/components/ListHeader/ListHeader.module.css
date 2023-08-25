@@ -8,6 +8,10 @@
   justify-content: space-between;
 }
 
+.head h1 {
+  margin: 0;
+}
+
 .actions {
   display: flex;
   align-items: center;

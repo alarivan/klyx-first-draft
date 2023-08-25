@@ -1,0 +1,14 @@
+.container {
+  display: block;
+}
+
+:global(.inputGroup) .colorInput {
+  padding: 0 3px;
+  height: 40px;
+  width: 80px;
+  display: block;
+}
+
+.colorPicker {
+  display: block;
+}
