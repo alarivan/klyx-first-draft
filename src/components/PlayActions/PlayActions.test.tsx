@@ -14,12 +14,23 @@ describe("PlayActions", () => {
   it("calls goNext on next click", () => {
     render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
 
-    const next = screen.getByLabelText("Next");
+    const next = screen.getByLabelText("Next without completing");
     expect(next).toBeInTheDocument();
 
     fireEvent.click(next);
 
     expect(goNext).toHaveBeenCalledOnce();
+  });
+
+  it("calls goNext with true on next click", () => {
+    render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
+
+    const next = screen.getByLabelText("Next and complete");
+    expect(next).toBeInTheDocument();
+
+    fireEvent.click(next);
+
+    expect(goNext).toHaveBeenCalledWith(true);
   });
 
   it("calls goPrev on previous click", () => {

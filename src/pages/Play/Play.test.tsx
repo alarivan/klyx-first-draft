@@ -41,10 +41,24 @@ describe("Play", () => {
     expect(screen.getByText("Start timer")).toBeInTheDocument();
   });
 
-  it("goes next", () => {
+  it("goes next without completing", () => {
     const [history] = renderInListItemGuardProvider(() => <Play />, list, 0);
 
-    const next = screen.getByLabelText("Next");
+    const next = screen.getByLabelText("Next without completing");
+    fireEvent.click(next);
+
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/list/${list.id}/${list.items[1].id}`);
+      });
+      dispose();
+    });
+  });
+
+  it("goes next and completes", () => {
+    const [history] = renderInListItemGuardProvider(() => <Play />, list, 0);
+
+    const next = screen.getByLabelText("Next and complete");
     fireEvent.click(next);
 
     createRoot((dispose) => {

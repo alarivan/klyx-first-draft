@@ -1,4 +1,4 @@
-import { screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { createListWithItems } from "../../store/helpers";
@@ -24,5 +24,16 @@ describe("PlayContent", () => {
 
     expect(screen.queryByText("item1")).not.toBeInTheDocument();
     expect(screen.queryByText("item1desc")).not.toBeInTheDocument();
+  });
+
+  it("toggles completed on click", () => {
+    renderInListItemGuardProvider(() => <PlayContent />, list, 0);
+
+    expect(screen.getByLabelText("completed")).toBeInTheDocument();
+
+    const toggle = screen.getByLabelText("Toggle completed");
+    fireEvent.click(toggle);
+
+    expect(screen.getByLabelText("incomplete")).toBeInTheDocument();
   });
 });

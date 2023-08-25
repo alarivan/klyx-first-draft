@@ -9,6 +9,10 @@
 
 .status {
   margin-right: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .description {

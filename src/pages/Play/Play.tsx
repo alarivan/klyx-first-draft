@@ -10,9 +10,11 @@ import { PlayContent } from "../../components/PlayContent";
 import { PlayCounter } from "../../components/PlayCounter";
 import { PlayHeader } from "../../components/PlayHeader";
 import { PlayTimer } from "../../components/PlayTimer";
+import { useStoreContext } from "../../store/context";
 
 export const Play: Component = () => {
   const guard = useListItemGuardContext();
+  const [_, actions] = useStoreContext();
   const navigate = useNavigate();
   const nextId = createMemo(() => {
     const nextIndex = guard().item.index + 1;
@@ -26,7 +28,13 @@ export const Play: Component = () => {
     return prevIndex >= 0 ? guard().list.items[prevIndex].id : null;
   });
 
-  const goNext = () => {
+  const goNext = (complete: boolean = false) => {
+    if (complete) {
+      actions.updateItem(guard().list.id, guard().item.data.id, {
+        completed: true,
+      });
+    }
+
     const id = nextId();
     navigate(`/list/${guard().list.id}/play/${id}`);
   };
