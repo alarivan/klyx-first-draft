@@ -27,10 +27,10 @@ export const PlayContent: Component = () => {
           onClick={toggleCompleted}
           class={styles.status}
         >
-          <ItemStatus status={item().completed} />
+          <ItemStatus status={item().completed} size={28} />
         </button>
         <Show when={item().name}>
-          <h2>{item().name}</h2>
+          <h3>{item().name}</h3>
         </Show>
       </div>
       <hr />

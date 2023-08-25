@@ -5,6 +5,7 @@ import { Routes, Route } from "@solidjs/router";
 import styles from "./App.module.css";
 import { ListGuardProvider } from "./components/ListGuard";
 import { ListItemGuardProvider } from "./components/ListItemGuard";
+import { PageHeader } from "./components/PageHeader";
 import { Home } from "./pages/Home";
 import { ListEdit } from "./pages/ListEdit";
 import { ListItemEdit } from "./pages/ListItemEdit";
@@ -17,6 +18,7 @@ import { PlayDone } from "./pages/PlayDone";
 const App: Component = () => {
   return (
     <div class={styles.container}>
+      <PageHeader />
       <Routes>
         <Route path="/" component={Home} />
         <Route path="/list/new" component={NewList} />

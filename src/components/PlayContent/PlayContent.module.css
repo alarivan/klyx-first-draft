@@ -7,6 +7,10 @@
   align-items: center;
 }
 
+.main h3 {
+  margin: 0;
+}
+
 .status {
   margin-right: 16px;
   background: none;
