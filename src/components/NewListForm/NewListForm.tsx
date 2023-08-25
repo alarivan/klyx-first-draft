@@ -1,13 +1,13 @@
 import type { IList, IStoreActions } from "../../store/types";
 import type { Component } from "solid-js";
 
-import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
 import { minLength, useForm } from "../../lib/form";
 
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
+  onCancel: () => void;
   buttonLabel?: string;
   list?: IList;
 }> = (props) => {
@@ -69,12 +69,16 @@ export const NewListForm: Component<{
         />
       </div>
       <div class="formActions">
-        <button class="action__fancy submit" type="submit">
+        <button class="action action__fancy submit" type="submit">
           {props.buttonLabel || "Submit"}
         </button>
-        <div class="cancel">
-          <A href="/">Cancel</A>
-        </div>
+        <button
+          onClick={props.onCancel}
+          class="action action__secondary"
+          type="button"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );

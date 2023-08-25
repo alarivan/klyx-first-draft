@@ -3,11 +3,12 @@ import type { Component } from "solid-js";
 
 import { useNavigate, useParams } from "@solidjs/router";
 
-import { ListGuard } from "../../components/ListGuard";
+import { useListGuardContext } from "../../components/ListGuard";
 import { NewListForm } from "../../components/NewListForm";
 import { useStoreContext } from "../../store/context";
 
 export const ListEdit: Component = () => {
+  const list = useListGuardContext();
   const params = useParams();
   const navigate = useNavigate();
   const [_, actions] = useStoreContext();
@@ -17,15 +18,16 @@ export const ListEdit: Component = () => {
     navigate(`/list/${params.listId}`);
   };
 
+  const onCancel = () => {
+    navigate(`/list/${params.listId}`);
+  };
+
   return (
-    <ListGuard>
-      {(list) => (
-        <NewListForm
-          buttonLabel="Save list"
-          onSubmit={onSubmit}
-          list={list()}
-        />
-      )}
-    </ListGuard>
+    <NewListForm
+      buttonLabel="Save list"
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+      list={list()}
+    />
   );
 };

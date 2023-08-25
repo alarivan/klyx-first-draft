@@ -15,5 +15,15 @@ export const NewList: Component = () => {
     navigate("/");
   };
 
-  return <NewListForm buttonLabel="Add list" onSubmit={onSubmit} />;
+  const onCancel = () => {
+    navigate("/");
+  };
+
+  return (
+    <NewListForm
+      buttonLabel="Add list"
+      onSubmit={onSubmit}
+      onCancel={onCancel}
+    />
+  );
 };

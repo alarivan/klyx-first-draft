@@ -31,4 +31,18 @@ describe("ListEdit", () => {
       });
     });
   });
+
+  it("navigates to list on cancel", () => {
+    const [history] = renderInListGuardProvider(() => <ListEdit />, list);
+
+    const button = screen.getByText("Cancel");
+    fireEvent.click(button);
+
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/list/${list.id}`);
+        dispose();
+      });
+    });
+  });
 });

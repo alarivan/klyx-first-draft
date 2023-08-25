@@ -26,4 +26,18 @@ describe("NewList", () => {
       });
     });
   });
+
+  it("navigates to home on cancel", () => {
+    const [history] = renderInRouter(() => <NewList />);
+
+    const button = screen.getByText("Cancel");
+    fireEvent.click(button);
+
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/`);
+        dispose();
+      });
+    });
+  });
 });

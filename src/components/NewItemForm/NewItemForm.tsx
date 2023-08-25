@@ -66,7 +66,7 @@ export const NewItemForm: Component<{
   return (
     <form use:_initForm={onFormSubmit}>
       <div class="inputGroup">
-        <label for="name">Item name*</label>
+        <label for="name">Item name</label>
         <input id="name" name="name" type="text" />
       </div>
       <div class="inputGroup">

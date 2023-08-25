@@ -19,7 +19,7 @@ describe("NewListForm", () => {
 
     render(() => (
       <Router>
-        <NewListForm onSubmit={onSubmit} />
+        <NewListForm onSubmit={onSubmit} onCancel={() => {}} />
       </Router>
     ));
 
@@ -32,7 +32,7 @@ describe("NewListForm", () => {
 
     render(() => (
       <Router>
-        <NewListForm onSubmit={onSubmit} list={list} />
+        <NewListForm onSubmit={onSubmit} list={list} onCancel={() => {}} />
       </Router>
     ));
 
@@ -47,7 +47,7 @@ describe("NewListForm", () => {
 
     render(() => (
       <Router>
-        <NewListForm onSubmit={onSubmit} />
+        <NewListForm onSubmit={onSubmit} onCancel={() => {}} />
       </Router>
     ));
 
@@ -61,7 +61,7 @@ describe("NewListForm", () => {
 
     render(() => (
       <Router>
-        <NewListForm onSubmit={onSubmit} />
+        <NewListForm onSubmit={onSubmit} onCancel={() => {}} />
       </Router>
     ));
 
@@ -77,7 +77,7 @@ describe("NewListForm", () => {
 
     render(() => (
       <Router>
-        <NewListForm onSubmit={onSubmit} />
+        <NewListForm onSubmit={onSubmit} onCancel={() => {}} />
       </Router>
     ));
 
@@ -94,5 +94,20 @@ describe("NewListForm", () => {
     fireEvent.click(button);
 
     expect(onSubmit).toHaveBeenCalledOnce();
+  });
+
+  it("submits form when all inputs are valid", () => {
+    const onCancel = vi.fn();
+
+    render(() => (
+      <Router>
+        <NewListForm onCancel={onCancel} onSubmit={vi.fn()} />
+      </Router>
+    ));
+
+    const button = screen.getByText("Cancel");
+    fireEvent.click(button);
+
+    expect(onCancel).toHaveBeenCalledOnce();
   });
 });
