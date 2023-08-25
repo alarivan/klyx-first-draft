@@ -12,29 +12,24 @@ export const NewItemForm: Component<{
   item?: IListItem;
   onSubmit: (values: IListItemDataObject) => void;
 }> = (props) => {
-  const fieldNames = [
-    "name",
-    "description",
-    "counterType",
-    "counterLimit",
-    "timerSeconds",
-    "timerAutostart",
-  ] as const;
+  const initialValues = {
+    name: props.item?.name || "",
+    description: props.item?.description || "",
+    counterLimit: props.item?.counterLimit || "0",
+    counterType: props.item?.counterType || "none",
+    timerSeconds: props.item?.timerSeconds || "0",
+    timerAutostart: props.item?.timerAutostart || false,
+  };
+  const fieldNames = Object.keys(initialValues) as unknown as Array<
+    keyof typeof initialValues
+  >;
   const {
     initFormInput: _initFormInput,
     initForm: _initForm,
     errors,
     values,
   } = useForm({
-    initialValues: {
-      name: props.item?.name || "",
-      description: props.item?.description || "",
-      counterLimit: props.item?.counterLimit || "0",
-      counterType: props.item?.counterType || "none",
-      timerSeconds: props.item?.timerSeconds || "0",
-      timerAutostart: props.item?.timerAutostart || false,
-    },
-    fieldNames,
+    initialValues,
     errorClass: "error",
   });
 

@@ -11,17 +11,19 @@ export const NewListForm: Component<{
   buttonLabel?: string;
   list?: IList;
 }> = (props) => {
-  const fieldNames = ["name", "description"] as const;
+  const initialValues = {
+    name: props.list?.name || "",
+    description: props.list?.description || "",
+  };
+  const fieldNames = Object.keys(initialValues) as unknown as Array<
+    keyof typeof initialValues
+  >;
   const {
     initFormInput: _initFormInput,
     initForm: _initForm,
     errors,
   } = useForm({
-    initialValues: {
-      name: props.list?.name || "",
-      description: props.list?.description || "",
-    },
-    fieldNames,
+    initialValues,
     errorClass: "err",
   });
 

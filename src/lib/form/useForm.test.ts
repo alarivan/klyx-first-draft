@@ -8,7 +8,7 @@ describe("useForm", () => {
     it("should run accessor when form is submitted", () => {
       createRoot((dispose) => {
         const { initForm } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -30,7 +30,7 @@ describe("useForm", () => {
     it("should validate form inputs when form is submitted", () => {
       createRoot((dispose) => {
         const { initForm, initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -59,7 +59,7 @@ describe("useForm", () => {
     it("should validate form inputs when form input is re-added to the form", () => {
       createRoot((dispose) => {
         const { initForm, initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -89,7 +89,7 @@ describe("useForm", () => {
     it("should validate form input is initialized before form", () => {
       createRoot((dispose) => {
         const { initForm, initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -121,7 +121,7 @@ describe("useForm", () => {
     it("should set errors and add class on blur and remove both on input", () => {
       createRoot(async (dispose) => {
         const { initFormInput, errors } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -148,7 +148,7 @@ describe("useForm", () => {
     it("should run oninput when errors there is no errors", () => {
       createRoot(async (dispose) => {
         const { initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -169,7 +169,7 @@ describe("useForm", () => {
     it("should run with validator as boolean", () => {
       createRoot(async (dispose) => {
         const { initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -189,7 +189,7 @@ describe("useForm", () => {
     it("should run when there is no errors returend by validators", () => {
       createRoot(async (dispose) => {
         const { initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -212,7 +212,7 @@ describe("useForm", () => {
     it("should return values", () => {
       createRoot(async (dispose) => {
         const { values, initFormInput } = useForm({
-          fieldNames: ["name"],
+          initialValues: { name: "" },
           errorClass: "err",
         });
 
@@ -234,7 +234,7 @@ describe("useForm", () => {
     it("should return values with checkbox input", () => {
       createRoot(async (dispose) => {
         const { values, initFormInput } = useForm({
-          fieldNames: ["toggle"],
+          initialValues: { toggle: false },
           errorClass: "err",
         });
 
@@ -261,7 +261,6 @@ describe("useForm", () => {
       createRoot(async (dispose) => {
         const { values, initFormInput } = useForm({
           initialValues: { name: "initial" },
-          fieldNames: ["name"],
           errorClass: "err",
         });
 
@@ -281,7 +280,6 @@ describe("useForm", () => {
       createRoot(async (dispose) => {
         const { values, initFormInput } = useForm({
           initialValues: { toggle: true },
-          fieldNames: ["toggle"],
           errorClass: "err",
         });
 
@@ -302,7 +300,6 @@ describe("useForm", () => {
       createRoot(async (dispose) => {
         const { values, initFormInput } = useForm({
           initialValues: { toggle: false },
-          fieldNames: ["toggle"],
           errorClass: "err",
         });
 

@@ -92,20 +92,9 @@ export const createStoreValue = (initialState?: IStore) => {
               ...rest
             } = newItem;
 
-            if (counterLimit === "0") {
-              item.counterLimit = null;
-            } else if (typeof newItem.counterLimit !== "undefined") {
-              item.counterLimit = newItem.counterLimit;
-            }
-
-            if (timerSeconds === "0") {
-              item.timerSeconds = null;
-            } else if (typeof newItem.timerSeconds !== "undefined") {
-              item.timerSeconds = newItem.timerSeconds;
-            }
-
+            // update progress
             if (
-              typeof newItem.counterLimit !== "undefined" &&
+              typeof counterLimit !== "undefined" &&
               counterLimit !== item.counterLimit
             ) {
               item.counterProgress = null;
@@ -121,9 +110,40 @@ export const createStoreValue = (initialState?: IStore) => {
             } else if (typeof timerProgress !== "undefined") {
               item.timerProgress = timerProgress;
             }
+            //
+
+            if (counterLimit === "0") {
+              item.counterLimit = null;
+            } else if (typeof counterLimit !== "undefined") {
+              item.counterLimit = counterLimit;
+            }
+
+            if (timerSeconds === "0") {
+              item.timerSeconds = null;
+            } else if (typeof newItem.timerSeconds !== "undefined") {
+              item.timerSeconds = newItem.timerSeconds;
+            }
 
             Object.assign(item, rest);
-            item.completed = isCompleted(item);
+            if (newItem.completed === false) {
+              if (item.timerSeconds) {
+                item.timerProgress = null;
+              }
+
+              if (item.counterType === "limited") {
+                item.counterProgress = null;
+              }
+            } else if (newItem.completed === true) {
+              if (item.timerSeconds) {
+                item.timerProgress = parseInt(item.timerSeconds);
+              }
+
+              if (item.counterType === "limited" && item.counterLimit) {
+                item.counterProgress = parseInt(item.counterLimit);
+              }
+            } else {
+              item.completed = isCompleted(item);
+            }
           }),
         );
       },

@@ -3,7 +3,6 @@ import type {
   IFormFieldRecord,
   IFormInputElement,
   IValidatorFn,
-  ExcludeFromTypeInference,
 } from "./types";
 
 import { createSignal } from "solid-js";
@@ -45,24 +44,18 @@ function getInputError(
 
 export function useForm<T extends string>({
   initialValues,
-  fieldNames,
   errorClass,
 }: {
-  fieldNames: readonly T[];
-  initialValues?: Partial<
-    Record<ExcludeFromTypeInference<T>, string | boolean>
-  >;
+  initialValues: Record<T, string | boolean>;
   errorClass: string;
 }) {
-  type IFormFieldName = ExcludeFromTypeInference<T>;
-
+  const fieldNames: T[] = Object.keys(initialValues) as T[];
   const fields: IFormFieldRecord<T> = {} as IFormFieldRecord<T>;
-  const [errors, setErrors] = createStore<IFormErrorRecord<IFormFieldName>>({});
-  const [values, setValues] = createSignal<
-    Partial<Record<IFormFieldName, string | boolean>>
-  >(initialValues || {});
+  const [errors, setErrors] = createStore<IFormErrorRecord<T>>({});
+  const [values, setValues] =
+    createSignal<Record<T, string | boolean>>(initialValues);
 
-  const onInput = (name: IFormFieldName, ref: IFormInputElement) => {
+  const onInput = (name: T, ref: IFormInputElement) => {
     let value: string | boolean = ref.value;
     if (ref.type === "checkbox") {
       value = (ref as HTMLInputElement).checked;
@@ -75,7 +68,7 @@ export function useForm<T extends string>({
     }
   };
 
-  const setErrorMessage = (name: IFormFieldName) => {
+  const setErrorMessage = (name: T) => {
     const field = fields?.[name];
     if (field?.element && field?.validators) {
       const { element, validators } = field;
@@ -88,10 +81,7 @@ export function useForm<T extends string>({
     }
   };
 
-  const initInputElement = (
-    name: IFormFieldName,
-    element: IFormInputElement,
-  ) => {
+  const initInputElement = (name: T, element: IFormInputElement) => {
     const initialValue = initialValues?.[name];
     let value = initialValue;
     if (element.type === "checkbox") {
@@ -100,10 +90,7 @@ export function useForm<T extends string>({
         value = initialValue || checkboxElement.checked || false;
         checkboxElement.checked = value;
       }
-    } else if (
-      typeof initialValue === "string" ||
-      typeof initialValue === "undefined"
-    ) {
+    } else if (typeof initialValue === "string") {
       value = initialValue || element.value || "";
       element.value = value;
     }
@@ -121,7 +108,7 @@ export function useForm<T extends string>({
   ) => {
     const accessorValue = accessor();
     const validators = Array.isArray(accessorValue) ? accessorValue : [];
-    const name = ref.name as IFormFieldName;
+    const name = ref.name as T;
 
     const elementRef = fields?.[name]?.element;
     if (elementRef !== ref) {
@@ -138,10 +125,7 @@ export function useForm<T extends string>({
   ) => {
     const callback = accessor();
 
-    const formElements = ref.elements as Record<
-      IFormFieldName,
-      IFormInputElement
-    >;
+    const formElements = ref.elements as Record<T, IFormInputElement>;
     for (const name of fieldNames) {
       const elementRef = formElements[name];
       const existingRef = fields?.[name]?.element;
@@ -158,10 +142,7 @@ export function useForm<T extends string>({
       e.preventDefault();
       let errored = false;
 
-      const formElements = ref.elements as Record<
-        IFormFieldName,
-        IFormInputElement
-      >;
+      const formElements = ref.elements as Record<T, IFormInputElement>;
       for (const name of fieldNames) {
         const elementRef = formElements[name];
         const field = fields[name];

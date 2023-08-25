@@ -21,10 +21,10 @@ const newMockState = () => {
         description: `item${idx + 1}desc`,
         completed: true,
         counterType: "limited",
-        counterLimit: 10,
+        counterLimit: "10",
         counterProgress: 0,
         timerSeconds: "60",
-        timerProgress: "20",
+        timerProgress: 20,
       })),
     [],
   ].map((items, lidx) =>
@@ -298,6 +298,28 @@ describe(createStoreValue, () => {
         });
       });
 
+      it("updates progress", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const listId = mockState.lists[1].id;
+          const item = mockState.lists[1].items[0];
+          const updatedValues: IListItemDataObject = {
+            counterProgress: 10,
+            timerProgress: 10,
+          };
+
+          actions.updateItem(listId, item.id, updatedValues);
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
+            ...item,
+            counterProgress: 10,
+            timerProgress: 10,
+          });
+
+          dispose();
+        });
+      });
+
       it("sets counterLimit and timerSeconds to null when value is '0'", () => {
         createRoot((dispose) => {
           const mockState = newMockState();
@@ -339,32 +361,74 @@ describe(createStoreValue, () => {
 
           dispose();
         });
+      });
 
-        it("resets timer and counter progress", () => {
-          createRoot((dispose) => {
-            const mockState = newMockState();
-            const [_, actions] = createStoreValue(mockState);
-            const listId = mockState.lists[0].id;
-            const item = mockState.lists[0].items[0];
-            const updatedValues: IListItemDataObject = {
-              name: "updated",
-              timerSeconds: "60",
-              timerProgress: 10,
-              counterLimit: "12",
-              counterProgress: 10,
-            };
+      it("resets timer and counter progress when counter or timer value changes", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const listId = mockState.lists[0].id;
+          const item = mockState.lists[0].items[0];
+          const updatedValues: IListItemDataObject = {
+            name: "updated",
+            timerSeconds: "60",
+            timerProgress: 10,
+            counterLimit: "12",
+            counterProgress: 10,
+          };
 
-            actions.updateItem(listId, item.id, updatedValues);
-            expect(actions.findItem(listId, item.id)?.data).toEqual({
-              ...item,
-              counterLimit: item.counterLimit,
-              timerProgress: null,
-              timerSeconds: item.timerSeconds,
-              counterProgress: null,
-            });
-
-            dispose();
+          actions.updateItem(listId, item.id, updatedValues);
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
+            ...item,
+            counterLimit: item.counterLimit,
+            timerProgress: null,
+            timerSeconds: item.timerSeconds,
+            counterProgress: null,
           });
+
+          dispose();
+        });
+      });
+
+      it("resets timer and limited counter when completed state is updated to false", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const listId = mockState.lists[1].id;
+          const item = mockState.lists[1].items[0];
+          const updatedValues: IListItemDataObject = {
+            completed: false,
+          };
+
+          actions.updateItem(listId, item.id, updatedValues);
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
+            ...item,
+            timerProgress: null,
+            counterProgress: null,
+          });
+
+          dispose();
+        });
+      });
+
+      it("completes timer and limited counter when completed state is updated to true", () => {
+        createRoot((dispose) => {
+          const mockState = newMockState();
+          const [_, actions] = createStoreValue(mockState);
+          const listId = mockState.lists[1].id;
+          const item = mockState.lists[1].items[0];
+          const updatedValues: IListItemDataObject = {
+            completed: true,
+          };
+
+          actions.updateItem(listId, item.id, updatedValues);
+          expect(actions.findItem(listId, item.id)?.data).toEqual({
+            ...item,
+            timerProgress: 60,
+            counterProgress: 10,
+          });
+
+          dispose();
         });
       });
     });
