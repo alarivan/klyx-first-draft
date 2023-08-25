@@ -13,7 +13,7 @@
   align-items: center;
 }
 
-.action:not(:last-child) {
+.actions :not(:last-child) {
   margin-right: 8px;
 }
 

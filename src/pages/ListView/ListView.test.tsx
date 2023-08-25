@@ -1,4 +1,4 @@
-import { screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { createListWithItems } from "../../store/helpers";
@@ -21,5 +21,18 @@ describe("ListView", () => {
       "href",
       `/list/${list.id}/item/new`,
     );
+  });
+
+  it("switches between compact and detailed views", () => {
+    renderInListGuardProvider(() => <ListView />, list);
+
+    const compact = screen.getByTitle("Sortable compact view");
+    fireEvent.click(compact);
+
+    const detailed = screen.getByTitle("Detailed view");
+    fireEvent.click(detailed);
+
+    expect(screen.getByTitle("Sortable compact view")).toBeInTheDocument();
+    expect(screen.queryByTitle("Detailed view")).not.toBeInTheDocument();
   });
 });

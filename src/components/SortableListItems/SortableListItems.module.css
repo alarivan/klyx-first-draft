@@ -1,0 +1,7 @@
+.container {
+  display: block;
+}
+
+.activeItem {
+  cursor: grab;
+}

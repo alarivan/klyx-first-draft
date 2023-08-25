@@ -1,5 +1,5 @@
 import type { IList } from "../../store/types";
-import type { Component } from "solid-js";
+import type { ParentComponent } from "solid-js";
 
 import { A } from "@solidjs/router";
 import { FiEdit2, FiTrash } from "solid-icons/fi";
@@ -9,7 +9,7 @@ import { useStoreContext } from "../../store/context";
 
 import styles from "./ListHeader.module.css";
 
-export const ListHeader: Component<{ list: IList }> = (props) => {
+export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
   const [_, actions] = useStoreContext();
 
   const deleteList = () => {
@@ -23,8 +23,9 @@ export const ListHeader: Component<{ list: IList }> = (props) => {
       <div class={styles.head}>
         <h1>{props.list.name}</h1>
         <div class={styles.actions}>
+          {props.children}
           <A
-            class={`action action__secondary ${styles.action}`}
+            class={`action action__secondary`}
             aria-label="Edit list"
             href={`/list/${props.list.id}/edit`}
           >
@@ -33,7 +34,7 @@ export const ListHeader: Component<{ list: IList }> = (props) => {
           <button
             aria-label="Delete list"
             type="button"
-            class={`action action__secondary ${styles.action}`}
+            class={`action action__secondary`}
             onClick={deleteList}
           >
             <FiTrash />

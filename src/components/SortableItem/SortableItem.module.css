@@ -1,0 +1,13 @@
+.container {
+  display: block;
+  height: 48px;
+  cursor: grab;
+}
+
+.opacity25 {
+  opacity: 0.25;
+}
+
+.transitionTransfrom {
+  transition: transform ease-in-out 200ms;
+}

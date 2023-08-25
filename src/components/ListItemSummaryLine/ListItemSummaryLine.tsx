@@ -3,7 +3,7 @@ import type { Component } from "solid-js";
 
 import { A } from "@solidjs/router";
 import { FiChevronDown, FiChevronUp, FiEdit2, FiTrash } from "solid-icons/fi";
-import { onMount, createSignal, Show } from "solid-js";
+import { mergeProps, onMount, createSignal, Show } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
 import { ItemStatus } from "../ItemStatus";
@@ -14,7 +14,9 @@ export const ListItemSummaryLine: Component<{
   listId: string;
   index: number;
   item: IListItem;
-}> = (props) => {
+  isCompact?: boolean;
+}> = (p) => {
+  const props = mergeProps({ isCompact: false }, p);
   const [_, actions] = useStoreContext();
   const deleteItem = () => {
     if (confirm(`Delete ${props.item.name}?`)) {
@@ -43,7 +45,7 @@ export const ListItemSummaryLine: Component<{
         <div class={styles.number}>{props.index + 1}</div>
         <div class={styles.nameLine}>
           <ItemStatus status={props.item.completed} size={24} />
-          <p class={styles.name}>{props.item.name}</p>
+          <p class={styles.name}>{props.item.name || props.item.description}</p>
         </div>
         <div class={styles.actions}>
           <A
@@ -63,63 +65,66 @@ export const ListItemSummaryLine: Component<{
           </button>
         </div>
       </div>
-      <div class={styles.options}>
-        <Show
-          when={
-            (props.item.counterType === "limited" && props.item.counterLimit) ||
-            props.item.counterType === "unlimited"
-          }
+      <Show when={!props.isCompact}>
+        <div class={styles.options}>
+          <Show
+            when={
+              (props.item.counterType === "limited" &&
+                props.item.counterLimit) ||
+              props.item.counterType === "unlimited"
+            }
+          >
+            <div>
+              Repeat:{" "}
+              <b>
+                {props.item.counterType === "limited"
+                  ? props.item.counterLimit
+                  : "unlimited"}
+              </b>
+            </div>
+          </Show>
+          <Show
+            when={
+              props.item.timerSeconds && parseInt(props.item.timerSeconds) > 0
+            }
+          >
+            <div>
+              Timer: <b>{props.item.timerSeconds}</b>
+            </div>
+          </Show>
+        </div>
+        <p
+          ref={/* c8 ignore next */ descriptionElement}
+          classList={{
+            [styles.description]: true,
+            [styles.descriptionFull]: showDescription(),
+          }}
         >
-          <div>
-            Repeat:{" "}
-            <b>
-              {props.item.counterType === "limited"
-                ? props.item.counterLimit
-                : "unlimited"}
-            </b>
-          </div>
-        </Show>
-        <Show
-          when={
-            props.item.timerSeconds && parseInt(props.item.timerSeconds) > 0
-          }
-        >
-          <div>
-            Timer: <b>{props.item.timerSeconds}</b>
-          </div>
-        </Show>
-      </div>
-      <p
-        ref={/* c8 ignore next */ descriptionElement}
-        classList={{
-          [styles.description]: true,
-          [styles.descriptionFull]: showDescription(),
-        }}
-      >
-        {props.item.description}
-      </p>
-      <Show when={isLongDescription()}>
-        <Show
-          when={showDescription()}
-          fallback={
+          {props.item.description}
+        </p>
+        <Show when={isLongDescription()}>
+          <Show
+            when={showDescription()}
+            fallback={
+              <button
+                aria-label="Expand description"
+                class={styles.expandDescription}
+                type="button"
+                onClick={toggleShowDescription}
+              >
+                <FiChevronDown size={20} />
+              </button>
+            }
+          >
             <button
-              aria-label="Expand description"
+              aria-label="Collapse description"
               class={styles.expandDescription}
               type="button"
               onClick={toggleShowDescription}
             >
-              <FiChevronDown size={20} />
+              <FiChevronUp size={20} />
             </button>
-          }
-        >
-          <button
-            aria-label="Collapse description"
-            class={styles.expandDescription}
-            type="button"
-            onClick={toggleShowDescription}
-          >
-            <FiChevronUp size={20} />
-          </button>
+          </Show>
         </Show>
       </Show>
     </div>

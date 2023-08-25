@@ -24,10 +24,14 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
     description: "item3desc",
     counterType: "unlimited",
   },
+  {
+    description: "item4desc",
+  },
 ]);
 const itemMinimal = list.items[0];
 const itemFull = list.items[1];
 const itemUnlimited = list.items[2];
+const itemNoName = list.items[3];
 
 vi.mock("../../store/createStoreValue", async () => {
   const type = await import("../../store/createStoreValue");
@@ -67,6 +71,18 @@ describe("ListItemSummaryLine", () => {
     expect(screen.getByText("Timer:")).toBeInTheDocument();
     expect(screen.getByText("60")).toBeInTheDocument();
     expect(screen.getByText("item2desc")).toBeInTheDocument();
+  });
+
+  it("renders component without name and with description", () => {
+    render(() => (
+      <Router>
+        <StoreProvider initalStore={{ lists: [list] }}>
+          <ListItemSummaryLine listId={list.id} item={itemNoName} index={3} />
+        </StoreProvider>
+      </Router>
+    ));
+
+    expect(screen.getAllByText("item4desc")).toHaveLength(2);
   });
 
   it("renders component with unlimited counter", () => {

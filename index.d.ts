@@ -5,6 +5,7 @@ declare module "solid-js" {
     interface Directives {
       _initForm: (ref: HTMLFormElement) => void;
       _initFormInput: Array<IValidatorFn> | boolean;
+      _sortable: boolean;
     }
   }
 }
