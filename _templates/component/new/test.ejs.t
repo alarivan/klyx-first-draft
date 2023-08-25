@@ -12,14 +12,14 @@ import { renderInListGuardProvider } from "../../test/utils";
 
 import { <%= name %> } from "./<%= name %>";
 
-const list = createListWithItems({ name: "list1", description: "list1desc" }, [
+const list = () => createListWithItems({ name: "list1", description: "list1desc" }, [
   { name: "item1", description: "item1desc" },
 ]);
 
 describe("<%= name %>", () => {
   it("renders component", () => {
     renderInListGuardProvider(
-      () => <%= name %>,
+      () => <<%= name %> />,
       list(),
     );
 
