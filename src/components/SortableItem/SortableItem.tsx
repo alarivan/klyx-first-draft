@@ -10,8 +10,8 @@ export const SortableItem: ParentComponent<{ id: string }> = (props) => {
 
   return (
     <div
-      data-testid="sortableid"
       use:_sortable
+      style={{ "touch-action": "none" }}
       class={styles.container}
       classList={{
         [styles.opacity25]: _sortable.isActiveDraggable,

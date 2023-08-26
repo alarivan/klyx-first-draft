@@ -4,4 +4,5 @@
 
 .activeItem {
   cursor: grab;
+  max-width: 80%;
 }
