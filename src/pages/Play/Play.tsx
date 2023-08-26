@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 
 import { useNavigate } from "@solidjs/router";
-import { createMemo, Show } from "solid-js";
+import { Show } from "solid-js";
 
 import { BottomActionsLayout } from "../../components/BottomActionsLayout";
 import { useListItemGuardContext } from "../../components/ListItemGuard";
@@ -21,17 +21,17 @@ export const Play: Component = () => {
     return ts && ts !== "0";
   };
 
-  const nextId = createMemo(() => {
+  const nextId = () => {
     const nextIndex = guard().item.index + 1;
     return nextIndex !== guard().list.items.length
       ? guard().list.items[nextIndex].id
       : "done";
-  });
+  };
 
-  const prevId = createMemo(() => {
+  const prevId = () => {
     const prevIndex = guard().item.index - 1;
     return prevIndex >= 0 ? guard().list.items[prevIndex].id : null;
-  });
+  };
 
   const goNext = (complete: boolean = false) => {
     if (complete) {
