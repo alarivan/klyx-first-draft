@@ -8,6 +8,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "vitest --coverage",
+    "ci:test": "vitest --run",
     "lint": "eslint --fix ./src/**/*/*.{ts,tsx}",
     "hygen": "hygen",
     "h:cmp": "hygen component new",
