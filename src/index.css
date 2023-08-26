@@ -172,6 +172,7 @@ li {
 .action:disabled {
   background-color: var(--action-disabled-bg);
   color: var(--action-disabled-text);
+  cursor: not-allowed;
 }
 .action__primary {
   background-color: var(--action-primary-bg);
