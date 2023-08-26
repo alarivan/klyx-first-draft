@@ -2,35 +2,12 @@
   padding: 0 0 16px;
 }
 
-.state {
-  display: flex;
+.main {
   margin-bottom: 16px;
 }
-.bar {
-  flex: 1;
-  display: flex;
-}
-.progressText,
-.progress {
-  background-color: var(--timer-progress-bg);
-  color: var(--timer-progress-text);
-}
-.totalText,
-.total {
-  background-color: var(--timer-total-bg);
-  color: var(--timer-total-text);
-}
 
-.progressText,
-.totalText {
-  font-weight: bold;
-  width: 3rem;
-  text-align: center;
-  padding: 8px;
-}
-.progress,
-.total {
-  transition: width ease 1000ms;
+.timerForm {
+  margin-bottom: 16px;
 }
 
 .actions {

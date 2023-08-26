@@ -43,8 +43,8 @@ describe("PlayTimer", () => {
       0,
     );
 
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.getByText("60")).toBeInTheDocument();
+    expect(screen.getByText("00:00")).toBeInTheDocument();
+    expect(screen.getByText("01:00")).toBeInTheDocument();
     expect(screen.getByText("Start timer")).toBeInTheDocument();
     expect(screen.getByText("Reset timer")).toBeInTheDocument();
     expect(screen.getByText("Pause timer")).toBeInTheDocument();
@@ -61,7 +61,7 @@ describe("PlayTimer", () => {
       3,
     );
 
-    expect(screen.getAllByText("0")).toHaveLength(2);
+    expect(screen.getAllByText("00:00")).toHaveLength(2);
   });
 
   it("starts and pauses timer", () => {
@@ -71,20 +71,20 @@ describe("PlayTimer", () => {
       0,
     );
 
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.getByText("60")).toBeInTheDocument();
+    expect(screen.getByText("00:00")).toBeInTheDocument();
+    expect(screen.getByText("01:00")).toBeInTheDocument();
 
     const start = screen.getByText("Start timer");
     fireEvent.click(start);
     vi.advanceTimersByTime(2000);
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.queryByText("0")).not.toBeInTheDocument();
+    expect(screen.getByText("00:02")).toBeInTheDocument();
 
     const pause = screen.getByText("Pause timer");
     fireEvent.click(pause);
     vi.advanceTimersByTime(2000);
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.queryByText("0")).not.toBeInTheDocument();
+    expect(screen.getByText("00:02")).toBeInTheDocument();
+
+    expect(screen.queryByText("00:00")).not.toBeInTheDocument();
   });
 
   it("resets timer", () => {
@@ -94,14 +94,14 @@ describe("PlayTimer", () => {
       2,
     );
 
-    expect(screen.getByText("6")).toBeInTheDocument();
-    expect(screen.getByText("10")).toBeInTheDocument();
+    expect(screen.getByText("00:06")).toBeInTheDocument();
+    expect(screen.getByText("00:10")).toBeInTheDocument();
 
     const reset = screen.getByText("Reset timer");
     fireEvent.click(reset);
 
-    expect(screen.getByText("0")).toBeInTheDocument();
-    expect(screen.queryByText("6")).not.toBeInTheDocument();
+    expect(screen.getByText("00:00")).toBeInTheDocument();
+    expect(screen.queryByText("00:06")).not.toBeInTheDocument();
   });
 
   describe("with timerAutoswitch", () => {
@@ -135,8 +135,8 @@ describe("PlayTimer", () => {
       );
 
       vi.advanceTimersByTime(2000);
-      expect(screen.getByText("2")).toBeInTheDocument();
-      expect(screen.getByText("3")).toBeInTheDocument();
+      expect(screen.getByText("00:02")).toBeInTheDocument();
+      expect(screen.getByText("00:03")).toBeInTheDocument();
     });
   });
 
@@ -166,5 +166,22 @@ describe("PlayTimer", () => {
     fireEvent.click(autostart);
 
     expect(autostart).toBeChecked();
+  });
+
+  it("updates timer on timer form submit", () => {
+    renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      list(),
+      0,
+    );
+
+    const timerInput = screen.getByLabelText("Timer (seconds)");
+    fireEvent.input(timerInput, { target: { value: "12" } });
+
+    const updateTimer = screen.getByText("Update timer");
+    fireEvent.click(updateTimer);
+
+    expect(screen.getByText("00:00")).toBeInTheDocument();
+    expect(screen.getByText("00:12")).toBeInTheDocument();
   });
 });

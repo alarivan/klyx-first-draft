@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+}
+
+.bar {
+  flex: 1;
+  display: flex;
+}
+
+.progressText {
+  text-align: left;
+}
+.totalText {
+  text-align: right;
+}
+
+.progressText,
+.progress {
+  background-color: var(--timer-progress-bg);
+  color: var(--timer-progress-text);
+}
+.totalText,
+.total {
+  background-color: var(--timer-total-bg);
+  color: var(--timer-total-text);
+}
+
+.progressText,
+.totalText {
+  font-weight: bold;
+  padding: 8px;
+}
+.progress,
+.total {
+  transition: width ease 1000ms;
+}

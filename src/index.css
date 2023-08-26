@@ -1,5 +1,5 @@
 :root {
-  --error-text: #d0000d;
+  --error-text: #ffffff;
   --error-bg: #d0000d;
 
   --base-color: #696969;
@@ -116,6 +116,7 @@ li {
 }
 
 .formActions .cancel {
+  text-align: center;
   padding: 8px;
 }
 

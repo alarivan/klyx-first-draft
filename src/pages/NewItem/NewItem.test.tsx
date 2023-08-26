@@ -22,7 +22,7 @@ describe("NewItem", () => {
   it("submits form when all inputs are valid", () => {
     const [history] = renderInListGuardProvider(() => <NewItem />, list);
 
-    const nameInput = screen.getByLabelText(/Item name/);
+    const nameInput = screen.getByLabelText("Name");
     const descriptionInput = screen.getByRole("textbox", {
       name: "item description",
     });

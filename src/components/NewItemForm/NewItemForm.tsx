@@ -66,7 +66,7 @@ export const NewItemForm: Component<{
   return (
     <form use:_initForm={onFormSubmit}>
       <div class="inputGroup">
-        <label for="name">Item name</label>
+        <label for="name">Name</label>
         <input id="name" name="name" type="text" />
       </div>
       <div class="inputGroup">
@@ -102,24 +102,34 @@ export const NewItemForm: Component<{
         </div>
       </Show>
       <div class="inputGroup">
-        <label for="timerSeconds">Timer</label>
+        <label for="timerSeconds">Timer (seconds)</label>
         <input
           use:_initFormInput
           id="timerSeconds"
           name="timerSeconds"
+          max={3599}
+          min={0}
           type="number"
         />
+        <Show when={errors.timerSeconds}>
+          <div class="inputError">{errors.timerSeconds}</div>
+        </Show>
       </div>
       <div class="inputGroup inputGroup__checkbox">
         <input id="timerAutostart" type="checkbox" />
         <label for="timerAutostart">Automatically start timer</label>
       </div>
       <div class="formActions">
-        <button class="action__fancy submit" type="submit">
+        <button class="action action__fancy submit" type="submit">
           {props.buttonLabel || "Submit"}
         </button>
         <div class="cancel">
-          <A href={`/list/${props.listId}`}>Cancel</A>
+          <A
+            class="a-reset action action__secondary "
+            href={`/list/${props.listId}`}
+          >
+            Cancel
+          </A>
         </div>
       </div>
     </form>

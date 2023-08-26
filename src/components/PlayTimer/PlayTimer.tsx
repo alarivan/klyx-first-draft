@@ -1,9 +1,12 @@
+import type { IListItemDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { createEffect, on } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
 import { useListItemGuardContext } from "../ListItemGuard";
+import { TimerBar } from "../TimerBar";
+import { TimerForm } from "../TimerForm";
 
 import styles from "./PlayTimer.module.css";
 
@@ -77,23 +80,24 @@ export const PlayTimer: Component<{
     ),
   );
 
-  const percentProgress = () => {
-    return timerProgress() / (timerSeconds() / 100) + "%";
-  };
-  const percentLeft = () => {
-    return 100 - timerProgress() / (timerSeconds() / 100) + "%";
+  const saveTimerSeconds = (values: {
+    timerSeconds: IListItemDataObject["timerSeconds"];
+  }) => {
+    actions.updateItem(guard().list.id, item().id, values);
+    clearTimer();
   };
 
   return (
     <div class={styles.container}>
       <h3>Timer</h3>
-      <div class={styles.state}>
-        <div class={styles.progressText}>{timerProgress()}</div>
-        <div class={styles.bar}>
-          <div class={styles.progress} style={{ width: percentProgress() }} />
-          <div class={styles.total} style={{ width: percentLeft() }} />
+      <div class={styles.main}>
+        <div class={styles.timerForm}>
+          <TimerForm
+            onSubmit={saveTimerSeconds}
+            timerSeconds={item().timerSeconds}
+          />
         </div>
-        <div class={styles.totalText}>{timerSeconds()}</div>
+        <TimerBar progress={timerProgress()} total={timerSeconds()} />
       </div>
       <div class={styles.actions}>
         <button

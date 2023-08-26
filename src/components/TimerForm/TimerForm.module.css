@@ -1,0 +1,11 @@
+.container {
+  display: block;
+}
+
+.timerInput {
+  display: flex;
+}
+.timerInput input {
+  flex: 1;
+  margin-right: 8px;
+}

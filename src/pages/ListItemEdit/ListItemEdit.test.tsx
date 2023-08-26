@@ -24,7 +24,7 @@ describe("ListItemEdit", () => {
       </Router>
     ));
 
-    const nameInput = screen.getByLabelText(/Item name/);
+    const nameInput = screen.getByLabelText("Name");
 
     fireEvent.change(nameInput, { target: { value: "name" } });
 

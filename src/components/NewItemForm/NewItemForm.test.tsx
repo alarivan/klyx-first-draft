@@ -32,11 +32,11 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    expect(screen.getByLabelText(/Item name/)).toBeInTheDocument();
+    expect(screen.getByLabelText("Name")).toBeInTheDocument();
     expect(screen.getByLabelText("Description")).toBeInTheDocument();
     expect(screen.getByLabelText("Counter")).toBeInTheDocument();
     expect(screen.queryByLabelText("Counter limit")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Timer")).toBeInTheDocument();
+    expect(screen.getByLabelText("Timer (seconds)")).toBeInTheDocument();
     expect(screen.getByText("Submit")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
   });
@@ -50,7 +50,7 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    expect(screen.getByLabelText(/Item name/)).toHaveValue("item1");
+    expect(screen.getByLabelText("Name")).toHaveValue("item1");
     expect(screen.getByLabelText("Description")).toHaveValue("item1desc");
     expect(screen.getByLabelText("Counter")).toHaveValue("limited");
     // lol wtf? why?
@@ -59,7 +59,7 @@ describe("NewItemForm", () => {
     //
     expect(screen.getByLabelText("Counter limit")).toHaveValue(4);
 
-    expect(screen.getByLabelText("Timer")).toHaveValue(60);
+    expect(screen.getByLabelText("Timer (seconds)")).toHaveValue(60);
     expect(screen.getByText("Submit")).toBeInTheDocument();
     expect(screen.getByText("Cancel")).toBeInTheDocument();
   });
@@ -99,6 +99,24 @@ describe("NewItemForm", () => {
     expect(screen.getByText("Constraints not satisfied")).toBeInTheDocument();
   });
 
+  it("shows timerSeconds error", () => {
+    const onSubmit = vi.fn();
+
+    render(() => (
+      <Router>
+        <NewItemForm listId="listid" onSubmit={onSubmit} />
+      </Router>
+    ));
+
+    const timerSeconds = screen.getByLabelText("Timer (seconds)");
+    fireEvent.input(timerSeconds, { target: { value: -1 } });
+
+    const button = screen.getByText("Submit");
+    fireEvent.click(button);
+
+    expect(screen.getByText("Constraints not satisfied")).toBeInTheDocument();
+  });
+
   it("submits form when all inputs are valid", () => {
     const onSubmit = vi.fn();
 
@@ -108,10 +126,10 @@ describe("NewItemForm", () => {
       </Router>
     ));
 
-    const nameInput = screen.getByLabelText(/Item name/);
+    const nameInput = screen.getByLabelText("Name");
     const descriptionInput = screen.getByLabelText("Description");
     const counterInput = screen.getByLabelText("Counter");
-    const timerInput = screen.getByLabelText("Timer");
+    const timerInput = screen.getByLabelText("Timer (seconds)");
 
     fireEvent.change(nameInput, { target: { value: "name" } });
     fireEvent.change(descriptionInput, { target: { value: "desc" } });
