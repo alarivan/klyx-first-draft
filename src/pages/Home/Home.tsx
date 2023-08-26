@@ -34,7 +34,7 @@ export const Home: Component = () => {
           </For>
         </ul>
         <div class={styles.addListButtonWrapperBottom}>
-          <A href="/list/new" class="action__fancy">
+          <A href="/list/new" class="action action__fancy">
             add new list
           </A>
         </div>

@@ -125,7 +125,7 @@ export const NewItemForm: Component<{
         </button>
         <div class="cancel">
           <A
-            class="a-reset action action__secondary "
+            class="a-reset action action__secondary"
             href={`/list/${props.listId}`}
           >
             Cancel
