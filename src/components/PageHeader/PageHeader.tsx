@@ -11,7 +11,7 @@ export const PageHeader: Component = () => {
       <A title="Home" class={`a-reset`} href="/">
         <img
           alt="KLYX logo"
-          src="/src/assets/android-chrome-192x192.png"
+          src="/android-chrome-192x192.png"
           width={30}
           height={30}
         />
