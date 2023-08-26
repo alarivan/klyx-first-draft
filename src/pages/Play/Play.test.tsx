@@ -66,7 +66,7 @@ describe("Play", () => {
   });
 
   it("goes next and completes", () => {
-    const [history] = renderInListItemGuardProvider(() => <Play />, list, 0);
+    const [history] = renderInListItemGuardProvider(() => <Play />, list, 3);
 
     const next = screen.getByLabelText("Next and complete");
     fireEvent.click(next);

@@ -1,5 +1,6 @@
 .container {
   display: block;
+  margin-bottom: 8px;
 }
 
 .head {
