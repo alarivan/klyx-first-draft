@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install dependencies
+      - name: Run tests
         run: pnpm ci:test
 
       - name: Install Vercel CLI
