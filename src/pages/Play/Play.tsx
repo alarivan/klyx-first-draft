@@ -16,6 +16,11 @@ export const Play: Component = () => {
   const guard = useListItemGuardContext();
   const [_, actions] = useStoreContext();
   const navigate = useNavigate();
+  const showTimer = () => {
+    const ts = guard().item.data.timerSeconds;
+    return ts && ts !== "0";
+  };
+
   const nextId = createMemo(() => {
     const nextIndex = guard().item.index + 1;
     return nextIndex !== guard().list.items.length
@@ -64,7 +69,7 @@ export const Play: Component = () => {
           <PlayCounter goNext={goNext} />
         </>
       </Show>
-      <Show when={guard().item.data.timerSeconds}>
+      <Show when={showTimer()}>
         <>
           <hr />
           <PlayTimer goNext={goNext} />

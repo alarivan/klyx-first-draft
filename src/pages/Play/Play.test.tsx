@@ -16,8 +16,12 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
     counterType: "unlimited",
   },
   {
-    name: "item2",
+    name: "item3",
     timerSeconds: "10",
+  },
+  {
+    name: "item4",
+    timerSeconds: "0",
   },
 ]);
 
@@ -39,6 +43,12 @@ describe("Play", () => {
     renderInListItemGuardProvider(() => <Play />, list, 2);
 
     expect(screen.getByText("Start timer")).toBeInTheDocument();
+  });
+
+  it("renders play viewout timer when timer is '0'", () => {
+    renderInListItemGuardProvider(() => <Play />, list, 3);
+
+    expect(screen.queryByText("Timer")).not.toBeInTheDocument();
   });
 
   it("goes next without completing", () => {
