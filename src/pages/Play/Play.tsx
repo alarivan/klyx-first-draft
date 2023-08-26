@@ -47,6 +47,8 @@ export const Play: Component = () => {
     const id = prevId();
     if (id) {
       navigate(`/list/${guard().list.id}/play/${id}`);
+    } else {
+      navigate(`/list/${guard().list.id}`);
     }
   };
 

@@ -82,12 +82,26 @@ describe("Play", () => {
   it("goes back", () => {
     const [history] = renderInListItemGuardProvider(() => <Play />, list, 1);
 
-    const prev = screen.getByLabelText("Previous");
+    const prev = screen.getByTitle("Previous");
     fireEvent.click(prev);
 
     createRoot((dispose) => {
       createEffect(() => {
         expect(history().value).toEqual(`/list/${list.id}/${list.items[0].id}`);
+      });
+      dispose();
+    });
+  });
+
+  it("goes back to list", () => {
+    const [history] = renderInListItemGuardProvider(() => <Play />, list, 0);
+
+    const prev = screen.getByTitle("Back to list");
+    fireEvent.click(prev);
+
+    createRoot((dispose) => {
+      createEffect(() => {
+        expect(history().value).toEqual(`/list/${list.id}`);
       });
       dispose();
     });

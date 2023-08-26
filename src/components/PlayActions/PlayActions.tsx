@@ -4,8 +4,10 @@ import {
   FiArrowLeft,
   FiArrowRight,
   FiCheckSquare,
+  FiList,
   FiSquare,
 } from "solid-icons/fi";
+import { Show } from "solid-js";
 
 import styles from "./PlayActions.module.css";
 
@@ -17,13 +19,15 @@ export const PlayActions: Component<{
   return (
     <div class={styles.container}>
       <button
-        disabled={!props.isPrevAvailable}
-        aria-label="Previous"
+        title={props.isPrevAvailable ? "Previous" : "Back to list"}
         onClick={() => props.goPrev()}
         type="button"
         class="action action__primary"
       >
         <FiArrowLeft size={32} />
+        <Show when={!props.isPrevAvailable}>
+          <FiList size={32} />
+        </Show>
       </button>
       <button
         aria-label="Next without completing"

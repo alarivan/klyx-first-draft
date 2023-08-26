@@ -42,7 +42,7 @@ describe("PlayActions", () => {
       <PlayActions goNext={goNext} goPrev={goPrev} isPrevAvailable />
     ));
 
-    const prev = screen.getByLabelText("Previous");
+    const prev = screen.getByTitle("Previous");
     expect(prev).toBeInTheDocument();
 
     fireEvent.click(prev);
@@ -50,12 +50,12 @@ describe("PlayActions", () => {
     expect(goPrev).toHaveBeenCalledOnce();
   });
 
-  it("renders previous as disabled", () => {
+  it("renders previous as list", () => {
     render(() => (
       <PlayActions goNext={goNext} goPrev={goPrev} isPrevAvailable={false} />
     ));
 
-    const prev = screen.getByLabelText("Previous");
-    expect(prev).toBeDisabled();
+    const prev = screen.getByTitle("Back to list");
+    expect(prev).toBeInTheDocument();
   });
 });
