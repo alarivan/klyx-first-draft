@@ -14,12 +14,11 @@
 .name {
   font-weight: bold;
   font-size: 1.1rem;
-  margin-top: 0px;
-  margin-bottom: 4px;
+  margin: 0px;
 }
 
 .description {
-  margin: 0;
+  margin: 4px 0 0;
   font-size: 0.9rem;
   height: 0.9rem;
   overflow: hidden;
