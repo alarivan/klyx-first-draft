@@ -47,7 +47,13 @@ export const Play: Component = () => {
 
   return (
     <BottomActionsLayout
-      actions={<PlayActions goNext={goNext} goPrev={goPrev} />}
+      actions={
+        <PlayActions
+          goNext={goNext}
+          goPrev={goPrev}
+          isPrevAvailable={!!prevId()}
+        />
+      }
     >
       <PlayHeader />
       <hr />

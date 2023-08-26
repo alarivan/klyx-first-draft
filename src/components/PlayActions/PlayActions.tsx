@@ -12,10 +12,12 @@ import styles from "./PlayActions.module.css";
 export const PlayActions: Component<{
   goNext: (complete?: boolean) => void;
   goPrev: () => void;
+  isPrevAvailable: boolean;
 }> = (props) => {
   return (
     <div class={styles.container}>
       <button
+        disabled={!props.isPrevAvailable}
         aria-label="Previous"
         onClick={() => props.goPrev()}
         type="button"

@@ -12,7 +12,9 @@ describe("PlayActions", () => {
   });
 
   it("calls goNext on next click", () => {
-    render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
+    render(() => (
+      <PlayActions goNext={goNext} goPrev={goPrev} isPrevAvailable />
+    ));
 
     const next = screen.getByLabelText("Next without completing");
     expect(next).toBeInTheDocument();
@@ -23,7 +25,9 @@ describe("PlayActions", () => {
   });
 
   it("calls goNext with true on next click", () => {
-    render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
+    render(() => (
+      <PlayActions goNext={goNext} goPrev={goPrev} isPrevAvailable />
+    ));
 
     const next = screen.getByLabelText("Next and complete");
     expect(next).toBeInTheDocument();
@@ -34,7 +38,9 @@ describe("PlayActions", () => {
   });
 
   it("calls goPrev on previous click", () => {
-    render(() => <PlayActions goNext={goNext} goPrev={goPrev} />);
+    render(() => (
+      <PlayActions goNext={goNext} goPrev={goPrev} isPrevAvailable />
+    ));
 
     const prev = screen.getByLabelText("Previous");
     expect(prev).toBeInTheDocument();
@@ -42,5 +48,14 @@ describe("PlayActions", () => {
     fireEvent.click(prev);
 
     expect(goPrev).toHaveBeenCalledOnce();
+  });
+
+  it("renders previous as disabled", () => {
+    render(() => (
+      <PlayActions goNext={goNext} goPrev={goPrev} isPrevAvailable={false} />
+    ));
+
+    const prev = screen.getByLabelText("Previous");
+    expect(prev).toBeDisabled();
   });
 });
