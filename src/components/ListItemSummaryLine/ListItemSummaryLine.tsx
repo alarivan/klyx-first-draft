@@ -36,6 +36,12 @@ export const ListItemSummaryLine: Component<{
     }
   });
 
+  const toggleCompleted = () => {
+    actions.updateItem(props.listId, props.item.id, {
+      completed: !props.item.completed,
+    });
+  };
+
   const [showDescription, setShowDescription] = createSignal(true);
   const toggleShowDescription = () => setShowDescription((s) => !s);
 
@@ -44,7 +50,12 @@ export const ListItemSummaryLine: Component<{
       <div class={styles.header}>
         <div class={styles.number}>{props.index + 1}</div>
         <div class={styles.nameLine}>
-          <ItemStatus status={props.item.completed} size={24} />
+          <button
+            title={`Toggle completed for item ${props.index + 1}`}
+            onClick={toggleCompleted}
+          >
+            <ItemStatus status={props.item.completed} size={24} />
+          </button>
           <p class={styles.name}>{props.item.name || props.item.description}</p>
         </div>
         <div class={styles.actions}>

@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import { StoreProvider } from "../../store/context";
 import { createStoreValue } from "../../store/createStoreValue";
 import { createListWithItems } from "../../store/helpers";
+import { renderInRouter } from "../../test/utils";
 
 import { ListItemSummaryLine } from "./ListItemSummaryLine";
 
@@ -48,7 +49,10 @@ const mockCreateStoreValue = createStoreValue as Mock;
 
 describe("ListItemSummaryLine", () => {
   beforeEach(() => {
-    mockCreateStoreValue.mockReturnValue([null, { removeItem: vi.fn() }]);
+    mockCreateStoreValue.mockReturnValue([
+      null,
+      { removeItem: vi.fn(), updateItem: vi.fn() },
+    ]);
   });
 
   afterEach(() => {
@@ -116,6 +120,24 @@ describe("ListItemSummaryLine", () => {
     expect(screen.queryByText("Repeat:")).not.toBeInTheDocument();
     expect(screen.queryByText("Timer:")).not.toBeInTheDocument();
     expect(screen.queryByText("item1desc")).not.toBeInTheDocument();
+  });
+
+  it("renders with minimal data", () => {
+    const updateItemMock = vi.fn();
+    mockCreateStoreValue.mockReturnValue([
+      null,
+      { removeItem: vi.fn(), updateItem: updateItemMock },
+    ]);
+    renderInRouter(() => (
+      <ListItemSummaryLine listId={list.id} item={itemMinimal} index={0} />
+    ));
+
+    const toggle = screen.getByTitle("Toggle completed for item 1");
+    fireEvent.click(toggle);
+
+    expect(updateItemMock).toHaveBeenCalledWith(list.id, itemMinimal.id, {
+      completed: true,
+    });
   });
 
   describe("delete item", () => {
