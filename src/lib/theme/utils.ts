@@ -40,10 +40,10 @@ export const applyTheme = (
   root.style.setProperty(`--card-bg`, cardBase.hex());
   root.style.setProperty(`--card-text`, getTextColor(cardBase));
 
-  const timerBase = color.darken(0.2);
+  const timerBase = color.lighten(0.2);
   root.style.setProperty(`--timer-progress-bg`, timerBase.hex());
   root.style.setProperty(`--timer-progress-text`, getTextColor(timerBase));
-  root.style.setProperty(`--timer-total-bg`, timerBase.lighten(0.3).hex());
+  root.style.setProperty(`--timer-total-bg`, timerBase.lighten(0.2).hex());
   root.style.setProperty(
     `--timer-total-text`,
     getTextColor(timerBase.lighten(0.3)),

@@ -42,10 +42,10 @@ describe("applyTheme", () => {
     expect(root).toHaveStyle("--body-box-shadow: #979797;");
     expect(root).toHaveStyle("--card-bg: #939393;");
     expect(root).toHaveStyle("--card-text: #000000;");
-    expect(root).toHaveStyle("--timer-progress-bg: #545454;");
+    expect(root).toHaveStyle("--timer-progress-bg: #7E7E7E;");
     expect(root).toHaveStyle("--timer-progress-text: #FFFFFF;");
-    expect(root).toHaveStyle("--timer-total-bg: #6D6D6D;");
-    expect(root).toHaveStyle("--timer-total-text: #FFFFFF;");
+    expect(root).toHaveStyle("--timer-total-bg: #979797;");
+    expect(root).toHaveStyle("--timer-total-text: #000000;");
     expect(root).toHaveStyle("--action-fancy-text: #FFFFFF;");
     expect(root).toHaveStyle("--action-fancy-bg: #3F3F3F;");
     expect(root).toHaveStyle("--action-fancy-bg-hover: #393939;");

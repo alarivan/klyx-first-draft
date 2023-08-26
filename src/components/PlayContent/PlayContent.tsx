@@ -33,8 +33,8 @@ export const PlayContent: Component = () => {
           <h3>{item().name}</h3>
         </Show>
       </div>
-      <hr />
       <Show when={item().description}>
+        <hr />
         <p class={styles.description}>{item().description}</p>
       </Show>
     </div>
