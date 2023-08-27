@@ -76,7 +76,16 @@ export const PlayCounter: Component<{
 
   return (
     <div class={styles.container}>
-      <h3>Repeat</h3>
+      <div class={styles.head}>
+        <h3>Repeat</h3>
+        <button
+          onClick={handleReset}
+          type="button"
+          class="action action__secondary"
+        >
+          Reset counter
+        </button>
+      </div>
       <div class={styles.main}>
         <button
           aria-label="Decrease counter"
@@ -98,15 +107,8 @@ export const PlayCounter: Component<{
           <FiPlus size={32} />
         </button>
       </div>
-      <div class={styles.extra}>
-        <button
-          onClick={handleReset}
-          type="button"
-          class="action action__secondary"
-        >
-          Reset counter
-        </button>
-        <Show when={item().counterType === "limited"}>
+      <Show when={item().counterType === "limited"}>
+        <div class={styles.extra}>
           <div
             class={`inputGroup inputGroup__checkbox ${styles.nextOnComplete}`}
           >
@@ -120,8 +122,8 @@ export const PlayCounter: Component<{
               Automatically go next when counter is completed
             </label>
           </div>
-        </Show>
-      </div>
+        </div>
+      </Show>
     </div>
   );
 };
