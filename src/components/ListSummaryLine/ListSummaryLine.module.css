@@ -20,10 +20,10 @@
 .description {
   margin: 4px 0 0;
   font-size: 0.9rem;
-  height: 0.9rem;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: pre-wrap;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .secondary {
