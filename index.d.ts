@@ -1,3 +1,4 @@
+/// <reference types="dom-screen-wake-lock" />
 import type { IValidatorFn } from "./src/lib/form";
 
 declare module "solid-js" {

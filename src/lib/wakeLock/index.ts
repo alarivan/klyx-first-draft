@@ -1,0 +1,1 @@
+export { createWakeLock } from "./createWakeLock";
