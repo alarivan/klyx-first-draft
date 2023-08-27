@@ -1,5 +1,5 @@
 import type { IListItem } from "../../store/types";
-import type { Component } from "solid-js";
+import type { Accessor, Component } from "solid-js";
 
 import { A } from "@solidjs/router";
 import {
@@ -11,6 +11,7 @@ import {
 } from "solid-icons/fi";
 import { mergeProps, onMount, createSignal, Show } from "solid-js";
 
+import { formatSecondsToTime } from "../../lib/format";
 import { useStoreContext } from "../../store/context";
 import { ItemStatus } from "../ItemStatus";
 
@@ -119,12 +120,16 @@ export const ListItemSummaryLine: Component<{
           </Show>
           <Show
             when={
-              props.item.timerSeconds && parseInt(props.item.timerSeconds) > 0
+              props.item.timerSeconds &&
+              parseInt(props.item.timerSeconds) > 0 &&
+              parseInt(props.item.timerSeconds)
             }
           >
-            <div>
-              Timer: <b>{props.item.timerSeconds}</b>
-            </div>
+            {(ts: Accessor<number>) => (
+              <div>
+                Timer: <b>{formatSecondsToTime(ts())}</b>
+              </div>
+            )}
           </Show>
         </div>
         <p

@@ -73,7 +73,7 @@ describe("ListItemSummaryLine", () => {
     expect(screen.getByText("Repeat:")).toBeInTheDocument();
     expect(screen.getByText("10")).toBeInTheDocument();
     expect(screen.getByText("Timer:")).toBeInTheDocument();
-    expect(screen.getByText("60")).toBeInTheDocument();
+    expect(screen.getByText("01:00")).toBeInTheDocument();
     expect(screen.getByText("item2desc")).toBeInTheDocument();
   });
 
@@ -120,6 +120,19 @@ describe("ListItemSummaryLine", () => {
     expect(screen.queryByText("Repeat:")).not.toBeInTheDocument();
     expect(screen.queryByText("Timer:")).not.toBeInTheDocument();
     expect(screen.queryByText("item1desc")).not.toBeInTheDocument();
+  });
+
+  it("renders with dragActivators", () => {
+    renderInRouter(() => (
+      <ListItemSummaryLine
+        listId={list.id}
+        item={itemMinimal}
+        index={0}
+        dragActivators={{}}
+      />
+    ));
+
+    expect(screen.getByLabelText("Drag handle")).toBeInTheDocument();
   });
 
   it("toggles completed", () => {
