@@ -7,10 +7,20 @@
   display: block;
 }
 
-.container :global(.action) {
-  padding: 4px;
+.actions {
+  display: flex;
+  align-items: center;
 }
 
-.settings {
-  display: block;
+.wakeLockInput {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.action {
+  padding: 4px;
+}
+.action:not(:last-child) {
+  margin-right: 8px;
 }
