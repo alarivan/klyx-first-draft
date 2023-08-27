@@ -1,7 +1,7 @@
 import type { IListItemDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
-import { Show } from "solid-js";
+import { createEffect, Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
 
@@ -16,6 +16,7 @@ export const TimerForm: Component<{
   const {
     initFormInput: _initFormInput,
     initForm: _initForm,
+    setValue,
     errors,
   } = useForm({
     initialValues: {
@@ -23,6 +24,12 @@ export const TimerForm: Component<{
     },
 
     errorClass: "error",
+  });
+
+  createEffect(() => {
+    if (props.timerSeconds) {
+      setValue("timerSeconds", props.timerSeconds);
+    }
   });
 
   const onFormSubmit = (e: HTMLFormElement) => {

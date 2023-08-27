@@ -65,7 +65,12 @@ export const ListItemSummaryLine: Component<{
           >
             <ItemStatus status={props.item.completed} size={24} />
           </button>
-          <p class={styles.name}>{props.item.name || props.item.description}</p>
+          <A
+            href={`/list/${props.listId}/play/${props.item.id}`}
+            class={`a-reset ${styles.name}`}
+          >
+            {props.item.name || props.item.description}
+          </A>
         </div>
         <div class={styles.actions}>
           <Show

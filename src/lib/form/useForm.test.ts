@@ -316,4 +316,49 @@ describe("useForm", () => {
       });
     });
   });
+
+  describe("setValue", () => {
+    it("should set value for checkbox", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput, setValue } = useForm({
+          initialValues: { toggle: false },
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "toggle";
+        inputElement.type = "checkbox";
+
+        initFormInput(inputElement, () => []);
+
+        setValue("toggle", true);
+
+        expect(values()).toEqual({ toggle: true });
+        expect(inputElement.checked).toEqual(true);
+
+        dispose();
+      });
+    });
+
+    it("should set value for input", () => {
+      createRoot(async (dispose) => {
+        const { values, initFormInput, setValue } = useForm({
+          initialValues: { name: "al" },
+          errorClass: "err",
+        });
+
+        const inputElement = document.createElement("input");
+        inputElement.name = "name";
+
+        initFormInput(inputElement, () => []);
+
+        setValue("name", "pal");
+
+        expect(values()).toEqual({ name: "pal" });
+        expect(inputElement.value).toEqual("pal");
+
+        dispose();
+      });
+    });
+  });
 });

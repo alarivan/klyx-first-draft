@@ -162,5 +162,26 @@ export function useForm<T extends string>({
     };
   };
 
-  return { initFormInput, initForm, errors, values };
+  const setValue = (name: T, newValue: string | boolean) => {
+    const element = fields[name]?.element;
+    if (element) {
+      let value = newValue;
+      if (element.type === "checkbox") {
+        const checkboxElement = element as HTMLInputElement;
+        if (typeof newValue === "boolean") {
+          value = newValue;
+          checkboxElement.checked = value;
+        }
+      } else if (typeof newValue === "string") {
+        value = newValue;
+        element.value = value;
+      }
+      setValues((v) => ({
+        ...v,
+        [name]: value,
+      }));
+    }
+  };
+
+  return { initFormInput, initForm, errors, values, setValue };
 }
