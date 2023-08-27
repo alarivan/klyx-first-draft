@@ -9,5 +9,13 @@ vi.mock("@solid-primitives/storage", async () => {
   };
 });
 
+vi.mock("solid-transition-group", async () => {
+  const mod = await vi.importActual("solid-transition-group");
+  return {
+    ...mod,
+    Transition: vi.fn().mockImplementation((p) => p.children),
+  };
+});
+
 const noop = () => {};
 Object.defineProperty(window, "scrollTo", { value: noop, writable: true });

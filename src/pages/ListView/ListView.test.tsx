@@ -26,6 +26,9 @@ describe("ListView", () => {
   it("switches between compact and detailed views", () => {
     renderInListGuardProvider(() => <ListView />, list);
 
+    const listActions = screen.getByLabelText("List actions");
+    fireEvent.click(listActions);
+
     const compact = screen.getByTitle("Sortable compact view");
     fireEvent.click(compact);
 

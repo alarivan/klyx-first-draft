@@ -17,7 +17,6 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
 
   const toggleActions = () => {
     setShowActions((s) => !s);
-    console.log("TCL: [line 17][ListHeader.tsx] showActions: ", showActions());
   };
 
   const deleteList = () => {

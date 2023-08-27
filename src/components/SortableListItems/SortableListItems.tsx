@@ -70,6 +70,7 @@ export const SortableItemsActiveDragged: Component<{
               index={item().index}
               item={item().data}
               listId={props.list.id}
+              dragActivators={{}}
             />
           </li>
         );
@@ -104,12 +105,15 @@ export const SortableListItems: Component = () => {
             {(item, index) => (
               <li>
                 <SortableItem id={item.id}>
-                  <ListItemSummaryLine
-                    isCompact
-                    index={index()}
-                    item={item}
-                    listId={list().id}
-                  />
+                  {(dragActivators) => (
+                    <ListItemSummaryLine
+                      isCompact
+                      index={index()}
+                      item={item}
+                      listId={list().id}
+                      dragActivators={dragActivators}
+                    />
+                  )}
                 </SortableItem>
               </li>
             )}

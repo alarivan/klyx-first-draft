@@ -2,7 +2,7 @@ import type { IStoreActions } from "../../store/types";
 import type { Draggable, Droppable } from "@thisbeyond/solid-dnd";
 import type { Mock } from "vitest";
 
-import { screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
 import { DragOverlay, useDragDropContext } from "@thisbeyond/solid-dnd";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -52,6 +52,13 @@ describe("SortableListItems", () => {
     expect(screen.getByText("item1")).toBeInTheDocument();
   });
 
+  it("toggles completed", () => {
+    renderInListGuardProvider(() => <SortableListItems />, list());
+
+    const toggle = screen.getByTitle("Toggle completed for item 1");
+    fireEvent.click(toggle);
+  });
+
   it(onDragStartCreator, () => {
     const currentList = list();
 
@@ -86,24 +93,39 @@ describe("SortableListItems", () => {
       ]);
   });
 
-  it("SortableItemsActiveDragged", () => {
-    const currentList = list();
-    renderInRouter(() => (
-      <SortableItemsActiveDragged
-        item={{ data: currentList.items[0], index: 0 }}
-        list={currentList}
-      />
-    ));
+  describe("SortableItemsActiveDragged", () => {
+    it("renders component", () => {
+      const currentList = list();
+      renderInRouter(() => (
+        <SortableItemsActiveDragged
+          item={{ data: currentList.items[0], index: 0 }}
+          list={currentList}
+        />
+      ));
 
-    expect(screen.getByText("item1")).toBeInTheDocument();
-  });
+      expect(screen.getByText("item1")).toBeInTheDocument();
+    });
 
-  it("SortableItemsActiveDragged", () => {
-    const currentList = list();
-    renderInRouter(() => (
-      <SortableItemsActiveDragged item={null} list={currentList} />
-    ));
+    it("does not render component", () => {
+      const currentList = list();
+      renderInRouter(() => (
+        <SortableItemsActiveDragged item={null} list={currentList} />
+      ));
 
-    expect(screen.queryByText("item1")).not.toBeInTheDocument();
+      expect(screen.queryByText("item1")).not.toBeInTheDocument();
+    });
+
+    it("toggles completed", () => {
+      const currentList = list();
+      renderInRouter(() => (
+        <SortableItemsActiveDragged
+          item={{ data: currentList.items[0], index: 0 }}
+          list={currentList}
+        />
+      ));
+
+      const toggle = screen.getByTitle("Toggle completed for item 1");
+      fireEvent.click(toggle);
+    });
   });
 });

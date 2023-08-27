@@ -2,7 +2,13 @@ import type { IListItem } from "../../store/types";
 import type { Component } from "solid-js";
 
 import { A } from "@solidjs/router";
-import { FiChevronDown, FiChevronUp, FiEdit2, FiTrash } from "solid-icons/fi";
+import {
+  FiChevronDown,
+  FiChevronUp,
+  FiEdit2,
+  FiMove,
+  FiTrash,
+} from "solid-icons/fi";
 import { mergeProps, onMount, createSignal, Show } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
@@ -15,11 +21,13 @@ export const ListItemSummaryLine: Component<{
   index: number;
   item: IListItem;
   isCompact?: boolean;
+  dragActivators?: any;
 }> = (p) => {
   const props = mergeProps({ isCompact: false }, p);
   const [_, actions] = useStoreContext();
   const deleteItem = () => {
-    if (confirm(`Delete ${props.item.name}?`)) {
+    const name = props.item.name || `item ${props.index + 1}`;
+    if (confirm(`Delete ${name}?`)) {
       actions.removeItem(props.listId, props.item.id);
     }
   };
@@ -59,21 +67,36 @@ export const ListItemSummaryLine: Component<{
           <p class={styles.name}>{props.item.name || props.item.description}</p>
         </div>
         <div class={styles.actions}>
-          <A
-            aria-label="Edit item"
-            class={`action action__secondary ${styles.action}`}
-            href={`/list/${props.listId}/item/${props.item.id}/edit`}
+          <Show
+            when={!props.dragActivators}
+            fallback={
+              <button
+                aria-label="Drag handle"
+                title="Drag handle"
+                style={{ "touch-action": "none" }}
+                class={`action action__secondary ${styles.action} ${styles.draggable}`}
+                {...props.dragActivators}
+              >
+                <FiMove />
+              </button>
+            }
           >
-            <FiEdit2 />
-          </A>
-          <button
-            aria-label="Delete item"
-            class={`action action__secondary ${styles.action}`}
-            type="button"
-            onClick={deleteItem}
-          >
-            <FiTrash />
-          </button>
+            <A
+              aria-label="Edit item"
+              class={`action action__secondary ${styles.action}`}
+              href={`/list/${props.listId}/item/${props.item.id}/edit`}
+            >
+              <FiEdit2 />
+            </A>
+            <button
+              aria-label="Delete item"
+              class={`action action__secondary ${styles.action}`}
+              type="button"
+              onClick={deleteItem}
+            >
+              <FiTrash />
+            </button>
+          </Show>
         </div>
       </div>
       <Show when={!props.isCompact}>

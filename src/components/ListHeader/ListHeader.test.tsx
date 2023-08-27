@@ -24,15 +24,6 @@ vi.mock("../../store/createStoreValue", async () => {
   };
 });
 
-vi.mock("solid-transition-group", async () => {
-  const type = await import("solid-transition-group");
-  const mod: typeof type = await vi.importActual("solid-transition-group");
-  return {
-    ...mod,
-    Transition: vi.fn().mockImplementation((p) => p.children),
-  };
-});
-
 const mockCreateStoreValue = createStoreValue as Mock;
 
 describe("ListHeader", () => {

@@ -122,7 +122,7 @@ describe("ListItemSummaryLine", () => {
     expect(screen.queryByText("item1desc")).not.toBeInTheDocument();
   });
 
-  it("renders with minimal data", () => {
+  it("toggles completed", () => {
     const updateItemMock = vi.fn();
     mockCreateStoreValue.mockReturnValue([
       null,
@@ -158,16 +158,8 @@ describe("ListItemSummaryLine", () => {
       });
 
       it("does not call remove item when delete button is clicked", () => {
-        render(() => (
-          <Router>
-            <StoreProvider initalStore={{ lists: [] }}>
-              <ListItemSummaryLine
-                listId={list.id}
-                item={itemMinimal}
-                index={0}
-              />
-            </StoreProvider>
-          </Router>
+        renderInRouter(() => (
+          <ListItemSummaryLine listId={list.id} item={itemMinimal} index={0} />
         ));
 
         const deleteItem = screen.getByLabelText("Delete item");
@@ -183,22 +175,27 @@ describe("ListItemSummaryLine", () => {
       });
 
       it("calls remove item when delete button is clicked", () => {
-        render(() => (
-          <Router>
-            <StoreProvider initalStore={{ lists: [] }}>
-              <ListItemSummaryLine
-                listId={list.id}
-                item={itemMinimal}
-                index={0}
-              />
-            </StoreProvider>
-          </Router>
+        renderInRouter(() => (
+          <ListItemSummaryLine listId={list.id} item={itemMinimal} index={0} />
         ));
 
         const deleteItem = screen.getByLabelText("Delete item");
         fireEvent.click(deleteItem);
 
         expect(removeItemMock).toHaveBeenCalled();
+      });
+
+      it("opens confirm with message when name is not available", () => {
+        vi.spyOn(global, "confirm").mockImplementation(() => true);
+
+        renderInRouter(() => (
+          <ListItemSummaryLine listId={list.id} item={itemNoName} index={3} />
+        ));
+
+        const deleteItem = screen.getByLabelText("Delete item");
+        fireEvent.click(deleteItem);
+
+        expect(global.confirm).toHaveBeenCalledWith("Delete item 4?");
       });
     });
   });

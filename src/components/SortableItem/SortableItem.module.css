@@ -1,7 +1,6 @@
 .container {
   display: block;
   height: 48px;
-  cursor: grab;
 }
 
 .opacity25 {

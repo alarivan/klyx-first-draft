@@ -18,6 +18,7 @@ vi.mock("@thisbeyond/solid-dnd", async () => {
   const mod: typeof type = await vi.importActual("@thisbeyond/solid-dnd");
   return {
     ...mod,
+    transformStyle: vi.fn(),
     createSortable: vi.fn(),
     useDragDropContext: vi.fn(),
   };
@@ -28,7 +29,15 @@ const useDragableContextMock = useDragDropContext as Mock;
 
 describe("SortableItem", () => {
   beforeEach(() => {
-    createSortableMock.mockReturnValue(Object.defineProperties(() => {}, {}));
+    createSortableMock.mockReturnValue(
+      Object.defineProperties(() => {}, {
+        ref: {
+          writable: true,
+        },
+        transform: {},
+        dragActivators: {},
+      }),
+    );
     useDragableContextMock.mockReturnValue([{}]);
   });
 
@@ -37,7 +46,11 @@ describe("SortableItem", () => {
   });
 
   it("renders children", () => {
-    render(() => <SortableItem id={list.items[0].id}>children</SortableItem>);
+    render(() => (
+      <SortableItem id={list.items[0].id}>
+        {() => <div>children</div>}
+      </SortableItem>
+    ));
 
     expect(screen.getByText("children")).toBeInTheDocument();
   });
@@ -45,34 +58,29 @@ describe("SortableItem", () => {
   it("renders component with class when dragable", () => {
     createSortableMock.mockReturnValue(
       Object.defineProperties(() => {}, {
+        ref: {
+          writable: true,
+        },
+        transform: {},
+        dragActivators: {},
         isActiveDraggable: {
           enumerable: true,
           get: () => true,
         },
       }),
     );
-    render(() => <SortableItem id={list.items[0].id}>children</SortableItem>);
-
-    expect(screen.getByText("children")).toHaveClass(styles.opacity25);
-  });
-
-  it("renders component with class when dragable", () => {
-    createSortableMock.mockReturnValue(
-      Object.defineProperties(() => {}, {
-        isActiveDraggable: {
-          enumerable: true,
-          get: () => true,
-        },
-      }),
-    );
-    render(() => <SortableItem id={list.items[0].id}>children</SortableItem>);
+    render(() => (
+      <SortableItem id={list.items[0].id}>{() => "children"}</SortableItem>
+    ));
 
     expect(screen.getByText("children")).toHaveClass(styles.opacity25);
   });
 
   it("renders component with class when state is draggable", () => {
     useDragableContextMock.mockReturnValue([{ active: { draggable: true } }]);
-    render(() => <SortableItem id={list.items[0].id}>children</SortableItem>);
+    render(() => (
+      <SortableItem id={list.items[0].id}>{() => "children"}</SortableItem>
+    ));
 
     expect(screen.getByText("children")).toHaveClass(
       styles.transitionTransfrom,
@@ -81,7 +89,9 @@ describe("SortableItem", () => {
 
   it("renders when draggable context is null", () => {
     useDragableContextMock.mockReturnValue(null);
-    render(() => <SortableItem id={list.items[0].id}>children</SortableItem>);
+    render(() => (
+      <SortableItem id={list.items[0].id}>{() => "children"}</SortableItem>
+    ));
 
     expect(screen.getByText("children")).toBeInTheDocument();
   });

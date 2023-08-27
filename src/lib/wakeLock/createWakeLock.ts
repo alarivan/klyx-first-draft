@@ -9,7 +9,6 @@ export function createWakeLock(): [
   release: () => Promise<void>,
 ] {
   let wakeLock: WakeLockSentinel | undefined | null;
-  console.log("TCL: [line 12][createWakeLock.ts] wakeLock: ", wakeLock);
   const isAvailable = "wakeLock" in navigator;
 
   const [isActive, setIsActive] = createSignal(false);

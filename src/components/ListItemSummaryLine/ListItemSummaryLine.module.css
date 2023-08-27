@@ -22,7 +22,7 @@
 .nameLine {
   flex: 1;
   width: 0%;
-  max-width: 240px;
+  max-width: calc(69vw - 32px);
   display: flex;
   align-items: center;
   margin-right: auto;
@@ -83,4 +83,8 @@
 
 .action:not(:last-child) {
   margin-right: 8px;
+}
+
+.draggable {
+  cursor: grab;
 }

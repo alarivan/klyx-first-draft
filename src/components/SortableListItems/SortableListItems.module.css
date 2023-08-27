@@ -1,8 +1,11 @@
 .container {
   display: block;
+  position: relative;
+  max-width: 768px;
 }
 
 .activeItem {
-  cursor: grab;
-  max-width: 80%;
+  max-width: 736px;
+  overflow: hidden;
+  width: 100%;
 }
