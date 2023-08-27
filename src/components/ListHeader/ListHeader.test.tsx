@@ -27,8 +27,13 @@ vi.mock("../../store/createStoreValue", async () => {
 const mockCreateStoreValue = createStoreValue as Mock;
 
 describe("ListHeader", () => {
+  const removeMock = vi.fn();
+  const resetItemsStateMock = vi.fn();
   beforeEach(() => {
-    mockCreateStoreValue.mockReturnValue([null, { remove: vi.fn() }]);
+    mockCreateStoreValue.mockReturnValue([
+      null,
+      { remove: removeMock, resetItemsState: resetItemsStateMock },
+    ]);
   });
 
   afterEach(() => {
@@ -62,10 +67,7 @@ describe("ListHeader", () => {
   });
 
   describe("delete button", () => {
-    const removeMock = vi.fn();
     beforeEach(() => {
-      mockCreateStoreValue.mockReturnValue([null, { remove: removeMock }]);
-
       renderInRouter(() => <ListHeader list={list} />);
 
       const toggle = screen.getByLabelText("List actions");
@@ -97,6 +99,43 @@ describe("ListHeader", () => {
         fireEvent.click(screen.getByLabelText("Delete list"));
 
         expect(removeMock).toHaveBeenCalledWith(list.id);
+      });
+    });
+  });
+
+  describe("reset button", () => {
+    beforeEach(() => {
+      renderInRouter(() => <ListHeader list={list} />);
+
+      const toggle = screen.getByLabelText("List actions");
+      fireEvent.click(toggle);
+    });
+
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
+    describe("when confirm is false", () => {
+      beforeEach(() => {
+        vi.spyOn(global, "confirm").mockReturnValue(false);
+      });
+
+      it("handles click on reset button", () => {
+        fireEvent.click(screen.getByLabelText("Reset all items"));
+
+        expect(resetItemsStateMock).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("when confirm is true", () => {
+      beforeEach(() => {
+        vi.spyOn(global, "confirm").mockReturnValue(true);
+      });
+
+      it("handles click on reset button", () => {
+        fireEvent.click(screen.getByLabelText("Reset all items"));
+
+        expect(resetItemsStateMock).toHaveBeenCalledWith(list.id);
       });
     });
   });

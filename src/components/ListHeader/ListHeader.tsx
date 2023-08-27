@@ -25,6 +25,12 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
     }
   };
 
+  const resetItemsState = () => {
+    if (confirm("Reset state of all of the items?")) {
+      actions.resetItemsState(props.list.id);
+    }
+  };
+
   return (
     <div class={styles.container}>
       <div class={styles.head}>
@@ -49,6 +55,7 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
                   title="Reset all items"
                   type="button"
                   class={`action action__secondary`}
+                  onClick={resetItemsState}
                 >
                   <FiRefreshCcw />
                 </button>
