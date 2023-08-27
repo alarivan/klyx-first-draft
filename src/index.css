@@ -208,3 +208,20 @@ li {
 .action__secondary:active {
   background-color: var(--action-secondary-bg-active);
 }
+
+.slide-y {
+  overflow: hidden;
+  transition: max-height 500ms ease;
+}
+.slide-y-enter-active {
+  max-height: 0;
+}
+.slide-y-enter-to {
+  max-height: 48px;
+}
+.slide-y-exit-active {
+  max-height: 48px;
+}
+.slide-y-exit-to {
+  max-height: 0;
+}

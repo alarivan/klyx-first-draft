@@ -1,12 +1,11 @@
 import type { Mock } from "vitest";
 
-import { Router } from "@solidjs/router";
-import { fireEvent, render, screen } from "@solidjs/testing-library";
+import { fireEvent, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
 import { createStoreValue } from "../../store/createStoreValue";
 import { createListWithItems } from "../../store/helpers";
+import { renderInRouter } from "../../test/utils";
 
 import { ListHeader } from "./ListHeader";
 
@@ -25,6 +24,15 @@ vi.mock("../../store/createStoreValue", async () => {
   };
 });
 
+vi.mock("solid-transition-group", async () => {
+  const type = await import("solid-transition-group");
+  const mod: typeof type = await vi.importActual("solid-transition-group");
+  return {
+    ...mod,
+    Transition: vi.fn().mockImplementation((p) => p.children),
+  };
+});
+
 const mockCreateStoreValue = createStoreValue as Mock;
 
 describe("ListHeader", () => {
@@ -37,26 +45,42 @@ describe("ListHeader", () => {
   });
 
   it("renders component", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <ListHeader list={list} />
-        </StoreProvider>
-      </Router>
-    ));
+    renderInRouter(() => <ListHeader list={list} />);
 
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list1desc")).toBeInTheDocument();
-    expect(screen.getByLabelText("Edit list")).toHaveAttribute(
-      "href",
-      `/list/${list.id}/edit`,
-    );
   });
+
+  describe("actions panel", () => {
+    it("renders component and open panel", async () => {
+      renderInRouter(() => <ListHeader list={list}>children</ListHeader>);
+
+      const toggle = screen.getByLabelText("List actions");
+      fireEvent.click(toggle);
+
+      await new Promise((done) => setTimeout(done, 0));
+
+      expect(screen.getByText("children")).toBeInTheDocument();
+      expect(screen.getByLabelText("Reset all items")).toBeInTheDocument();
+      expect(screen.getByLabelText("Delete list")).toBeInTheDocument();
+      expect(screen.getByLabelText("Edit list")).toHaveAttribute(
+        "href",
+        `/list/${list.id}/edit`,
+      );
+    });
+  });
+
   describe("delete button", () => {
     const removeMock = vi.fn();
     beforeEach(() => {
       mockCreateStoreValue.mockReturnValue([null, { remove: removeMock }]);
+
+      renderInRouter(() => <ListHeader list={list} />);
+
+      const toggle = screen.getByLabelText("List actions");
+      fireEvent.click(toggle);
     });
+
     afterEach(() => {
       vi.clearAllMocks();
     });
@@ -67,14 +91,6 @@ describe("ListHeader", () => {
       });
 
       it("handles click on delete button", () => {
-        render(() => (
-          <Router>
-            <StoreProvider initalStore={{ lists: [list] }}>
-              <ListHeader list={list} />
-            </StoreProvider>
-          </Router>
-        ));
-
         fireEvent.click(screen.getByLabelText("Delete list"));
 
         expect(removeMock).not.toHaveBeenCalled();
@@ -87,14 +103,6 @@ describe("ListHeader", () => {
       });
 
       it("handles click on delete button", () => {
-        render(() => (
-          <Router>
-            <StoreProvider initalStore={{ lists: [list] }}>
-              <ListHeader list={list} />
-            </StoreProvider>
-          </Router>
-        ));
-
         fireEvent.click(screen.getByLabelText("Delete list"));
 
         expect(removeMock).toHaveBeenCalledWith(list.id);
