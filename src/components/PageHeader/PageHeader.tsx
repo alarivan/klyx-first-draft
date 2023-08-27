@@ -16,8 +16,12 @@ export const PageHeader: Component = () => {
           height={30}
         />
       </A>
-      <A title="Settings" class={`a-reset ${styles.settings}`} href="/settings">
-        <FiSettings size={30} />
+      <A
+        title="Settings"
+        class={`a-reset action action__secondary ${styles.settings}`}
+        href="/settings"
+      >
+        <FiSettings size={22} />
       </A>
     </div>
   );

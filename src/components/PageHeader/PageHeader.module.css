@@ -3,8 +3,12 @@
   justify-content: space-between;
   align-items: center;
 }
-.container a {
+.container a img {
   display: block;
+}
+
+.container :global(.action) {
+  padding: 4px;
 }
 
 .settings {
