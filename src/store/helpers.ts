@@ -5,6 +5,8 @@ import type {
   IListItemDataObject,
 } from "./types";
 
+import { COUNTER_TYPE_ENUM } from "./types";
+
 export const createList = ({
   name,
   description = null,
@@ -23,7 +25,7 @@ export const createListItem = ({
   description = null,
   completed = false,
   counterLimit = null,
-  counterType = "none",
+  counterType = COUNTER_TYPE_ENUM.NONE,
   counterAutoswitch = true,
   counterProgress = null,
   timerSeconds = null,

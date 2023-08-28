@@ -1,9 +1,14 @@
+export enum COUNTER_TYPE_ENUM {
+  NONE = "none",
+  LIMITED = "limited",
+  UNLIMITED = "unlimited",
+}
 export interface IListItem {
   id: string;
   name: string | null;
   description: string | null;
   completed: boolean;
-  counterType: "none" | "limited" | "unlimited";
+  counterType: COUNTER_TYPE_ENUM;
   counterLimit: string | null;
   counterAutoswitch: boolean;
   counterProgress: number | null;

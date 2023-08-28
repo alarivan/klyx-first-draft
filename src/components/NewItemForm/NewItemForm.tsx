@@ -5,6 +5,7 @@ import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
+import { COUNTER_TYPE_ENUM } from "../../store/types";
 
 export const NewItemForm: Component<{
   listId: string;
@@ -16,7 +17,7 @@ export const NewItemForm: Component<{
     name: props.item?.name || "",
     description: props.item?.description || "",
     counterLimit: props.item?.counterLimit || "0",
-    counterType: props.item?.counterType || "none",
+    counterType: props.item?.counterType || COUNTER_TYPE_ENUM.NONE,
     timerSeconds: props.item?.timerSeconds || "0",
     timerAutostart: props.item?.timerAutostart || false,
   };
@@ -51,7 +52,8 @@ export const NewItemForm: Component<{
         return acc;
       } else if (name === "counterType") {
         acc[name] =
-          (element.value as IListItemDataObject["counterType"]) || "none";
+          (element.value as IListItemDataObject["counterType"]) ||
+          COUNTER_TYPE_ENUM.NONE;
         return acc;
       } else {
         acc[name] = element.value || null;

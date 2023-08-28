@@ -3,12 +3,13 @@ import type { IStore, IStoreContextValue } from "./types";
 import { makePersisted } from "@solid-primitives/storage";
 import { createStore, produce } from "solid-js/store";
 
+import { LOCAL_STORAGE_STORE_KEY } from "./constants";
 import { createList, createListItem, isCompleted } from "./helpers";
 
 export const createStoreValue = (initialState?: IStore) => {
   const [state, setState] = makePersisted(
     createStore<IStore>(initialState || { lists: [] }),
-    { name: "klyx-store" },
+    { name: LOCAL_STORAGE_STORE_KEY },
   );
   const value: IStoreContextValue = [
     state,
@@ -125,6 +126,7 @@ export const createStoreValue = (initialState?: IStore) => {
             }
 
             Object.assign(item, rest);
+
             if (newItem.completed === false) {
               if (item.timerSeconds) {
                 item.timerProgress = null;
