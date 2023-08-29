@@ -24,58 +24,69 @@ export const applyColorsToAction = (
   }
 };
 
+const createThemeColorModifier = (isDark: boolean) => {
+  const method = isDark ? "lighten" : "darken";
+  return (color: Color, baseValue: number, darkValue?: number) => {
+    const value = isDark && darkValue ? darkValue : baseValue;
+    return color[method](value);
+  };
+};
+
 export const applyTheme = (
   root: HTMLElement,
   baseColor: string = "#a6a6a6",
 ) => {
   const color = Color(baseColor);
-  root.style.setProperty(`--base-color`, color.hex());
 
-  const bodyBg = color.lighten(0.8);
+  const isDark = color.luminosity() < 0.3;
+  const adjustColorValue = createThemeColorModifier(isDark);
+
+  const bodyBg = color;
   root.style.setProperty(`--body-bg`, bodyBg.hex());
   root.style.setProperty(`--body-text`, getTextColor(bodyBg));
-  root.style.setProperty(`--body-box-shadow`, bodyBg.darken(0.2).hex());
+  root.style.setProperty(
+    `--body-box-shadow`,
+    adjustColorValue(bodyBg, 0.2).hex(),
+  );
 
-  const cardBase = color.lighten(0.4);
+  const cardBase = adjustColorValue(bodyBg, 0.5);
   root.style.setProperty(`--card-bg`, cardBase.hex());
   root.style.setProperty(`--card-text`, getTextColor(cardBase));
 
-  const timerBase = color.lighten(0.2);
+  const timerBase = adjustColorValue(bodyBg, 0.4, 0.8);
+  const timerTotal = adjustColorValue(timerBase, -0.2, 0.3);
   root.style.setProperty(`--timer-progress-bg`, timerBase.hex());
   root.style.setProperty(`--timer-progress-text`, getTextColor(timerBase));
-  root.style.setProperty(`--timer-total-bg`, timerBase.lighten(0.2).hex());
-  root.style.setProperty(
-    `--timer-total-text`,
-    getTextColor(timerBase.lighten(0.3)),
-  );
+  root.style.setProperty(`--timer-total-bg`, timerTotal.hex());
+  root.style.setProperty(`--timer-total-text`, getTextColor(timerTotal));
 
-  const actionFancyBase = color.darken(0.4);
+  const actionFancyBase = adjustColorValue(bodyBg, 0.4, 0.8);
   const actionFancy = {
     base: actionFancyBase,
-    hover: actionFancyBase.darken(0.1).hex(),
-    active: actionFancyBase.lighten(0.1).hex(),
-    border: actionFancyBase.darken(0.6).hex(),
+    hover: adjustColorValue(actionFancyBase, 0.1).hex(),
+    active: adjustColorValue(actionFancyBase, 0.2).hex(),
+    border: adjustColorValue(actionFancyBase, 0.6).hex(),
   };
 
-  const actionPrimaryBase = color.darken(0.3);
+  const actionPrimaryBase = adjustColorValue(bodyBg, 0.3, 0.7);
   const actionPrimary = {
     base: actionPrimaryBase,
-    hover: actionPrimaryBase.lighten(0.2).hex(),
-    active: actionPrimaryBase.lighten(0.1).hex(),
+    hover: adjustColorValue(actionPrimaryBase, 0.2).hex(),
+    active: adjustColorValue(actionPrimaryBase, 0.3).hex(),
   };
 
-  const actionSecondaryBase = color.lighten(0.2);
+  const actionSecondaryBase = adjustColorValue(bodyBg, 0.2, 0.6);
   const actionSecondary = {
     base: actionSecondaryBase,
-    hover: actionSecondaryBase.darken(0.2).hex(),
-    active: actionSecondaryBase.darken(0.1).hex(),
+    hover: adjustColorValue(actionSecondaryBase, 0.1).hex(),
+    active: adjustColorValue(actionSecondaryBase, 0.2).hex(),
   };
 
   applyColorsToAction(root, "--action-fancy", actionFancy);
   applyColorsToAction(root, "--action-primary", actionPrimary);
   applyColorsToAction(root, "--action-secondary", actionSecondary);
 
-  const disabledBase = Color("#a5a5a5");
+  const disabledBase = color.grayscale();
   root.style.setProperty(`--action-disabled-bg`, disabledBase.hex());
   root.style.setProperty(`--action-disabled-text`, getTextColor(disabledBase));
 };
