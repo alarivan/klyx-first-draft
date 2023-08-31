@@ -1,7 +1,7 @@
 {
-  "name": "vite-template-solid",
+  "name": "klyx-first-draft",
   "version": "0.0.0",
-  "description": "",
+  "description": "klyx first draft",
   "scripts": {
     "start": "vite",
     "dev": "vite",
