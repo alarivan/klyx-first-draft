@@ -18,7 +18,7 @@ export const Home: Component = () => {
       fallback={
         <div class={styles.addListButtonWrapper}>
           <A href="/list/new" class="action__fancy">
-            add new list <FiPlus style={{ display: "block" }} size={40} />
+            add list <FiPlus style={{ display: "block" }} size={40} />
           </A>
         </div>
       }
@@ -35,7 +35,7 @@ export const Home: Component = () => {
         </ul>
         <div class={styles.addListButtonWrapperBottom}>
           <A href="/list/new" class="action action__fancy">
-            add new list
+            add list
           </A>
         </div>
       </div>

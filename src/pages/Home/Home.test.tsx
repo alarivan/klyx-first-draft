@@ -22,12 +22,12 @@ describe("Home", () => {
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("list2")).toBeInTheDocument();
     expect(screen.getByText("list3")).toBeInTheDocument();
-    expect(screen.getByText("add new list")).toBeInTheDocument();
+    expect(screen.getByText("add list")).toBeInTheDocument();
   });
 
   it("renders button when there is no lists", () => {
     renderInRouter(() => <Home />, { lists: [] });
 
-    expect(screen.getByText("add new list")).toBeInTheDocument();
+    expect(screen.getByText("add list")).toBeInTheDocument();
   });
 });
