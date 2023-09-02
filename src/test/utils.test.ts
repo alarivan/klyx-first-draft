@@ -1,6 +1,9 @@
+import { screen } from "@solidjs/testing-library";
+import { createRoot } from "solid-js";
 import { describe, expect, it } from "vitest";
 
 import { createListWithItems } from "../store/helpers";
+import { COUNTER_TYPE_ENUM } from "../store/types";
 
 import {
   renderInListGuardProvider,
@@ -14,7 +17,7 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   },
   {
     name: "item2",
-    counterType: "unlimited",
+    counterType: COUNTER_TYPE_ENUM.UNLIMITED,
   },
   {
     name: "item2",
@@ -24,13 +27,35 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
 
 describe("renderInListItemGuardProvider", () => {
   it("throws an error when list item index is out of bounds", () => {
-    expect(() => renderInListItemGuardProvider(() => "no", list, 10)).toThrow();
+    expect(() =>
+      renderInListItemGuardProvider(() => "no", "/:listId/:itemId", list, 10),
+    ).toThrow();
   });
 
   it("renders list item guard component", () => {
     expect(() =>
-      renderInListItemGuardProvider(() => "no", list, 1),
+      renderInListItemGuardProvider(() => "no", "/:listId/:itemId", list, 1),
     ).not.toThrow();
+  });
+
+  it("renders list item navigates to catchall", async () => {
+    const [_, navigate] = renderInListItemGuardProvider(
+      () => "no",
+      "/random",
+      list,
+      1,
+    );
+
+    createRoot((dispose) => {
+      if (navigate) {
+        navigate("/list/random");
+      }
+      dispose();
+    });
+
+    await Promise.resolve();
+
+    expect(screen.getByText("catchall")).toBeInTheDocument();
   });
 });
 

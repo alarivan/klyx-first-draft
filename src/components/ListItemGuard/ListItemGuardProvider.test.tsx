@@ -10,9 +10,10 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   { name: "item1", description: "item1desc" },
 ]);
 
+const playPath = "/list/:listId/play/:itemId";
 describe("ListItemGuardProvider", () => {
   it("renders provider with children", () => {
-    renderInListItemGuardProvider(() => "children", list);
+    renderInListItemGuardProvider(() => "children", playPath, list);
 
     expect(screen.getByText("children")).toBeInTheDocument();
   });
@@ -28,7 +29,7 @@ describe("useListItemGuardContext", () => {
       useListItemGuardContext();
       return <>test</>;
     };
-    renderInListItemGuardProvider(Component, list);
+    renderInListItemGuardProvider(Component, playPath, list);
 
     expect(screen.getByText("test")).toBeInTheDocument();
   });

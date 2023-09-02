@@ -1,5 +1,5 @@
 import { fireEvent, screen } from "@solidjs/testing-library";
-import { createRoot, createEffect } from "solid-js";
+import { createRoot } from "solid-js";
 import { describe, expect, it } from "vitest";
 
 import { createListWithItems } from "../../store/helpers";
@@ -26,6 +26,8 @@ const list = () =>
     },
   ]);
 
+const playPath = "/list/:listId/play/:itemId";
+
 describe("PlayTimer", () => {
   const goNext = vi.fn();
   beforeEach(() => {
@@ -39,6 +41,7 @@ describe("PlayTimer", () => {
   it("renders component", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       0,
     );
@@ -57,6 +60,7 @@ describe("PlayTimer", () => {
   it("renders with timer seconds null", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       3,
     );
@@ -67,6 +71,7 @@ describe("PlayTimer", () => {
   it("starts and pauses timer", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       0,
     );
@@ -90,6 +95,7 @@ describe("PlayTimer", () => {
   it("resets timer", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       2,
     );
@@ -107,22 +113,16 @@ describe("PlayTimer", () => {
   describe("with timerAutoswitch", () => {
     it("goes next when timer is finished", () => {
       const autoSwitchList = list();
-      const [history] = renderInListItemGuardProvider(
+      renderInListItemGuardProvider(
         () => <PlayTimer goNext={goNext} />,
+        playPath,
         autoSwitchList,
         1,
       );
 
-      vi.advanceTimersByTime(3000);
+      vi.advanceTimersByTime(4000);
 
-      createRoot((dispose) => {
-        createEffect(() => {
-          expect(history().value).toEqual(
-            `/list/${autoSwitchList.id}/${autoSwitchList.items[2].id}`,
-          );
-        });
-        dispose();
-      });
+      expect(goNext).toHaveBeenCalledOnce();
     });
   });
 
@@ -130,6 +130,7 @@ describe("PlayTimer", () => {
     it("starts timer automatically", () => {
       renderInListItemGuardProvider(
         () => <PlayTimer goNext={goNext} />,
+        playPath,
         list(),
         1,
       );
@@ -143,6 +144,7 @@ describe("PlayTimer", () => {
   it("toggle autoswitch", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       0,
     );
@@ -158,6 +160,7 @@ describe("PlayTimer", () => {
   it("toggle autostart", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       0,
     );
@@ -171,6 +174,7 @@ describe("PlayTimer", () => {
   it("updates timer on timer form submit", () => {
     renderInListItemGuardProvider(
       () => <PlayTimer goNext={goNext} />,
+      playPath,
       list(),
       0,
     );
@@ -183,5 +187,31 @@ describe("PlayTimer", () => {
 
     expect(screen.getByText("00:00")).toBeInTheDocument();
     expect(screen.getByText("00:12")).toBeInTheDocument();
+  });
+
+  it("clears timer when route changes", async () => {
+    const currentList = list();
+    const [_, navigate] = renderInListItemGuardProvider(
+      () => <PlayTimer goNext={goNext} />,
+      playPath,
+      currentList,
+      1,
+    );
+
+    vi.advanceTimersByTime(2001);
+    expect(screen.getByText("00:02")).toBeInTheDocument();
+
+    const dispose = createRoot((dispose) => {
+      if (navigate) {
+        navigate(`/list/${currentList.id}/play/${currentList.items[2].id}`);
+      }
+      return dispose;
+    });
+
+    await Promise.resolve();
+    vi.advanceTimersByTime(2001);
+    expect(screen.getByText("00:06")).toBeInTheDocument();
+
+    dispose();
   });
 });

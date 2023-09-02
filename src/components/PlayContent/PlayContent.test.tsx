@@ -11,23 +11,25 @@ const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   {},
 ]);
 
+const playPath = "/list/:listId/play/:itemId";
+
 describe("PlayContent", () => {
   it("renders component with data", () => {
-    renderInListItemGuardProvider(() => <PlayContent />, list);
+    renderInListItemGuardProvider(() => <PlayContent />, playPath, list);
 
     expect(screen.getByText("item1")).toBeInTheDocument();
     expect(screen.getByText("item1desc")).toBeInTheDocument();
   });
 
   it("renders component without data", () => {
-    renderInListItemGuardProvider(() => <PlayContent />, list, 1);
+    renderInListItemGuardProvider(() => <PlayContent />, playPath, list, 1);
 
     expect(screen.queryByText("item1")).not.toBeInTheDocument();
     expect(screen.queryByText("item1desc")).not.toBeInTheDocument();
   });
 
   it("toggles completed on click", () => {
-    renderInListItemGuardProvider(() => <PlayContent />, list, 0);
+    renderInListItemGuardProvider(() => <PlayContent />, playPath, list, 0);
 
     expect(screen.getByLabelText("completed")).toBeInTheDocument();
 

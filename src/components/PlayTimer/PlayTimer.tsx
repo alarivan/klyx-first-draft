@@ -1,6 +1,7 @@
 import type { IListItemDataObject } from "../../store/types";
 import type { Component } from "solid-js";
 
+import { useBeforeLeave } from "@solidjs/router";
 import { createEffect, on } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
@@ -23,7 +24,7 @@ export const PlayTimer: Component<{
     return ts ? parseInt(ts) : 0;
   };
 
-  let timer: NodeJS.Timer | undefined;
+  let timer: NodeJS.Timeout | undefined;
 
   const clearTimer = () => {
     if (timer) {
@@ -79,6 +80,9 @@ export const PlayTimer: Component<{
       },
     ),
   );
+  useBeforeLeave(() => {
+    clearTimer();
+  });
 
   const saveTimerSeconds = (values: {
     timerSeconds: IListItemDataObject["timerSeconds"];

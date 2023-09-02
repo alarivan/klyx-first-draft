@@ -2,10 +2,12 @@ import { fireEvent, screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
 import { createListWithItems } from "../../store/helpers";
+import { COUNTER_TYPE_ENUM } from "../../store/types";
 import { renderInListItemGuardProvider } from "../../test/utils";
 
 import { PlayCounter } from "./PlayCounter";
 
+const playPath = "/list/:listId/play/:itemId";
 describe("PlayCounter", () => {
   const goNextMock = vi.fn();
 
@@ -20,21 +22,21 @@ describe("PlayCounter", () => {
           name: "item1",
           description: "item1desc",
           counterLimit: "2",
-          counterType: "limited",
+          counterType: COUNTER_TYPE_ENUM.LIMITED,
           counterAutoswitch: false,
         },
         {
           name: "item1",
           description: "item1desc",
           counterLimit: "2",
-          counterType: "limited",
+          counterType: COUNTER_TYPE_ENUM.LIMITED,
           counterProgress: 1,
         },
         {
           name: "item1",
           description: "item1desc",
           counterLimit: "2",
-          counterType: "limited",
+          counterType: COUNTER_TYPE_ENUM.LIMITED,
           counterProgress: 2,
         },
         {
@@ -46,6 +48,7 @@ describe("PlayCounter", () => {
     it("renders component with initial state 0", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
       );
 
@@ -62,6 +65,7 @@ describe("PlayCounter", () => {
     it("renders component with initial state limit", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
         2,
       );
@@ -74,6 +78,7 @@ describe("PlayCounter", () => {
     it("decreases counter", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
         2,
       );
@@ -89,6 +94,7 @@ describe("PlayCounter", () => {
     it("increases counter", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
         0,
       );
@@ -104,6 +110,7 @@ describe("PlayCounter", () => {
     it("resets counter", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
         2,
       );
@@ -120,6 +127,7 @@ describe("PlayCounter", () => {
       const autoswitchList = list();
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         autoswitchList,
         0,
       );
@@ -135,6 +143,7 @@ describe("PlayCounter", () => {
     it("calls navigate to next item when counter is completed", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
         1,
       );
@@ -154,19 +163,20 @@ describe("PlayCounter", () => {
         {
           name: "item1",
           description: "item1desc",
-          counterType: "unlimited",
+          counterType: COUNTER_TYPE_ENUM.UNLIMITED,
         },
         {
           name: "item2",
           description: "item2desc",
           counterLimit: "2",
-          counterType: "limited",
+          counterType: COUNTER_TYPE_ENUM.LIMITED,
         },
       ]);
 
     it("renders component with initial state", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
       );
 
@@ -183,6 +193,7 @@ describe("PlayCounter", () => {
     it("increases counter", () => {
       renderInListItemGuardProvider(
         () => <PlayCounter goNext={goNextMock} />,
+        playPath,
         list(),
       );
 

@@ -94,10 +94,14 @@ export const Settings: Component = () => {
         </button>
       </section>
       <section>
-        <h2>Switch back to the other store</h2>
+        <h2>Swap back to previous data</h2>
         <p>
-          If there is an issues with restored store from backup, you can go back
-          to the version of the store right before the restoring.
+          The Swap Back feature allows users to restore their data to a previous
+          state in our app and offers the added flexibility of reverting to the
+          version just before the restoration, ensuring control and data
+          accuracy. It provides peace of mind by enabling users to easily
+          backtrack if they are unsatisfied with the restored data or need to
+          compare different versions.{" "}
         </p>
         <button
           type="button"
