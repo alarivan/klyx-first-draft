@@ -33,9 +33,11 @@ const App: Component = () => {
             <Route path="/edit" component={ListEdit} />
             <Route path="/item/new" component={NewItem} />
           </Route>
+          <Route path="/list/:listId/play" component={ListGuardProvider}>
+            <Route path="/done" component={PlayDone} />
+          </Route>
           <Route path="/list/:listId/play" component={ListItemGuardProvider}>
             <Route path="/" component={Play} />
-            <Route path="/done" component={PlayDone} />
             <Route path="/:itemId" component={Play} />
           </Route>
           <Route

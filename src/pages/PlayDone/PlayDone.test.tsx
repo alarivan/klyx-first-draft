@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import "@testing-library/jest-dom";
 
 import { createListWithItems } from "../../store/helpers";
-import { renderInListItemGuardProvider } from "../../test/utils";
+import { renderInListGuardProvider } from "../../test/utils";
 
 import { PlayDone } from "./PlayDone";
 
@@ -17,7 +17,7 @@ const listNoDescription = createListWithItems({ name: "list1" }, [
 
 describe("PlayDone", () => {
   it("renders component", () => {
-    renderInListItemGuardProvider(() => <PlayDone />, list);
+    renderInListGuardProvider(() => <PlayDone />, list);
 
     expect(screen.getByText("list1")).toBeInTheDocument();
     expect(screen.getByText("2/2")).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe("PlayDone", () => {
   });
 
   it("renders component without description", () => {
-    renderInListItemGuardProvider(() => <PlayDone />, listNoDescription);
+    renderInListGuardProvider(() => <PlayDone />, listNoDescription);
 
     expect(screen.getByText(list.name)).toBeInTheDocument();
   });
