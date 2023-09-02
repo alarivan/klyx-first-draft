@@ -70,7 +70,7 @@ export const Settings: Component = () => {
           onClick={downloadBackup}
           class="action action__primary"
         >
-          Download backup of your data{" "}
+          Download backup of your data
         </button>
       </section>
       <section>
@@ -96,19 +96,19 @@ export const Settings: Component = () => {
       <section>
         <h2>Swap back to previous data</h2>
         <p>
-          The Swap Back feature allows users to restore their data to a previous
-          state in our app and offers the added flexibility of reverting to the
-          version just before the restoration, ensuring control and data
-          accuracy. It provides peace of mind by enabling users to easily
-          backtrack if they are unsatisfied with the restored data or need to
-          compare different versions.{" "}
+          The Swap Back feature allows you to restore data to a previous state
+          and offers the added flexibility of reverting to the version just
+          before the restoration, ensuring control and data accuracy. It
+          provides peace of mind by enabling you to easily backtrack if you are
+          unsatisfied with the restored data or need to compare different
+          versions.
         </p>
         <button
           type="button"
           onClick={onSwapClick}
           class="action action__primary"
         >
-          Switch back to the previous store
+          Swap back
         </button>
       </section>
     </div>
