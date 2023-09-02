@@ -136,7 +136,7 @@ describe("Settings", () => {
     it("swaps stores", () => {
       renderInRouter(() => <Settings />);
 
-      const swap = screen.getByText("Switch back to the previous store");
+      const swap = screen.getByText("Swap back");
       fireEvent.click(swap);
 
       expect(reloadFn).toHaveBeenCalledOnce();
@@ -152,7 +152,7 @@ describe("Settings", () => {
     it("swaps stores", () => {
       renderInRouter(() => <Settings />);
 
-      const swap = screen.getByText("Switch back to the previous store");
+      const swap = screen.getByText("Swap back");
       fireEvent.click(swap);
 
       expect(swapCurrentStoreWithBackupMock).toHaveBeenCalled();
