@@ -5,6 +5,7 @@ import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 
 import { useForm } from "../../lib/form";
+import { textareaAutoHeight as _textareaAutoHeight } from "../../lib/textareaAutoHeight";
 import { COUNTER_TYPE_ENUM } from "../../store/types";
 
 export const NewItemForm: Component<{
@@ -77,7 +78,8 @@ export const NewItemForm: Component<{
           id="description"
           name="description"
           aria-label="item description"
-          rows="3"
+          rows="4"
+          use:_textareaAutoHeight
         />
       </div>
       <div class="inputGroup">

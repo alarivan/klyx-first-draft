@@ -7,6 +7,7 @@ declare module "solid-js" {
       _initForm: (ref: HTMLFormElement) => void;
       _initFormInput: Array<IValidatorFn> | boolean;
       _sortable: boolean;
+      _textareaAutoHeight: boolean;
     }
   }
 }

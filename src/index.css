@@ -79,6 +79,11 @@ li {
 .inputGroup select {
   padding: 8px;
 }
+.inputGroup textarea {
+  min-width: 100%;
+  max-width: 100%;
+  height: auto;
+}
 
 .inputGroup.inputGroup__checkbox {
   padding: 8px 0;

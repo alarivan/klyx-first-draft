@@ -4,6 +4,7 @@ import type { Component } from "solid-js";
 import { Show } from "solid-js";
 
 import { minLength, useForm } from "../../lib/form";
+import { textareaAutoHeight as _textareaAutoHeight } from "../../lib/textareaAutoHeight";
 
 export const NewListForm: Component<{
   onSubmit: IStoreActions["add"];
@@ -65,7 +66,8 @@ export const NewListForm: Component<{
           id="description"
           name="description"
           aria-label="list description"
-          rows="3"
+          rows="4"
+          use:_textareaAutoHeight
         />
       </div>
       <div class="formActions">
