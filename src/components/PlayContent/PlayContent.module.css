@@ -25,3 +25,7 @@
   white-space: pre-wrap;
   overflow: hidden;
 }
+
+.action {
+  margin-left: auto;
+}

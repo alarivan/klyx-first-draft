@@ -1,5 +1,7 @@
 import type { Component } from "solid-js";
 
+import { A } from "@solidjs/router";
+import { FiEdit2 } from "solid-icons/fi";
 import { Show } from "solid-js";
 
 import { useStoreContext } from "../../store/context";
@@ -32,6 +34,13 @@ export const PlayContent: Component = () => {
         <Show when={item().name}>
           <h3>{item().name}</h3>
         </Show>
+        <A
+          aria-label="Edit item"
+          class={`action action__secondary ${styles.action}`}
+          href={`/list/${guard().list.id}/item/${item().id}/edit`}
+        >
+          <FiEdit2 />
+        </A>
       </div>
       <Show when={item().description}>
         <hr />
