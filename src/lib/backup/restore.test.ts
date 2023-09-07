@@ -4,7 +4,12 @@ import {
 } from "../../store";
 import { createListWithItems } from "../../store/helpers";
 
-import { restoreFromBackup, swapCurrentStoreWithBackup } from "./restore";
+import { INITIAL_STORE_STATE } from "./initialStoreState";
+import {
+  restoreFromBackup,
+  restoreToInitalState,
+  swapCurrentStoreWithBackup,
+} from "./restore";
 
 const list = () =>
   createListWithItems({ name: "list1", description: "list1desc" }, [
@@ -16,7 +21,7 @@ describe("restore", () => {
   beforeEach(() => {
     global.localStorage.clear();
   });
-  describe("restoreFromBackup", () => {
+  describe("Restore", () => {
     describe("when store doesn't exist in local storage", () => {
       it("restores from backup & doesn't save backup local storage store", () => {
         restoreFromBackup(store);
@@ -43,6 +48,17 @@ describe("restore", () => {
 
         expect(global.localStorage.getItem(LOCAL_STORAGE_STORE_KEY)).toEqual(
           JSON.stringify(newStore),
+        );
+        expect(
+          global.localStorage.getItem(LOCAL_STORAGE_BACKUP_STORE_KEY),
+        ).toEqual(JSON.stringify(store));
+      });
+
+      it("resetores to the initial state", () => {
+        restoreToInitalState();
+
+        expect(global.localStorage.getItem(LOCAL_STORAGE_STORE_KEY)).toEqual(
+          JSON.stringify(INITIAL_STORE_STATE),
         );
         expect(
           global.localStorage.getItem(LOCAL_STORAGE_BACKUP_STORE_KEY),

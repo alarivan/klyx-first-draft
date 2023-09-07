@@ -7,6 +7,7 @@ import {
   validateStore,
   restoreFromBackup,
   swapCurrentStoreWithBackup,
+  restoreToInitalState,
 } from "../../lib/backup";
 import { useBaseColor } from "../../lib/theme";
 import { LOCAL_STORAGE_STORE_KEY } from "../../store";
@@ -43,6 +44,13 @@ export const Settings: Component = () => {
   const onSwapClick = () => {
     const success = swapCurrentStoreWithBackup();
     if (success) {
+      window.location.reload();
+    }
+  };
+
+  const onResetClick = () => {
+    if (confirm("Would you like to reset the state to the inital state?")) {
+      restoreToInitalState();
       window.location.reload();
     }
   };
@@ -109,6 +117,20 @@ export const Settings: Component = () => {
           class="action action__primary"
         >
           Swap back
+        </button>
+      </section>
+      <section>
+        <h2>Reset</h2>
+        <p>
+          You can reset to the inital store the way it was before you made any
+          changes. This will include HOW TO list.
+        </p>
+        <button
+          type="button"
+          onClick={onResetClick}
+          class="action action__primary"
+        >
+          Reset to initial state
         </button>
       </section>
     </div>

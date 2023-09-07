@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   restoreFromBackup,
+  restoreToInitalState,
   saveAsFile,
   swapCurrentStoreWithBackup,
 } from "../../lib/backup";
@@ -21,12 +22,14 @@ vi.mock("../../lib/backup", async () => {
     saveAsFile: vi.fn(),
     restoreFromBackup: vi.fn(),
     swapCurrentStoreWithBackup: vi.fn(),
+    restoreToInitalState: vi.fn(),
   };
 });
 
 const saveAsFileMock = saveAsFile as Mock;
 const restoreFromBackupMock = restoreFromBackup as Mock;
 const swapCurrentStoreWithBackupMock = swapCurrentStoreWithBackup as Mock;
+const restoreToInitalStateMock = restoreToInitalState as Mock;
 
 describe("Settings", () => {
   const originalLocation = window.location;
@@ -157,6 +160,41 @@ describe("Settings", () => {
 
       expect(swapCurrentStoreWithBackupMock).toHaveBeenCalled();
       expect(reloadFn).not.toHaveBeenCalledOnce();
+    });
+  });
+
+  describe("reset", () => {
+    describe("when confirm is false", () => {
+      beforeEach(() => {
+        vi.spyOn(global, "confirm").mockReturnValue(false);
+      });
+
+      it("does not call restoreToInitalState", () => {
+        renderInRouter(() => <Settings />);
+
+        const reset = screen.getByText("Reset to initial state");
+        fireEvent.click(reset);
+        expect(global.confirm).toHaveBeenCalled();
+
+        expect(restoreToInitalStateMock).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("when confirm is true", () => {
+      beforeEach(() => {
+        vi.spyOn(global, "confirm").mockReturnValue(true);
+      });
+
+      it("calls restoreToInitalState", () => {
+        renderInRouter(() => <Settings />);
+
+        const reset = screen.getByText("Reset to initial state");
+        fireEvent.click(reset);
+
+        expect(global.confirm).toHaveBeenCalled();
+
+        expect(restoreToInitalStateMock).toHaveBeenCalledOnce();
+      });
     });
   });
 });

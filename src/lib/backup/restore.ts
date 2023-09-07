@@ -5,6 +5,8 @@ import {
   LOCAL_STORAGE_STORE_KEY,
 } from "../../store";
 
+import { INITIAL_STORE_STATE } from "./initialStoreState";
+
 export function restoreFromBackup(store: IStore) {
   const currentStore = localStorage.getItem(LOCAL_STORAGE_STORE_KEY);
   if (currentStore) {
@@ -26,4 +28,8 @@ export function swapCurrentStoreWithBackup() {
   }
 
   return false;
+}
+
+export function restoreToInitalState() {
+  restoreFromBackup(INITIAL_STORE_STATE);
 }
