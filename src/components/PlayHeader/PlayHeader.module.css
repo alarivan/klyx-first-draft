@@ -6,8 +6,10 @@
 
 .container h1 {
   margin: 0;
+  font-size: 1.2rem;
 }
 
 .progress {
   font-weight: bold;
+  margin-left: 8px;
 }
