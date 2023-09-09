@@ -1,10 +1,11 @@
 import Color from "color";
 
+type IThemeVars = Array<{ name: string; value: string }>;
+
 export const getTextColor = (color: Color) =>
   color.isLight() ? "#000000" : "#FFFFFF";
 
-export const applyColorsToAction = (
-  root: HTMLElement,
+const generateActionColors = (
   prefix: string,
   options: {
     base: Color;
@@ -12,16 +13,19 @@ export const applyColorsToAction = (
     active: string;
     border?: string;
   },
-) => {
+): IThemeVars => {
+  const vars: IThemeVars = [];
   const bg = options.base.hex();
   const text = getTextColor(options.base);
-  root.style.setProperty(`${prefix}-text`, text);
-  root.style.setProperty(`${prefix}-bg`, bg);
-  root.style.setProperty(`${prefix}-bg-hover`, options.hover);
-  root.style.setProperty(`${prefix}-bg-active`, options.active);
+  vars.push({ name: `${prefix}-text`, value: text });
+  vars.push({ name: `${prefix}-bg`, value: bg });
+  vars.push({ name: `${prefix}-bg-hover`, value: options.hover });
+  vars.push({ name: `${prefix}-bg-active`, value: options.active });
   if (options.border) {
-    root.style.setProperty(`${prefix}-border`, options.border);
+    vars.push({ name: `${prefix}-border`, value: options.border });
   }
+
+  return vars;
 };
 
 const createThemeColorModifier = (isDark: boolean) => {
@@ -32,33 +36,34 @@ const createThemeColorModifier = (isDark: boolean) => {
   };
 };
 
-export const applyTheme = (
-  root: HTMLElement,
-  baseColor: string = "#a6a6a6",
-) => {
+export const generateThemeVars = (baseColor: string): IThemeVars => {
   const color = Color(baseColor);
 
   const isDark = color.luminosity() < 0.3;
   const adjustColorValue = createThemeColorModifier(isDark);
 
+  const vars: IThemeVars = [];
+
   const bodyBg = color;
-  root.style.setProperty(`--body-bg`, bodyBg.hex());
-  root.style.setProperty(`--body-text`, getTextColor(bodyBg));
-  root.style.setProperty(
-    `--body-box-shadow`,
-    adjustColorValue(bodyBg, 0.2).hex(),
-  );
+  vars.push({ name: "--body-bg", value: bodyBg.hex() });
+  vars.push({ name: "--body-bg", value: bodyBg.hex() });
+  vars.push({ name: "--body-text", value: getTextColor(bodyBg) });
+
+  vars.push({
+    name: "--body-box-shadow",
+    value: adjustColorValue(bodyBg, 0.2).hex(),
+  });
 
   const cardBase = adjustColorValue(bodyBg, 0.5);
-  root.style.setProperty(`--card-bg`, cardBase.hex());
-  root.style.setProperty(`--card-text`, getTextColor(cardBase));
+  vars.push({ name: "--card-bg", value: cardBase.hex() });
+  vars.push({ name: "--card-text", value: getTextColor(cardBase) });
 
   const timerBase = adjustColorValue(bodyBg, 0.4, 0.8);
   const timerTotal = adjustColorValue(timerBase, -0.2, 0.3);
-  root.style.setProperty(`--timer-progress-bg`, timerBase.hex());
-  root.style.setProperty(`--timer-progress-text`, getTextColor(timerBase));
-  root.style.setProperty(`--timer-total-bg`, timerTotal.hex());
-  root.style.setProperty(`--timer-total-text`, getTextColor(timerTotal));
+  vars.push({ name: "--timer-progress-bg", value: timerBase.hex() });
+  vars.push({ name: "--timer-progress-text", value: getTextColor(timerBase) });
+  vars.push({ name: "--timer-total-bg", value: timerTotal.hex() });
+  vars.push({ name: "--timer-total-text", value: getTextColor(timerTotal) });
 
   const actionFancyBase = adjustColorValue(bodyBg, 0.4, 0.8);
   const actionFancy = {
@@ -75,18 +80,32 @@ export const applyTheme = (
     active: adjustColorValue(actionPrimaryBase, 0.3).hex(),
   };
 
-  const actionSecondaryBase = adjustColorValue(bodyBg, 0.2, 0.6);
+  const actionSecondaryBase = adjustColorValue(cardBase, 0.2, 0.6);
   const actionSecondary = {
     base: actionSecondaryBase,
     hover: adjustColorValue(actionSecondaryBase, 0.1).hex(),
     active: adjustColorValue(actionSecondaryBase, 0.2).hex(),
   };
 
-  applyColorsToAction(root, "--action-fancy", actionFancy);
-  applyColorsToAction(root, "--action-primary", actionPrimary);
-  applyColorsToAction(root, "--action-secondary", actionSecondary);
-
   const disabledBase = color.grayscale();
-  root.style.setProperty(`--action-disabled-bg`, disabledBase.hex());
-  root.style.setProperty(`--action-disabled-text`, getTextColor(disabledBase));
+  vars.push({ name: "--action-disabled-bg", value: disabledBase.hex() });
+  vars.push({
+    name: "--action-disabled-text",
+    value: getTextColor(disabledBase),
+  });
+
+  return vars.concat(
+    generateActionColors("--action-fancy", actionFancy),
+    generateActionColors("--action-primary", actionPrimary),
+    generateActionColors("--action-secondary", actionSecondary),
+  );
+};
+
+export const applyTheme = (
+  root: HTMLElement,
+  baseColor: string = "#a6a6a6",
+) => {
+  generateThemeVars(baseColor).forEach((v) =>
+    root.style.setProperty(v.name, v.value),
+  );
 };
