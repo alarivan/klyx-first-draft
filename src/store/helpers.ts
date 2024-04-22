@@ -53,9 +53,9 @@ export const createListWithItems = (
   list: IListDataObject,
   items: IListItemDataObject[] = [],
 ): IList => {
-  return items.reduce((list: IList, item) => {
-    return { ...list, items: [...list.items, createListItem(item)] };
-  }, createList(list));
+  const newList = createList(list);
+  const newItems = items.map(createListItem);
+  return { ...newList, items: newItems };
 };
 
 export const isCompleted = (item: IListItem) => {
@@ -76,4 +76,9 @@ export const isCompleted = (item: IListItem) => {
   }
 
   return completed;
+};
+
+export const stripIds = <T extends IList | IListItem>(value: T): T => {
+  const { id: _id, ...rest } = value;
+  return rest as T;
 };

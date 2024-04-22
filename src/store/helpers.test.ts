@@ -1,3 +1,5 @@
+import type { IList } from "./types";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -5,6 +7,7 @@ import {
   createListItem,
   createListWithItems,
   isCompleted,
+  stripIds,
 } from "./helpers";
 
 describe("helpers", () => {
@@ -237,6 +240,14 @@ describe("helpers", () => {
         counterProgress: 9,
       });
       expect(completed).toEqual(false);
+    });
+  });
+
+  describe("stripIds", () => {
+    it("strips ids from value", () => {
+      expect(stripIds({ id: "123", name: "haloa" } as IList)).toEqual({
+        name: "haloa",
+      });
     });
   });
 });
