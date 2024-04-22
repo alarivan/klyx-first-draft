@@ -4,7 +4,12 @@ import { makePersisted } from "@solid-primitives/storage";
 import { createStore, produce } from "solid-js/store";
 
 import { LOCAL_STORAGE_STORE_KEY } from "./constants";
-import { createList, createListItem, isCompleted } from "./helpers";
+import {
+  createList,
+  createListItem,
+  createListWithItems,
+  isCompleted,
+} from "./helpers";
 
 export const createStoreValue = (initialState?: IStore) => {
   const [state, setState] = makePersisted(
@@ -14,6 +19,13 @@ export const createStoreValue = (initialState?: IStore) => {
   const value: IStoreContextValue = [
     state,
     {
+      addWithItems(list, items) {
+        setState(
+          produce((state) => {
+            state.lists.push(createListWithItems(list, items));
+          }),
+        );
+      },
       add(list) {
         setState(
           produce((state) => {

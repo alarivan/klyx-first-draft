@@ -60,6 +60,54 @@ describe(createStoreValue, () => {
   });
 
   describe("actions", () => {
+    describe("addWithItems", () => {
+      it("adds list to store", () => {
+        createRoot((dispose) => {
+          const [state, actions] = createStoreValue();
+          actions.addWithItems({ name: "name" }, [
+            { name: "item1" },
+            { name: "item2" },
+          ]);
+          expect(state.lists[0]).toEqual(
+            expect.objectContaining({
+              name: "name",
+              description: null,
+              currentItem: null,
+              items: [
+                expect.objectContaining({
+                  name: "item1",
+                  description: null,
+                  completed: false,
+                  counterType: "none",
+                  counterLimit: null,
+                  counterAutoswitch: true,
+                  timerAutoswitch: true,
+                  timerAutostart: false,
+                  counterProgress: null,
+                  timerSeconds: null,
+                  timerProgress: null,
+                }),
+                expect.objectContaining({
+                  name: "item2",
+                  description: null,
+                  completed: false,
+                  counterType: "none",
+                  counterLimit: null,
+                  counterAutoswitch: true,
+                  timerAutoswitch: true,
+                  timerAutostart: false,
+                  counterProgress: null,
+                  timerSeconds: null,
+                  timerProgress: null,
+                }),
+              ],
+            }),
+          );
+          dispose();
+        });
+      });
+    });
+
     describe("add", () => {
       it("adds list to store", () => {
         createRoot((dispose) => {

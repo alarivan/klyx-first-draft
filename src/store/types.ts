@@ -51,6 +51,7 @@ export type IStore = { lists: Array<IList> };
 export type IListItemWithIndex = { data: IListItem; index: number };
 
 export type IStoreActions = {
+  addWithItems(list: IListDataObject, items: IListItemDataObject[]): void;
   add(list: IListDataObject): void;
   remove(removeId: IList["id"]): void;
   update(updateId: IList["id"], list: IListDataObject): void;
