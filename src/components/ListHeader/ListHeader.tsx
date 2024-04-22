@@ -2,7 +2,13 @@ import type { IList } from "../../store/types";
 import type { ParentComponent } from "solid-js";
 
 import { A } from "@solidjs/router";
-import { FiEdit2, FiMoreVertical, FiRefreshCcw, FiTrash } from "solid-icons/fi";
+import {
+  FiEdit2,
+  FiMoreVertical,
+  FiRefreshCcw,
+  FiTrash,
+  FiShare,
+} from "solid-icons/fi";
 import { Show, createSignal } from "solid-js";
 import { Transition } from "solid-transition-group";
 
@@ -31,6 +37,13 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
     }
   };
 
+  const shareList = () => {
+    const list = JSON.stringify(props.list);
+    const url = new URL(window.location.origin + "/preview");
+    url.searchParams.append("list", list);
+    navigator.clipboard.writeText(url.toString());
+  };
+
   return (
     <div class={styles.container}>
       <div class={styles.head}>
@@ -50,6 +63,15 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
             <div class="slide-y">
               <div class={`${styles.actions}`}>
                 {props.children}
+                <button
+                  aria-label="Share list"
+                  title="Share"
+                  type="button"
+                  class={`action action__secondary`}
+                  onClick={shareList}
+                >
+                  <FiShare />
+                </button>
                 <button
                   aria-label="Reset all items"
                   title="Reset all items"

@@ -139,4 +139,36 @@ describe("ListHeader", () => {
       });
     });
   });
+
+  describe("share button", () => {
+    const writeTextMock = vi.fn();
+
+    beforeAll(() => {
+      Object.defineProperty(navigator, "clipboard", {
+        configurable: true,
+        value: { writeText: writeTextMock },
+      });
+    });
+
+    beforeEach(() => {
+      renderInRouter(() => <ListHeader list={list} />);
+
+      const toggle = screen.getByLabelText("List actions");
+      fireEvent.click(toggle);
+    });
+
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it("handles click on share button", async () => {
+      const currentList = JSON.stringify(list);
+      const url = new URL(window.location.origin + "/preview");
+      url.searchParams.append("list", currentList);
+
+      fireEvent.click(screen.getByLabelText("Share list"));
+
+      expect(writeTextMock).toHaveBeenCalledWith(url.toString());
+    });
+  });
 });
