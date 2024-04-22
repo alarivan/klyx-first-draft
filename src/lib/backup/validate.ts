@@ -93,7 +93,7 @@ function validateItems(items: unknown) {
   return items.every(validateItem);
 }
 
-function validateList(list: unknown): boolean {
+export function validateList(list: unknown): boolean {
   if (!isObject(list)) {
     throw new Error("List is not an object");
   }

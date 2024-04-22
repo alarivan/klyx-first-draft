@@ -54,26 +54,48 @@ describe("Preview", () => {
     vi.clearAllMocks();
   });
 
-  it("adds list from search params", async () => {
-    const currentList = list();
-    mockUseSearchParams.mockReturnValue([
-      { list: JSON.stringify(currentList) },
-    ]);
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [] }}>
-          <Preview />
-        </StoreProvider>
-      </Router>
-    ));
+  describe("valid list", () => {
+    it("adds list from search params", async () => {
+      const currentList = list();
+      mockUseSearchParams.mockReturnValue([
+        { list: JSON.stringify(currentList) },
+      ]);
+      render(() => (
+        <Router>
+          <StoreProvider initalStore={{ lists: [] }}>
+            <Preview />
+          </StoreProvider>
+        </Router>
+      ));
 
-    expect(addWithItemsMock).toHaveBeenCalledWith(
-      stripIds(currentList),
-      currentList.items.map(stripIds),
-    );
+      expect(addWithItemsMock).toHaveBeenCalledWith(
+        stripIds(currentList),
+        currentList.items.map(stripIds),
+      );
 
-    expect(mockNavigateComponent).toHaveBeenCalledWith({
-      href: `/`,
+      expect(mockNavigateComponent).toHaveBeenCalledWith({
+        href: `/`,
+      });
+    });
+  });
+
+  describe("invalid list", () => {
+    it("does not add list from search params", async () => {
+      mockUseSearchParams.mockReturnValue([
+        { list: JSON.stringify({ invalid: "invalid" }) },
+      ]);
+      render(() => (
+        <Router>
+          <StoreProvider initalStore={{ lists: [] }}>
+            <Preview />
+          </StoreProvider>
+        </Router>
+      ));
+
+      expect(addWithItemsMock).not.toHaveBeenCalled();
+      expect(mockNavigateComponent).toHaveBeenCalledWith({
+        href: `/`,
+      });
     });
   });
 });
