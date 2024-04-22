@@ -15,6 +15,7 @@ import { NewItem } from "./pages/NewItem/NewItem";
 import { NewList } from "./pages/NewList";
 import { Play } from "./pages/Play";
 import { PlayDone } from "./pages/PlayDone";
+import { Preview } from "./pages/Preview";
 import { Settings } from "./pages/Settings";
 
 const App: Component = () => {
@@ -26,6 +27,7 @@ const App: Component = () => {
       <main>
         <Routes>
           <Route path="/" component={Home} />
+          <Route path="/preview" component={Preview} />
           <Route path="/settings" component={Settings} />
           <Route path="/list/new" component={NewList} />
           <Route path="/list/:listId" component={ListGuardProvider}>
