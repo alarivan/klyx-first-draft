@@ -1,25 +1,30 @@
-import { Router } from "@solidjs/router";
-import { render, screen } from "@solidjs/testing-library";
+import { screen } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 
-import { StoreProvider } from "../../store/context";
 import { createListWithItems } from "../../store/helpers";
+import { renderInRouter } from "../../test/utils";
 
-import { ListViewActions } from "./ListViewActions";
+import {
+  ListViewActionNew,
+  ListViewActionPlay,
+  ListViewActions,
+} from "./ListViewActions";
 
 const list = createListWithItems({ name: "list1", description: "list1desc" }, [
   { name: "item1", description: "item1desc" },
 ]);
 
 describe("ListViewActions", () => {
-  it("renders component", () => {
-    render(() => (
-      <Router>
-        <StoreProvider initalStore={{ lists: [list] }}>
-          <ListViewActions listId={list.id} />
-        </StoreProvider>
-      </Router>
-    ));
+  it("renders items", () => {
+    renderInRouter(
+      () => (
+        <ListViewActions>
+          <ListViewActionNew listId={list.id} />
+          <ListViewActionPlay listId={list.id} />
+        </ListViewActions>
+      ),
+      { lists: [list] },
+    );
 
     expect(screen.getByLabelText("Add item")).toHaveAttribute(
       "href",

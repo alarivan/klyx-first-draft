@@ -8,6 +8,10 @@ import { useListGuardContext } from "../../components/ListGuard";
 import { ListHeader } from "../../components/ListHeader";
 import { ListItemSummaryLine } from "../../components/ListItemSummaryLine";
 import { ListViewActions } from "../../components/ListViewActions";
+import {
+  ListViewActionNew,
+  ListViewActionPlay,
+} from "../../components/ListViewActions/ListViewActions";
 import { SortableListItems } from "../../components/SortableListItems";
 
 export const ListView: Component = () => {
@@ -17,7 +21,14 @@ export const ListView: Component = () => {
   const [isCompactView, setIsCompactView] = createSignal(false);
 
   return (
-    <BottomActionsLayout actions={<ListViewActions listId={list().id} />}>
+    <BottomActionsLayout
+      actions={
+        <ListViewActions>
+          <ListViewActionNew listId={list().id} />
+          <ListViewActionPlay listId={list().id} />
+        </ListViewActions>
+      }
+    >
       <ListHeader list={list()}>
         <Show
           when={isCompactView()}
