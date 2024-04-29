@@ -57,8 +57,16 @@ describe("Preview", () => {
   describe("valid list", () => {
     it("adds list from search params", async () => {
       const currentList = list();
+      const { name, ...originalList } = currentList;
+      const sharedList = {
+        name: `${name} (shared)`,
+        ...originalList,
+      };
+
       mockUseSearchParams.mockReturnValue([
-        { list: btoa(JSON.stringify(currentList)) },
+        {
+          list: btoa(JSON.stringify(sharedList)),
+        },
       ]);
       render(() => (
         <Router>
@@ -69,7 +77,7 @@ describe("Preview", () => {
       ));
 
       expect(addWithItemsMock).toHaveBeenCalledWith(
-        stripIds(currentList),
+        stripIds(sharedList),
         currentList.items.map(stripIds),
       );
 

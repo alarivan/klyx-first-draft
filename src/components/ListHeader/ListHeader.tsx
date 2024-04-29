@@ -38,9 +38,14 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
   };
 
   const shareList = () => {
-    const list = btoa(JSON.stringify(props.list));
+    const { name, ...originalList } = props.list;
+    const list = {
+      name: `${name} (shared)`,
+      ...originalList,
+    };
+    const base64List = btoa(JSON.stringify(list));
     const url = new URL(window.location.origin + "/preview");
-    url.searchParams.append("list", list);
+    url.searchParams.append("list", base64List);
     navigator.clipboard.writeText(url.toString());
   };
 
