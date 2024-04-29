@@ -162,7 +162,7 @@ describe("ListHeader", () => {
     });
 
     it("handles click on share button", async () => {
-      const currentList = JSON.stringify(list);
+      const currentList = btoa(JSON.stringify(list));
       const url = new URL(window.location.origin + "/preview");
       url.searchParams.append("list", currentList);
 

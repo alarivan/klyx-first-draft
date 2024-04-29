@@ -58,7 +58,7 @@ describe("Preview", () => {
     it("adds list from search params", async () => {
       const currentList = list();
       mockUseSearchParams.mockReturnValue([
-        { list: JSON.stringify(currentList) },
+        { list: btoa(JSON.stringify(currentList)) },
       ]);
       render(() => (
         <Router>
@@ -82,7 +82,7 @@ describe("Preview", () => {
   describe("invalid list", () => {
     it("does not add list from search params", async () => {
       mockUseSearchParams.mockReturnValue([
-        { list: JSON.stringify({ invalid: "invalid" }) },
+        { list: btoa(JSON.stringify({ invalid: "invalid" })) },
       ]);
       render(() => (
         <Router>

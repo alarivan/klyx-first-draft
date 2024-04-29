@@ -38,7 +38,7 @@ export const ListHeader: ParentComponent<{ list: IList }> = (props) => {
   };
 
   const shareList = () => {
-    const list = JSON.stringify(props.list);
+    const list = btoa(JSON.stringify(props.list));
     const url = new URL(window.location.origin + "/preview");
     url.searchParams.append("list", list);
     navigator.clipboard.writeText(url.toString());

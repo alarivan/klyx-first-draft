@@ -9,7 +9,7 @@ import { stripIds } from "../../store/helpers";
 export const Preview: Component = () => {
   const [searchParams] = useSearchParams();
   const [_, actions] = useStoreContext();
-  const list = JSON.parse(searchParams.list);
+  const list = JSON.parse(atob(searchParams.list));
   let isValidList = false;
   try {
     isValidList = !!list && validateList(list);
